@@ -14,7 +14,9 @@ namespace PythonCodeAnalyzer.Parser
             PyIn,
             PyNot,
             PyIs,
-            PyNone
+            PyNone,
+            PyPlus,
+            PyMinus
             
         }  
         

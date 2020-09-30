@@ -147,5 +147,34 @@ namespace TestPythonCodeAnalyzer
             Assert.True(test.Right is NoneExpression);
             Assert.Equal(RelationExpression.Relation.NotIn, test.RelationKind);
         }
+        
+        
+        [Fact]
+        public void TestArithPlus()
+        {
+            var test = new PythonCodeAnalyzer.Parser.Ast.Expression.ArithExpression(0, 11,
+                ArithExpression.ArithOperatorKind.Plus, new NoneExpression(0, 4, new Token(0, 4, Token.TokenKind.PyPlus)), new Token(5, 6, Token.TokenKind.PyPlus),new NoneExpression(7, 11, new Token(7, 11, Token.TokenKind.PyNone)));
+            
+            Assert.Equal(0UL, test.Start);
+            Assert.Equal(11UL, test.End);
+            Assert.True(test.Left is NoneExpression);
+            Assert.True(test.Operator.Kind == Token.TokenKind.PyPlus);
+            Assert.True(test.Right is NoneExpression);
+            Assert.Equal(ArithExpression.ArithOperatorKind.Plus, test.ArithOperator);
+        }
+        
+        [Fact]
+        public void TestArithMinus()
+        {
+            var test = new PythonCodeAnalyzer.Parser.Ast.Expression.ArithExpression(0, 11,
+                ArithExpression.ArithOperatorKind.Minus, new NoneExpression(0, 4, new Token(0, 4, Token.TokenKind.PyMinus)), new Token(5, 6, Token.TokenKind.PyMinus), new NoneExpression(7, 11, new Token(7, 11, Token.TokenKind.PyNone)));
+            
+            Assert.Equal(0UL, test.Start);
+            Assert.Equal(11UL, test.End);
+            Assert.True(test.Left is NoneExpression);
+            Assert.True(test.Operator.Kind == Token.TokenKind.PyMinus);
+            Assert.True(test.Right is NoneExpression);
+            Assert.Equal(ArithExpression.ArithOperatorKind.Minus, test.ArithOperator);
+        }
     }
 }
