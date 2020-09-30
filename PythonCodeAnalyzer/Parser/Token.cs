@@ -16,7 +16,10 @@ namespace PythonCodeAnalyzer.Parser
             PyIs,
             PyNone,
             PyPlus,
-            PyMinus
+            PyMinus,
+            PyColonAssign,
+            PyIf,
+            PyElse
             
         }  
         

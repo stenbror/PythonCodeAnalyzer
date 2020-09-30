@@ -4,8 +4,47 @@ using Xunit;
 
 namespace TestPythonCodeAnalyzer
 {
-    public class TestAstNodes
+    public class AstNodes
     {
+        [Fact]
+        public void TestNamedExpr()
+        {
+            var test = new PythonCodeAnalyzer.Parser.Ast.Expression.NamedExpression(0, 12,
+                new NoneExpression(0, 4, new Token(0, 4, Token.TokenKind.PyNone)), new Token(5, 7, Token.TokenKind.PyColonAssign), new NoneExpression(8, 12, new Token(8, 12, Token.TokenKind.PyNone)));
+            
+            Assert.Equal(0UL, test.Start);
+            Assert.Equal(12UL, test.End);
+            Assert.True(test.Left is NoneExpression);
+            Assert.True(test.Operator.Kind == Token.TokenKind.PyColonAssign);
+            Assert.True(test.Right is NoneExpression);
+            Assert.True(test is NamedExpression);
+        }
+        
+        [Fact]
+        public void TestConditionalExpr()
+        {
+            var test = new PythonCodeAnalyzer.Parser.Ast.Expression.ConditionalExpression(
+                0, 
+                23,
+                new NoneExpression(0, 4, new Token(0, 4, Token.TokenKind.PyNone)),
+                new Token(5, 7, Token.TokenKind.PyIf),
+                new NoneExpression(8, 12, new Token(8, 12, Token.TokenKind.PyNone)),
+                new Token(14, 18, Token.TokenKind.PyElse),
+                new NoneExpression(19, 23, new Token(19, 23, Token.TokenKind.PyNone)));
+            
+            Assert.Equal(0UL, test.Start);
+            Assert.Equal(23UL, test.End);
+            Assert.True(test.Left is NoneExpression);
+            Assert.True(test.Operator1.Kind == Token.TokenKind.PyIf);
+            Assert.True(test.Right is NoneExpression);
+            Assert.True(test.Operator2.Kind == Token.TokenKind.PyElse);
+            Assert.True(test.Next is NoneExpression);
+            Assert.True(test is ConditionalExpression);
+        }
+        
+        
+        
+        
         [Fact]
         public void TestRelationLess()
         {
