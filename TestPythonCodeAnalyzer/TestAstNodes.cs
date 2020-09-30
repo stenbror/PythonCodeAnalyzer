@@ -303,6 +303,34 @@ namespace TestPythonCodeAnalyzer
         }
         
         [Fact]
+        public void TestShiftLeft()
+        {
+            var test = new PythonCodeAnalyzer.Parser.Ast.Expression.ShiftExpression(0, 11, ShiftExpression.OperatorKind.Left,
+                 new NoneExpression(0, 4, new Token(0, 4, Token.TokenKind.PyNone)), new Token(5, 6, Token.TokenKind.PyShiftLeft),new NoneExpression(7, 11, new Token(7, 11, Token.TokenKind.PyNone)));
+            
+            Assert.Equal(0UL, test.Start);
+            Assert.Equal(11UL, test.End);
+            Assert.True(test.Left is NoneExpression);
+            Assert.True(test.Operator.Kind == Token.TokenKind.PyShiftLeft);
+            Assert.True(test.Right is NoneExpression);
+            Assert.Equal(ShiftExpression.OperatorKind.Left, test.ShiftOperator);
+        }
+        
+        [Fact]
+        public void TestShiftRight()
+        {
+            var test = new PythonCodeAnalyzer.Parser.Ast.Expression.ShiftExpression(0, 11, ShiftExpression.OperatorKind.Right,
+                new NoneExpression(0, 4, new Token(0, 4, Token.TokenKind.PyNone)), new Token(5, 6, Token.TokenKind.PyShiftRight),new NoneExpression(7, 11, new Token(7, 11, Token.TokenKind.PyNone)));
+            
+            Assert.Equal(0UL, test.Start);
+            Assert.Equal(11UL, test.End);
+            Assert.True(test.Left is NoneExpression);
+            Assert.True(test.Operator.Kind == Token.TokenKind.PyShiftRight);
+            Assert.True(test.Right is NoneExpression);
+            Assert.Equal(ShiftExpression.OperatorKind.Right, test.ShiftOperator);
+        }
+        
+        [Fact]
         public void TestArithPlus()
         {
             var test = new PythonCodeAnalyzer.Parser.Ast.Expression.ArithExpression(0, 11,

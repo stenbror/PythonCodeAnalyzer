@@ -25,7 +25,9 @@ namespace PythonCodeAnalyzer.Parser
             PyOr,
             PyXor,
             PyAnd,
-            PyMul
+            PyMul,
+            PyShiftLeft,
+            PyShiftRight
 
         }  
         
