@@ -27,7 +27,11 @@ namespace PythonCodeAnalyzer.Parser
             PyAnd,
             PyMul,
             PyShiftLeft,
-            PyShiftRight
+            PyShiftRight,
+            PyModulo,
+            PyMatrice,
+            PyDiv,
+            PyFloorDiv
 
         }  
         

@@ -357,5 +357,61 @@ namespace TestPythonCodeAnalyzer
             Assert.True(test.Right is NoneExpression);
             Assert.Equal(ArithExpression.ArithOperatorKind.Minus, test.ArithOperator);
         }
+        
+        [Fact]
+        public void TestTermModulo()
+        {
+            var test = new PythonCodeAnalyzer.Parser.Ast.Expression.TermExpression(0, 11,
+                TermExpression.OperatorKind.Modulo, new NoneExpression(0, 4, new Token(0, 4, Token.TokenKind.PyNone)), new Token(5, 6, Token.TokenKind.PyModulo), new NoneExpression(7, 11, new Token(7, 11, Token.TokenKind.PyNone)));
+            
+            Assert.Equal(0UL, test.Start);
+            Assert.Equal(11UL, test.End);
+            Assert.True(test.Left is NoneExpression);
+            Assert.True(test.Operator.Kind == Token.TokenKind.PyModulo);
+            Assert.True(test.Right is NoneExpression);
+            Assert.Equal(TermExpression.OperatorKind.Modulo, test.TermOperator);
+        }
+        
+        [Fact]
+        public void TestTermMatrice()
+        {
+            var test = new PythonCodeAnalyzer.Parser.Ast.Expression.TermExpression(0, 11,
+                TermExpression.OperatorKind.Matrice, new NoneExpression(0, 4, new Token(0, 4, Token.TokenKind.PyNone)), new Token(5, 6, Token.TokenKind.PyMatrice), new NoneExpression(7, 11, new Token(7, 11, Token.TokenKind.PyNone)));
+            
+            Assert.Equal(0UL, test.Start);
+            Assert.Equal(11UL, test.End);
+            Assert.True(test.Left is NoneExpression);
+            Assert.True(test.Operator.Kind == Token.TokenKind.PyMatrice);
+            Assert.True(test.Right is NoneExpression);
+            Assert.Equal(TermExpression.OperatorKind.Matrice, test.TermOperator);
+        }
+        
+        [Fact]
+        public void TestTermDiv()
+        {
+            var test = new PythonCodeAnalyzer.Parser.Ast.Expression.TermExpression(0, 11,
+                TermExpression.OperatorKind.Div, new NoneExpression(0, 4, new Token(0, 4, Token.TokenKind.PyNone)), new Token(5, 6, Token.TokenKind.PyDiv), new NoneExpression(7, 11, new Token(7, 11, Token.TokenKind.PyNone)));
+            
+            Assert.Equal(0UL, test.Start);
+            Assert.Equal(11UL, test.End);
+            Assert.True(test.Left is NoneExpression);
+            Assert.True(test.Operator.Kind == Token.TokenKind.PyDiv);
+            Assert.True(test.Right is NoneExpression);
+            Assert.Equal(TermExpression.OperatorKind.Div, test.TermOperator);
+        }
+        
+        [Fact]
+        public void TestTermFloorDiv()
+        {
+            var test = new PythonCodeAnalyzer.Parser.Ast.Expression.TermExpression(0, 11,
+                TermExpression.OperatorKind.FloorDiv, new NoneExpression(0, 4, new Token(0, 4, Token.TokenKind.PyNone)), new Token(5, 6, Token.TokenKind.PyFloorDiv), new NoneExpression(7, 11, new Token(7, 11, Token.TokenKind.PyNone)));
+            
+            Assert.Equal(0UL, test.Start);
+            Assert.Equal(11UL, test.End);
+            Assert.True(test.Left is NoneExpression);
+            Assert.True(test.Operator.Kind == Token.TokenKind.PyFloorDiv);
+            Assert.True(test.Right is NoneExpression);
+            Assert.Equal(TermExpression.OperatorKind.FloorDiv, test.TermOperator);
+        }
     }
 }
