@@ -1,0 +1,16 @@
+C:\Users\ricste.BIS\RiderProjects\PythonCodeAnalyzer\PythonCodeAnalyzer\bin\Debug\net5.0\PythonCodeAnalyzer.exe
+C:\Users\ricste.BIS\RiderProjects\PythonCodeAnalyzer\PythonCodeAnalyzer\bin\Debug\net5.0\PythonCodeAnalyzer.deps.json
+C:\Users\ricste.BIS\RiderProjects\PythonCodeAnalyzer\PythonCodeAnalyzer\bin\Debug\net5.0\PythonCodeAnalyzer.runtimeconfig.json
+C:\Users\ricste.BIS\RiderProjects\PythonCodeAnalyzer\PythonCodeAnalyzer\bin\Debug\net5.0\PythonCodeAnalyzer.runtimeconfig.dev.json
+C:\Users\ricste.BIS\RiderProjects\PythonCodeAnalyzer\PythonCodeAnalyzer\bin\Debug\net5.0\PythonCodeAnalyzer.dll
+C:\Users\ricste.BIS\RiderProjects\PythonCodeAnalyzer\PythonCodeAnalyzer\bin\Debug\net5.0\ref\PythonCodeAnalyzer.dll
+C:\Users\ricste.BIS\RiderProjects\PythonCodeAnalyzer\PythonCodeAnalyzer\bin\Debug\net5.0\PythonCodeAnalyzer.pdb
+C:\Users\ricste.BIS\RiderProjects\PythonCodeAnalyzer\PythonCodeAnalyzer\obj\Debug\net5.0\PythonCodeAnalyzer.csprojAssemblyReference.cache
+C:\Users\ricste.BIS\RiderProjects\PythonCodeAnalyzer\PythonCodeAnalyzer\obj\Debug\net5.0\PythonCodeAnalyzer.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\ricste.BIS\RiderProjects\PythonCodeAnalyzer\PythonCodeAnalyzer\obj\Debug\net5.0\PythonCodeAnalyzer.AssemblyInfoInputs.cache
+C:\Users\ricste.BIS\RiderProjects\PythonCodeAnalyzer\PythonCodeAnalyzer\obj\Debug\net5.0\PythonCodeAnalyzer.AssemblyInfo.cs
+C:\Users\ricste.BIS\RiderProjects\PythonCodeAnalyzer\PythonCodeAnalyzer\obj\Debug\net5.0\PythonCodeAnalyzer.csproj.CoreCompileInputs.cache
+C:\Users\ricste.BIS\RiderProjects\PythonCodeAnalyzer\PythonCodeAnalyzer\obj\Debug\net5.0\PythonCodeAnalyzer.dll
+C:\Users\ricste.BIS\RiderProjects\PythonCodeAnalyzer\PythonCodeAnalyzer\obj\Debug\net5.0\ref\PythonCodeAnalyzer.dll
+C:\Users\ricste.BIS\RiderProjects\PythonCodeAnalyzer\PythonCodeAnalyzer\obj\Debug\net5.0\PythonCodeAnalyzer.pdb
+C:\Users\ricste.BIS\RiderProjects\PythonCodeAnalyzer\PythonCodeAnalyzer\obj\Debug\net5.0\PythonCodeAnalyzer.genruntimeconfig.cache
