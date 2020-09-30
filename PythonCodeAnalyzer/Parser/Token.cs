@@ -23,7 +23,9 @@ namespace PythonCodeAnalyzer.Parser
             PyLambda, 
             PyColon,
             PyOr,
-            PyAnd
+            PyXor,
+            PyAnd,
+            PyMul
 
         }  
         
