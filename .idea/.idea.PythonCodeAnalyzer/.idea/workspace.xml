@@ -5,183 +5,35 @@
     <projectFile>TestPythonCodeAnalyzer/TestPythonCodeAnalyzer.csproj</projectFile>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="949b8773-a72b-465f-ac85-8ff5c38ccc94" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.PythonCodeAnalyzer/.idea/codeStyles/codeStyleConfig.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.PythonCodeAnalyzer/.idea/contentModel.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.PythonCodeAnalyzer/.idea/indexLayout.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.PythonCodeAnalyzer/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.PythonCodeAnalyzer/.idea/projectSettingsUpdater.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.PythonCodeAnalyzer/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.PythonCodeAnalyzer/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.PythonCodeAnalyzer/riderModule.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/PythonCodeAnalyzer.sln" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/PythonCodeAnalyzer.sln.DotSettings.user" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/PythonCodeAnalyzer/Parser/Ast/Expression/RelationExpression.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/PythonCodeAnalyzer/Parser/Ast/ExpressionNode.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/PythonCodeAnalyzer/Parser/Ast/Node.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/PythonCodeAnalyzer/Parser/Ast/StatementNode.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/PythonCodeAnalyzer/Parser/Token.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/PythonCodeAnalyzer/Program.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/PythonCodeAnalyzer/PythonCodeAnalyzer.csproj" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/PythonCodeAnalyzer/bin/Debug/net5.0/PythonCodeAnalyzer.deps.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/PythonCodeAnalyzer/bin/Debug/net5.0/PythonCodeAnalyzer.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/PythonCodeAnalyzer/bin/Debug/net5.0/PythonCodeAnalyzer.exe" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/PythonCodeAnalyzer/bin/Debug/net5.0/PythonCodeAnalyzer.pdb" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/PythonCodeAnalyzer/bin/Debug/net5.0/PythonCodeAnalyzer.runtimeconfig.dev.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/PythonCodeAnalyzer/bin/Debug/net5.0/PythonCodeAnalyzer.runtimeconfig.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/PythonCodeAnalyzer/bin/Debug/net5.0/ref/PythonCodeAnalyzer.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/PythonCodeAnalyzer/bin/Release/net5.0/PythonCodeAnalyzer.deps.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/PythonCodeAnalyzer/bin/Release/net5.0/PythonCodeAnalyzer.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/PythonCodeAnalyzer/bin/Release/net5.0/PythonCodeAnalyzer.exe" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/PythonCodeAnalyzer/bin/Release/net5.0/PythonCodeAnalyzer.pdb" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/PythonCodeAnalyzer/bin/Release/net5.0/PythonCodeAnalyzer.runtimeconfig.dev.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/PythonCodeAnalyzer/bin/Release/net5.0/PythonCodeAnalyzer.runtimeconfig.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/PythonCodeAnalyzer/bin/Release/net5.0/ref/PythonCodeAnalyzer.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/PythonCodeAnalyzer/obj/Debug/net5.0/.NETCoreApp,Version=v5.0.AssemblyAttributes.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/PythonCodeAnalyzer/obj/Debug/net5.0/PythonCodeAnalyzer.AssemblyInfo.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/PythonCodeAnalyzer/obj/Debug/net5.0/PythonCodeAnalyzer.AssemblyInfoInputs.cache" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/PythonCodeAnalyzer/obj/Debug/net5.0/PythonCodeAnalyzer.GeneratedMSBuildEditorConfig.editorconfig" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/PythonCodeAnalyzer/obj/Debug/net5.0/PythonCodeAnalyzer.assets.cache" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/PythonCodeAnalyzer/obj/Debug/net5.0/PythonCodeAnalyzer.csproj.CoreCompileInputs.cache" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/PythonCodeAnalyzer/obj/Debug/net5.0/PythonCodeAnalyzer.csproj.FileListAbsolute.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/PythonCodeAnalyzer/obj/Debug/net5.0/PythonCodeAnalyzer.csprojAssemblyReference.cache" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/PythonCodeAnalyzer/obj/Debug/net5.0/PythonCodeAnalyzer.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/PythonCodeAnalyzer/obj/Debug/net5.0/PythonCodeAnalyzer.genruntimeconfig.cache" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/PythonCodeAnalyzer/obj/Debug/net5.0/PythonCodeAnalyzer.pdb" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/PythonCodeAnalyzer/obj/Debug/net5.0/apphost.exe" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/PythonCodeAnalyzer/obj/Debug/net5.0/ref/PythonCodeAnalyzer.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/PythonCodeAnalyzer/obj/PythonCodeAnalyzer.csproj.nuget.dgspec.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/PythonCodeAnalyzer/obj/PythonCodeAnalyzer.csproj.nuget.g.props" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/PythonCodeAnalyzer/obj/PythonCodeAnalyzer.csproj.nuget.g.targets" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/PythonCodeAnalyzer/obj/Release/net5.0/.NETCoreApp,Version=v5.0.AssemblyAttributes.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/PythonCodeAnalyzer/obj/Release/net5.0/PythonCodeAnalyzer.AssemblyInfo.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/PythonCodeAnalyzer/obj/Release/net5.0/PythonCodeAnalyzer.AssemblyInfoInputs.cache" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/PythonCodeAnalyzer/obj/Release/net5.0/PythonCodeAnalyzer.GeneratedMSBuildEditorConfig.editorconfig" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/PythonCodeAnalyzer/obj/Release/net5.0/PythonCodeAnalyzer.assets.cache" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/PythonCodeAnalyzer/obj/Release/net5.0/PythonCodeAnalyzer.csproj.CoreCompileInputs.cache" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/PythonCodeAnalyzer/obj/Release/net5.0/PythonCodeAnalyzer.csproj.FileListAbsolute.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/PythonCodeAnalyzer/obj/Release/net5.0/PythonCodeAnalyzer.csprojAssemblyReference.cache" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/PythonCodeAnalyzer/obj/Release/net5.0/PythonCodeAnalyzer.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/PythonCodeAnalyzer/obj/Release/net5.0/PythonCodeAnalyzer.genruntimeconfig.cache" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/PythonCodeAnalyzer/obj/Release/net5.0/PythonCodeAnalyzer.pdb" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/PythonCodeAnalyzer/obj/Release/net5.0/apphost.exe" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/PythonCodeAnalyzer/obj/Release/net5.0/ref/PythonCodeAnalyzer.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/PythonCodeAnalyzer/obj/project.assets.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/PythonCodeAnalyzer/obj/project.nuget.cache" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/PythonCodeAnalyzer/obj/project.packagespec.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/PythonCodeAnalyzer/obj/rider.project.restore.info" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/TestParser.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/TestPythonCodeAnalyzer.csproj" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/bin/Release/net5.0/Microsoft.TestPlatform.CommunicationUtilities.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/bin/Release/net5.0/Microsoft.TestPlatform.CoreUtilities.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/bin/Release/net5.0/Microsoft.TestPlatform.CrossPlatEngine.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/bin/Release/net5.0/Microsoft.TestPlatform.PlatformAbstractions.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/bin/Release/net5.0/Microsoft.TestPlatform.Utilities.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/bin/Release/net5.0/Microsoft.VisualStudio.CodeCoverage.Shim.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/bin/Release/net5.0/Microsoft.VisualStudio.TestPlatform.Common.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/bin/Release/net5.0/Microsoft.VisualStudio.TestPlatform.ObjectModel.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/bin/Release/net5.0/Newtonsoft.Json.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/bin/Release/net5.0/NuGet.Frameworks.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/bin/Release/net5.0/TestPythonCodeAnalyzer.deps.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/bin/Release/net5.0/TestPythonCodeAnalyzer.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/bin/Release/net5.0/TestPythonCodeAnalyzer.pdb" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/bin/Release/net5.0/TestPythonCodeAnalyzer.runtimeconfig.dev.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/bin/Release/net5.0/TestPythonCodeAnalyzer.runtimeconfig.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/bin/Release/net5.0/cs/Microsoft.TestPlatform.CommunicationUtilities.resources.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/bin/Release/net5.0/cs/Microsoft.TestPlatform.CoreUtilities.resources.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/bin/Release/net5.0/cs/Microsoft.TestPlatform.CrossPlatEngine.resources.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/bin/Release/net5.0/cs/Microsoft.VisualStudio.TestPlatform.Common.resources.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/bin/Release/net5.0/cs/Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/bin/Release/net5.0/de/Microsoft.TestPlatform.CommunicationUtilities.resources.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/bin/Release/net5.0/de/Microsoft.TestPlatform.CoreUtilities.resources.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/bin/Release/net5.0/de/Microsoft.TestPlatform.CrossPlatEngine.resources.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/bin/Release/net5.0/de/Microsoft.VisualStudio.TestPlatform.Common.resources.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/bin/Release/net5.0/de/Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/bin/Release/net5.0/es/Microsoft.TestPlatform.CommunicationUtilities.resources.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/bin/Release/net5.0/es/Microsoft.TestPlatform.CoreUtilities.resources.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/bin/Release/net5.0/es/Microsoft.TestPlatform.CrossPlatEngine.resources.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/bin/Release/net5.0/es/Microsoft.VisualStudio.TestPlatform.Common.resources.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/bin/Release/net5.0/es/Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/bin/Release/net5.0/fr/Microsoft.TestPlatform.CommunicationUtilities.resources.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/bin/Release/net5.0/fr/Microsoft.TestPlatform.CoreUtilities.resources.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/bin/Release/net5.0/fr/Microsoft.TestPlatform.CrossPlatEngine.resources.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/bin/Release/net5.0/fr/Microsoft.VisualStudio.TestPlatform.Common.resources.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/bin/Release/net5.0/fr/Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/bin/Release/net5.0/it/Microsoft.TestPlatform.CommunicationUtilities.resources.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/bin/Release/net5.0/it/Microsoft.TestPlatform.CoreUtilities.resources.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/bin/Release/net5.0/it/Microsoft.TestPlatform.CrossPlatEngine.resources.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/bin/Release/net5.0/it/Microsoft.VisualStudio.TestPlatform.Common.resources.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/bin/Release/net5.0/it/Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/bin/Release/net5.0/ja/Microsoft.TestPlatform.CommunicationUtilities.resources.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/bin/Release/net5.0/ja/Microsoft.TestPlatform.CoreUtilities.resources.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/bin/Release/net5.0/ja/Microsoft.TestPlatform.CrossPlatEngine.resources.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/bin/Release/net5.0/ja/Microsoft.VisualStudio.TestPlatform.Common.resources.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/bin/Release/net5.0/ja/Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/bin/Release/net5.0/ko/Microsoft.TestPlatform.CommunicationUtilities.resources.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/bin/Release/net5.0/ko/Microsoft.TestPlatform.CoreUtilities.resources.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/bin/Release/net5.0/ko/Microsoft.TestPlatform.CrossPlatEngine.resources.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/bin/Release/net5.0/ko/Microsoft.VisualStudio.TestPlatform.Common.resources.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/bin/Release/net5.0/ko/Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/bin/Release/net5.0/pl/Microsoft.TestPlatform.CommunicationUtilities.resources.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/bin/Release/net5.0/pl/Microsoft.TestPlatform.CoreUtilities.resources.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/bin/Release/net5.0/pl/Microsoft.TestPlatform.CrossPlatEngine.resources.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/bin/Release/net5.0/pl/Microsoft.VisualStudio.TestPlatform.Common.resources.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/bin/Release/net5.0/pl/Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/bin/Release/net5.0/pt-BR/Microsoft.TestPlatform.CommunicationUtilities.resources.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/bin/Release/net5.0/pt-BR/Microsoft.TestPlatform.CoreUtilities.resources.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/bin/Release/net5.0/pt-BR/Microsoft.TestPlatform.CrossPlatEngine.resources.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/bin/Release/net5.0/pt-BR/Microsoft.VisualStudio.TestPlatform.Common.resources.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/bin/Release/net5.0/pt-BR/Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/bin/Release/net5.0/ref/TestPythonCodeAnalyzer.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/bin/Release/net5.0/ru/Microsoft.TestPlatform.CommunicationUtilities.resources.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/bin/Release/net5.0/ru/Microsoft.TestPlatform.CoreUtilities.resources.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/bin/Release/net5.0/ru/Microsoft.TestPlatform.CrossPlatEngine.resources.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/bin/Release/net5.0/ru/Microsoft.VisualStudio.TestPlatform.Common.resources.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/bin/Release/net5.0/ru/Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/bin/Release/net5.0/testhost.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/bin/Release/net5.0/testhost.exe" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/bin/Release/net5.0/tr/Microsoft.TestPlatform.CommunicationUtilities.resources.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/bin/Release/net5.0/tr/Microsoft.TestPlatform.CoreUtilities.resources.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/bin/Release/net5.0/tr/Microsoft.TestPlatform.CrossPlatEngine.resources.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/bin/Release/net5.0/tr/Microsoft.VisualStudio.TestPlatform.Common.resources.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/bin/Release/net5.0/tr/Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/bin/Release/net5.0/xunit.abstractions.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/bin/Release/net5.0/xunit.assert.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/bin/Release/net5.0/xunit.core.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/bin/Release/net5.0/xunit.execution.dotnet.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/bin/Release/net5.0/xunit.runner.reporters.netcoreapp10.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/bin/Release/net5.0/xunit.runner.utility.netcoreapp10.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/bin/Release/net5.0/xunit.runner.visualstudio.dotnetcore.testadapter.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/bin/Release/net5.0/zh-Hans/Microsoft.TestPlatform.CommunicationUtilities.resources.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/bin/Release/net5.0/zh-Hans/Microsoft.TestPlatform.CoreUtilities.resources.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/bin/Release/net5.0/zh-Hans/Microsoft.TestPlatform.CrossPlatEngine.resources.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/bin/Release/net5.0/zh-Hans/Microsoft.VisualStudio.TestPlatform.Common.resources.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/bin/Release/net5.0/zh-Hans/Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/bin/Release/net5.0/zh-Hant/Microsoft.TestPlatform.CommunicationUtilities.resources.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/bin/Release/net5.0/zh-Hant/Microsoft.TestPlatform.CoreUtilities.resources.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/bin/Release/net5.0/zh-Hant/Microsoft.TestPlatform.CrossPlatEngine.resources.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/bin/Release/net5.0/zh-Hant/Microsoft.VisualStudio.TestPlatform.Common.resources.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/bin/Release/net5.0/zh-Hant/Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/obj/Release/net5.0/.NETCoreApp,Version=v5.0.AssemblyAttributes.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/obj/Release/net5.0/TestPythonCodeAnalyzer.AssemblyInfo.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/obj/Release/net5.0/TestPythonCodeAnalyzer.AssemblyInfoInputs.cache" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/obj/Release/net5.0/TestPythonCodeAnalyzer.GeneratedMSBuildEditorConfig.editorconfig" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/obj/Release/net5.0/TestPythonCodeAnalyzer.assets.cache" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/obj/Release/net5.0/TestPythonCodeAnalyzer.csproj.CopyComplete" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/obj/Release/net5.0/TestPythonCodeAnalyzer.csproj.CoreCompileInputs.cache" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/obj/Release/net5.0/TestPythonCodeAnalyzer.csproj.FileListAbsolute.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/obj/Release/net5.0/TestPythonCodeAnalyzer.csprojAssemblyReference.cache" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/obj/Release/net5.0/TestPythonCodeAnalyzer.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/obj/Release/net5.0/TestPythonCodeAnalyzer.genruntimeconfig.cache" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/obj/Release/net5.0/TestPythonCodeAnalyzer.pdb" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/obj/Release/net5.0/ref/TestPythonCodeAnalyzer.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/obj/TestPythonCodeAnalyzer.csproj.nuget.dgspec.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/obj/TestPythonCodeAnalyzer.csproj.nuget.g.props" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/obj/TestPythonCodeAnalyzer.csproj.nuget.g.targets" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/obj/project.assets.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/obj/project.nuget.cache" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/obj/project.packagespec.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/obj/rider.project.restore.info" afterDir="false" />
+    <list default="true" id="949b8773-a72b-465f-ac85-8ff5c38ccc94" name="Default Changelist" comment="Initial version">
+      <change afterPath="$PROJECT_DIR$/PythonCodeAnalyzer/Parser/Ast/Expression/NoneExpression.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.PythonCodeAnalyzer/.idea/contentModel.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.PythonCodeAnalyzer/.idea/contentModel.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.PythonCodeAnalyzer/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.PythonCodeAnalyzer/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PythonCodeAnalyzer/Parser/Ast/Expression/RelationExpression.cs" beforeDir="false" afterPath="$PROJECT_DIR$/PythonCodeAnalyzer/Parser/Ast/Expression/RelationExpression.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PythonCodeAnalyzer/Parser/Token.cs" beforeDir="false" afterPath="$PROJECT_DIR$/PythonCodeAnalyzer/Parser/Token.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PythonCodeAnalyzer/bin/Release/net5.0/PythonCodeAnalyzer.dll" beforeDir="false" afterPath="$PROJECT_DIR$/PythonCodeAnalyzer/bin/Release/net5.0/PythonCodeAnalyzer.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PythonCodeAnalyzer/bin/Release/net5.0/PythonCodeAnalyzer.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/PythonCodeAnalyzer/bin/Release/net5.0/PythonCodeAnalyzer.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PythonCodeAnalyzer/bin/Release/net5.0/ref/PythonCodeAnalyzer.dll" beforeDir="false" afterPath="$PROJECT_DIR$/PythonCodeAnalyzer/bin/Release/net5.0/ref/PythonCodeAnalyzer.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PythonCodeAnalyzer/obj/Release/net5.0/PythonCodeAnalyzer.csproj.CoreCompileInputs.cache" beforeDir="false" afterPath="$PROJECT_DIR$/PythonCodeAnalyzer/obj/Release/net5.0/PythonCodeAnalyzer.csproj.CoreCompileInputs.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PythonCodeAnalyzer/obj/Release/net5.0/PythonCodeAnalyzer.dll" beforeDir="false" afterPath="$PROJECT_DIR$/PythonCodeAnalyzer/obj/Release/net5.0/PythonCodeAnalyzer.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PythonCodeAnalyzer/obj/Release/net5.0/PythonCodeAnalyzer.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/PythonCodeAnalyzer/obj/Release/net5.0/PythonCodeAnalyzer.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PythonCodeAnalyzer/obj/Release/net5.0/ref/PythonCodeAnalyzer.dll" beforeDir="false" afterPath="$PROJECT_DIR$/PythonCodeAnalyzer/obj/Release/net5.0/ref/PythonCodeAnalyzer.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestPythonCodeAnalyzer/TestAstNodes.cs" beforeDir="false" afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/TestAstNodes.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestPythonCodeAnalyzer/bin/Release/net5.0/TestPythonCodeAnalyzer.deps.json" beforeDir="false" afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/bin/Release/net5.0/TestPythonCodeAnalyzer.deps.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestPythonCodeAnalyzer/bin/Release/net5.0/TestPythonCodeAnalyzer.dll" beforeDir="false" afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/bin/Release/net5.0/TestPythonCodeAnalyzer.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestPythonCodeAnalyzer/bin/Release/net5.0/TestPythonCodeAnalyzer.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/bin/Release/net5.0/TestPythonCodeAnalyzer.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestPythonCodeAnalyzer/bin/Release/net5.0/ref/TestPythonCodeAnalyzer.dll" beforeDir="false" afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/bin/Release/net5.0/ref/TestPythonCodeAnalyzer.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestPythonCodeAnalyzer/obj/Release/net5.0/TestPythonCodeAnalyzer.csproj.CoreCompileInputs.cache" beforeDir="false" afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/obj/Release/net5.0/TestPythonCodeAnalyzer.csproj.CoreCompileInputs.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestPythonCodeAnalyzer/obj/Release/net5.0/TestPythonCodeAnalyzer.csproj.FileListAbsolute.txt" beforeDir="false" afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/obj/Release/net5.0/TestPythonCodeAnalyzer.csproj.FileListAbsolute.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestPythonCodeAnalyzer/obj/Release/net5.0/TestPythonCodeAnalyzer.csprojAssemblyReference.cache" beforeDir="false" afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/obj/Release/net5.0/TestPythonCodeAnalyzer.csprojAssemblyReference.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestPythonCodeAnalyzer/obj/Release/net5.0/TestPythonCodeAnalyzer.dll" beforeDir="false" afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/obj/Release/net5.0/TestPythonCodeAnalyzer.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestPythonCodeAnalyzer/obj/Release/net5.0/TestPythonCodeAnalyzer.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/obj/Release/net5.0/TestPythonCodeAnalyzer.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestPythonCodeAnalyzer/obj/Release/net5.0/ref/TestPythonCodeAnalyzer.dll" beforeDir="false" afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/obj/Release/net5.0/ref/TestPythonCodeAnalyzer.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestPythonCodeAnalyzer/obj/TestPythonCodeAnalyzer.csproj.nuget.dgspec.json" beforeDir="false" afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/obj/TestPythonCodeAnalyzer.csproj.nuget.dgspec.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestPythonCodeAnalyzer/obj/project.assets.json" beforeDir="false" afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/obj/project.assets.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestPythonCodeAnalyzer/obj/project.nuget.cache" beforeDir="false" afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/obj/project.nuget.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestPythonCodeAnalyzer/obj/project.packagespec.json" beforeDir="false" afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/obj/project.packagespec.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestPythonCodeAnalyzer/obj/rider.project.restore.info" beforeDir="false" afterPath="$PROJECT_DIR$/TestPythonCodeAnalyzer/obj/rider.project.restore.info" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -198,19 +50,23 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/PythonCodeAnalyzer/Parser/Token.cs" />
         <option value="$PROJECT_DIR$/PythonCodeAnalyzer/Parser/Ast/ExpressionNode.cs" />
-        <option value="$PROJECT_DIR$/PythonCodeAnalyzer/Parser/Ast/Node.cs" />
-        <option value="$PROJECT_DIR$/PythonCodeAnalyzer/Parser/Ast/Expression/RelationExpression.cs" />
         <option value="$PROJECT_DIR$/PythonCodeAnalyzer/Parser/Ast/StatementNode.cs" />
         <option value="$PROJECT_DIR$/PythonCodeAnalyzer/Program.cs" />
         <option value="$PROJECT_DIR$/TestPythonCodeAnalyzer/UnitTest1.cs" />
         <option value="$PROJECT_DIR$/TestPythonCodeAnalyzer/TestParser.cs" />
+        <option value="$PROJECT_DIR$/PythonCodeAnalyzer/Parser/Ast/Node.cs" />
+        <option value="$PROJECT_DIR$/PythonCodeAnalyzer/Parser/Ast/Expression/NoneExpression.cs" />
+        <option value="$PROJECT_DIR$/PythonCodeAnalyzer/Parser/Ast/Expression/RelationExpression.cs" />
+        <option value="$PROJECT_DIR$/PythonCodeAnalyzer/Parser/Token.cs" />
+        <option value="$PROJECT_DIR$/TestPythonCodeAnalyzer/TestAstNodes.cs" />
       </list>
     </option>
   </component>
   <component name="ProjectId" id="1iE3jcNBtAyYAS4hsaZLOOTrXXg" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -222,7 +78,7 @@
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
-  <component name="RunManager" selected=".NET Project.PythonCodeAnalyzer">
+  <component name="RunManager" selected=".NET Project.TestPythonCodeAnalyzer">
     <configuration name="PythonCodeAnalyzer" type="DotNetProject" factoryName=".NET Project">
       <option name="EXE_PATH" value="" />
       <option name="PROGRAM_PARAMETERS" value="" />
@@ -270,6 +126,13 @@
       <updated>1601459061182</updated>
       <workItem from="1601459070373" duration="3453000" />
     </task>
+    <task id="LOCAL−00001" summary="Initial version">
+      <created>1601465236422</created>
+      <option name="number" value="LOCAL−00001" />
+      <option name="presentableId" value="LOCAL−00001" />
+      <updated>1601465236422</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -279,6 +142,8 @@
   <component name="UnityUnitTestConfiguration" currentTestLauncher="NUnit" />
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
+    <MESSAGE value="Initial version" />
+    <option name="LAST_COMMIT_MESSAGE" value="Initial version" />
   </component>
   <component name="WindowStateProjectService">
     <state width="1380" height="219" key="GridCell.Tab.0.bottom" timestamp="1601461806513">
