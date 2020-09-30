@@ -7,7 +7,8 @@ namespace PythonCodeAnalyzer.Parser.Ast
 
         protected Node(uint start, uint end)
         {
-            
+            Start = start;
+            End = end;
         }
     }
 }
