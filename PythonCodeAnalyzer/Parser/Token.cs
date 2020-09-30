@@ -19,7 +19,9 @@ namespace PythonCodeAnalyzer.Parser
             PyMinus,
             PyColonAssign,
             PyIf,
-            PyElse
+            PyElse,
+            PyLambda, 
+            PyColon
             
         }  
         

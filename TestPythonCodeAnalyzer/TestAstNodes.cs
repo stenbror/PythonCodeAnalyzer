@@ -42,6 +42,28 @@ namespace TestPythonCodeAnalyzer
             Assert.True(test is ConditionalExpression);
         }
         
+        [Fact]
+        public void TestLambdaExpr()
+        {
+            var test = new PythonCodeAnalyzer.Parser.Ast.Expression.LambdaExpression(
+                0, 
+                23,
+                true,
+                new Token(5, 7, Token.TokenKind.PyLambda),
+                new NoneExpression(8, 12, new Token(8, 12, Token.TokenKind.PyNone)),
+                new Token(14, 18, Token.TokenKind.PyColon),
+                new NoneExpression(19, 23, new Token(19, 23, Token.TokenKind.PyNone)));
+            
+            Assert.Equal(0UL, test.Start);
+            Assert.Equal(23UL, test.End);
+            Assert.True(test.IsConditional);
+            Assert.True(test.Operator1.Kind == Token.TokenKind.PyLambda);
+            Assert.True(test.Left is NoneExpression);
+            Assert.True(test.Operator2.Kind == Token.TokenKind.PyColon);
+            Assert.True(test.Right is NoneExpression);
+            Assert.True(test is LambdaExpression);
+        }
+        
         
         
         
