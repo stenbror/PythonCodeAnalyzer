@@ -64,6 +64,47 @@ namespace TestPythonCodeAnalyzer
             Assert.True(test is LambdaExpression);
         }
         
+        [Fact]
+        public void TestOrTest()
+        {
+            var test = new PythonCodeAnalyzer.Parser.Ast.Expression.OrTestExpression(0, 12,
+                new NoneExpression(0, 4, new Token(0, 4, Token.TokenKind.PyNone)), new Token(5, 7, Token.TokenKind.PyOr), new NoneExpression(8, 12, new Token(8, 12, Token.TokenKind.PyNone)));
+            
+            Assert.Equal(0UL, test.Start);
+            Assert.Equal(12UL, test.End);
+            Assert.True(test.Left is NoneExpression);
+            Assert.True(test.Operator.Kind == Token.TokenKind.PyOr);
+            Assert.True(test.Right is NoneExpression);
+            Assert.True(test is OrTestExpression);
+        }
+        
+        [Fact]
+        public void TestAndTest()
+        {
+            var test = new PythonCodeAnalyzer.Parser.Ast.Expression.AndTestExpression(0, 13,
+                new NoneExpression(0, 4, new Token(0, 4, Token.TokenKind.PyNone)), new Token(5, 8 , Token.TokenKind.PyAnd), new NoneExpression(9, 13, new Token(9, 13, Token.TokenKind.PyNone)));
+            
+            Assert.Equal(0UL, test.Start);
+            Assert.Equal(13UL, test.End);
+            Assert.True(test.Left is NoneExpression);
+            Assert.True(test.Operator.Kind == Token.TokenKind.PyAnd);
+            Assert.True(test.Right is NoneExpression);
+            Assert.True(test is AndTestExpression);
+        }
+        
+        [Fact]
+        public void TestNotTest()
+        {
+            var test = new PythonCodeAnalyzer.Parser.Ast.Expression.NotTestExpression(0, 13,
+                new Token(5, 8 , Token.TokenKind.PyNot), new NoneExpression(9, 13, new Token(9, 13, Token.TokenKind.PyNone)));
+            
+            Assert.Equal(0UL, test.Start);
+            Assert.Equal(13UL, test.End);
+            Assert.True(test.Operator.Kind == Token.TokenKind.PyNot);
+            Assert.True(test.Right is NoneExpression);
+            Assert.True(test is NotTestExpression);
+        }
+        
         
         
         

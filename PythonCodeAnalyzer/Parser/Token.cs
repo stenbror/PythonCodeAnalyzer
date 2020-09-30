@@ -21,8 +21,10 @@ namespace PythonCodeAnalyzer.Parser
             PyIf,
             PyElse,
             PyLambda, 
-            PyColon
-            
+            PyColon,
+            PyOr,
+            PyAnd
+
         }  
         
         public TokenKind Kind { get; set; }
