@@ -13,7 +13,8 @@ namespace PythonCodeAnalyzer.Parser
             PyNotEqual,
             PyIn,
             PyNot,
-            PyIs
+            PyIs,
+            PyNone
             
         }  
         

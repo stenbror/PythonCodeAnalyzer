@@ -1,10 +1,12 @@
 namespace PythonCodeAnalyzer.Parser.Ast.Expression
 {
-    public class NoneExpression : ExpressionNode
+    public partial class NoneExpression : ExpressionNode
     {
-        public NoneExpression(uint start, uint end) : base(start, end)
+        public Token Operator { get; set; }
+        
+        public NoneExpression(uint start, uint end, Token op) : base(start, end)
         {
-          
+            Operator = op;
         }
     }
 }
