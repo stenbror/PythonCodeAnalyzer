@@ -413,5 +413,47 @@ namespace TestPythonCodeAnalyzer
             Assert.True(test.Right is NoneExpression);
             Assert.Equal(TermExpression.OperatorKind.FloorDiv, test.TermOperator);
         }
+        
+        [Fact]
+        public void TestFactorUnaryPlus()
+        {
+            var test = new PythonCodeAnalyzer.Parser.Ast.Expression.FactorExpression(0, 11,
+                FactorExpression.FactorOperatorKind.UnaryPlus, new Token(5, 6, Token.TokenKind.PyPlus), new NoneExpression(7, 11, new Token(7, 11, Token.TokenKind.PyNone)));
+            
+            Assert.Equal(0UL, test.Start);
+            Assert.Equal(11UL, test.End);
+            Assert.True(test.Operator.Kind == Token.TokenKind.PyPlus);
+            Assert.True(test.Right is NoneExpression);
+            Assert.Equal(FactorExpression.FactorOperatorKind.UnaryPlus, test.FactorOperator);
+        }
+        
+        [Fact]
+        public void TestFactorUnaryMinus()
+        {
+            var test = new PythonCodeAnalyzer.Parser.Ast.Expression.FactorExpression(0, 11,
+                FactorExpression.FactorOperatorKind.UnaryMinus, new Token(5, 6, Token.TokenKind.PyMinus), new NoneExpression(7, 11, new Token(7, 11, Token.TokenKind.PyNone)));
+            
+            Assert.Equal(0UL, test.Start);
+            Assert.Equal(11UL, test.End);
+            Assert.True(test.Operator.Kind == Token.TokenKind.PyMinus);
+            Assert.True(test.Right is NoneExpression);
+            Assert.Equal(FactorExpression.FactorOperatorKind.UnaryMinus, test.FactorOperator);
+        }
+        
+        [Fact]
+        public void TestFactorUnaryInvert()
+        {
+            var test = new PythonCodeAnalyzer.Parser.Ast.Expression.FactorExpression(0, 11,
+                FactorExpression.FactorOperatorKind.UnaryInvert, new Token(5, 6, Token.TokenKind.PyInvert), new NoneExpression(7, 11, new Token(7, 11, Token.TokenKind.PyNone)));
+            
+            Assert.Equal(0UL, test.Start);
+            Assert.Equal(11UL, test.End);
+            Assert.True(test.Operator.Kind == Token.TokenKind.PyInvert);
+            Assert.True(test.Right is NoneExpression);
+            Assert.Equal(FactorExpression.FactorOperatorKind.UnaryInvert, test.FactorOperator);
+        }
+        
+        
+        
     }
 }

@@ -31,7 +31,8 @@ namespace PythonCodeAnalyzer.Parser
             PyModulo,
             PyMatrice,
             PyDiv,
-            PyFloorDiv
+            PyFloorDiv,
+            PyInvert
 
         }  
         
