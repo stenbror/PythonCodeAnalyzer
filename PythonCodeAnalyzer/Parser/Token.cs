@@ -37,7 +37,10 @@ namespace PythonCodeAnalyzer.Parser
             PyAwait,
             Name,
             Number,
-            String
+            String,
+            PyElipsis,
+            PyTrue,
+            PyFalse
 
         }  
         
