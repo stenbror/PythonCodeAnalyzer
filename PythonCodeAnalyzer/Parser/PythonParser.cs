@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Security.Principal;
 using PythonCodeAnalyzer.Parser.Ast;
 using PythonCodeAnalyzer.Parser.Ast.Expression;
 
@@ -61,9 +62,38 @@ namespace PythonCodeAnalyzer.Parser
                     Tokenizer.Advance();
                     return new FalseLiteralExpression(startPos, Tokenizer.Position, unit); 
                 }
+                case Token.TokenKind.PyLeftParen:
+                case Token.TokenKind.PyLeftBracket:
+                case Token.TokenKind.PyLeftCurly:
+                    throw new NotImplementedException();            
                 default:
                     throw new SyntaxErrorException(startPos, Tokenizer.CurSymbol, "Illegal literal!");
             }
         }
+
+        public ExpressionNode ParseAtomExpression()
+        {
+            var startPos = Tokenizer.Position;
+            Token awaitOp = null;
+            if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyAwait)
+            {
+                awaitOp = Tokenizer.CurSymbol;
+                Tokenizer.Advance();
+            }
+            var res = ParseAtom();
+            if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyLeftParen ||
+                Tokenizer.CurSymbol.Kind == Token.TokenKind.PyLeftBracket || Tokenizer.CurSymbol.Kind == Token.TokenKind.PyDot)
+            {
+                // Handle Trailer later!
+                return new AtomExpression(startPos, Tokenizer.Position, awaitOp != null, awaitOp, res, null);
+            }
+            if (awaitOp != null)
+            {
+                return new AtomExpression(startPos, Tokenizer.Position, true, awaitOp, res, null);
+            }
+            return res;
+        }
+        
+        
     }
 }

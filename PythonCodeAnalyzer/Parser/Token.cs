@@ -41,6 +41,13 @@ namespace PythonCodeAnalyzer.Parser
             PyElipsis,
             PyTrue,
             PyFalse,
+            PyLeftParen,
+            PyRightParen,
+            PyLeftBracket,
+            PyRightBracket,
+            PyLeftCurly,
+            PyRightCurly,
+            PyDot,
             
             EOF
 
