@@ -40,7 +40,9 @@ namespace PythonCodeAnalyzer.Parser
             String,
             PyElipsis,
             PyTrue,
-            PyFalse
+            PyFalse,
+            
+            EOF
 
         }  
         
