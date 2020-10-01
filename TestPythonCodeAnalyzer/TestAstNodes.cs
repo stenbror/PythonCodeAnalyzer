@@ -453,6 +453,20 @@ namespace TestPythonCodeAnalyzer
             Assert.Equal(FactorExpression.FactorOperatorKind.UnaryInvert, test.FactorOperator);
         }
         
+        [Fact]
+        public void TestPower()
+        {
+            var test = new PythonCodeAnalyzer.Parser.Ast.Expression.PowerExpression(0, 11,
+                new NoneExpression(0, 4, new Token(0, 4, Token.TokenKind.PyNone)), new Token(5, 6, Token.TokenKind.PyPower), new NoneExpression(7, 11, new Token(7, 11, Token.TokenKind.PyNone)));
+            
+            Assert.Equal(0UL, test.Start);
+            Assert.Equal(11UL, test.End);
+            Assert.True(test.Left is NoneExpression);
+            Assert.True(test.Operator.Kind == Token.TokenKind.PyPower);
+            Assert.True(test.Right is NoneExpression);
+            Assert.True(test is PowerExpression);
+        }
+        
         
         
     }
