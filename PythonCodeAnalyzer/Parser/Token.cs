@@ -33,7 +33,11 @@ namespace PythonCodeAnalyzer.Parser
             PyDiv,
             PyFloorDiv,
             PyInvert,
-            PyPower
+            PyPower,
+            PyAwait,
+            Name,
+            Number,
+            String
 
         }  
         

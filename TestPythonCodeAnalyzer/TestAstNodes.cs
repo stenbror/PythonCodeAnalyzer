@@ -1,4 +1,5 @@
 using PythonCodeAnalyzer.Parser;
+using PythonCodeAnalyzer.Parser.Ast;
 using PythonCodeAnalyzer.Parser.Ast.Expression;
 using Xunit;
 
@@ -467,7 +468,51 @@ namespace TestPythonCodeAnalyzer
             Assert.True(test is PowerExpression);
         }
         
+        [Fact]
+        public void TestAtomExprWithAwait()
+        {
+            var test = new PythonCodeAnalyzer.Parser.Ast.Expression.AtomExpression(0, 11, true,
+                 new Token(5, 6, Token.TokenKind.PyAwait), 
+                 new NoneExpression(7, 11, new Token(7, 11, Token.TokenKind.PyNone)),
+                 null);
+            
+            Assert.Equal(0UL, test.Start);
+            Assert.Equal(11UL, test.End);
+            Assert.True(test.IsAwait);
+            Assert.True(test.Operator.Kind == Token.TokenKind.PyAwait);
+            Assert.True(test.Right is NoneExpression);
+            Assert.True(test.TrailerCollection is null);
+            Assert.True(test is AtomExpression);
+        }
+
+        [Fact]
+        public void TestAtomExprWithAwaitAndTrailers()
+        {
+            var test = new PythonCodeAnalyzer.Parser.Ast.Expression.AtomExpression(0, 11, true,
+                new Token(5, 6, Token.TokenKind.PyAwait),
+                new NoneExpression(7, 11, new Token(7, 11, Token.TokenKind.PyNone)),
+                new NoneExpression(7, 11, new Token(7, 11, Token.TokenKind.PyNone)));
+
+            Assert.Equal(0UL, test.Start);
+                Assert.Equal(11UL, test.End);
+                Assert.True(test.IsAwait);
+                Assert.True(test.Operator.Kind == Token.TokenKind.PyAwait);
+                Assert.True(test.Right is NoneExpression);
+                Assert.True(test.TrailerCollection is NoneExpression);
+                Assert.True(test is AtomExpression);
+        }
         
+        [Fact]
+        public void TestNameLiteral()
+        {
+            var test = new PythonCodeAnalyzer.Parser.Ast.Expression.NameLiteralExpression(0, 11, 
+                new Token(5, 6, Token.TokenKind.Name));
+
+            Assert.Equal(0UL, test.Start);
+            Assert.Equal(11UL, test.End);
+            Assert.True(test.Name.Kind == Token.TokenKind.Name);
+            Assert.True(test is NameLiteralExpression);
+        }
         
     }
 }
