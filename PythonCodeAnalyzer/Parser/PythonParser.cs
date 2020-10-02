@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq.Expressions;
-using System.Security.Principal;
 using PythonCodeAnalyzer.Parser.Ast;
 using PythonCodeAnalyzer.Parser.Ast.Expression;
 
@@ -319,7 +317,113 @@ namespace PythonCodeAnalyzer.Parser
         
         public ExpressionNode ParseComparison()
         {
-            throw new NotImplementedException();
+            var startPos = Tokenizer.Position;
+            var res = ParseOrExpr();
+            while (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyLess ||
+                   Tokenizer.CurSymbol.Kind == Token.TokenKind.PyLessEqual ||
+                   Tokenizer.CurSymbol.Kind == Token.TokenKind.PyEqual ||
+                   Tokenizer.CurSymbol.Kind == Token.TokenKind.PyGreaterEqual ||
+                   Tokenizer.CurSymbol.Kind == Token.TokenKind.PyGreater ||
+                   Tokenizer.CurSymbol.Kind == Token.TokenKind.PyNotEqual ||
+                   Tokenizer.CurSymbol.Kind == Token.TokenKind.PyNot ||
+                   Tokenizer.CurSymbol.Kind == Token.TokenKind.PyIn ||
+                   Tokenizer.CurSymbol.Kind == Token.TokenKind.PyIs)
+            {
+                switch (Tokenizer.CurSymbol.Kind)
+                {
+                    case Token.TokenKind.PyLess:
+                        {
+                            var op = Tokenizer.CurSymbol;
+                            Tokenizer.Advance();
+                            var right = ParseOrExpr();
+                            res = new RelationExpression(startPos, Tokenizer.Position, RelationExpression.Relation.Less , res, op, null, right);
+                        }
+                        break;
+                    case Token.TokenKind.PyLessEqual:
+                        {
+                            var op = Tokenizer.CurSymbol;
+                            Tokenizer.Advance();
+                            var right = ParseOrExpr();
+                            res = new RelationExpression(startPos, Tokenizer.Position, RelationExpression.Relation.LessEqual , res, op, null, right);
+                        }
+                        break;
+                    case Token.TokenKind.PyEqual:
+                        {
+                            var op = Tokenizer.CurSymbol;
+                            Tokenizer.Advance();
+                            var right = ParseOrExpr();
+                            res = new RelationExpression(startPos, Tokenizer.Position, RelationExpression.Relation.Equal , res, op, null, right);
+                        }
+                        break;
+                    case Token.TokenKind.PyGreaterEqual:
+                        {
+                            var op = Tokenizer.CurSymbol;
+                            Tokenizer.Advance();
+                            var right = ParseOrExpr();
+                            res = new RelationExpression(startPos, Tokenizer.Position, RelationExpression.Relation.GreaterEqual , res, op, null, right);
+                        }
+                        break;
+                    case Token.TokenKind.PyGreater:
+                        {
+                            var op = Tokenizer.CurSymbol;
+                            Tokenizer.Advance();
+                            var right = ParseOrExpr();
+                            res = new RelationExpression(startPos, Tokenizer.Position, RelationExpression.Relation.Greater , res, op, null, right);
+                        }
+                        break;
+                    case Token.TokenKind.PyNotEqual:
+                        {
+                            var op = Tokenizer.CurSymbol;
+                            Tokenizer.Advance();
+                            var right = ParseOrExpr();
+                            res = new RelationExpression(startPos, Tokenizer.Position, RelationExpression.Relation.NotEqual , res, op, null, right);
+                        }
+                        break;
+                    case Token.TokenKind.PyIn:
+                        {
+                            var op = Tokenizer.CurSymbol;
+                            Tokenizer.Advance();
+                            var right = ParseOrExpr();
+                            res = new RelationExpression(startPos, Tokenizer.Position, RelationExpression.Relation.In , res, op, null, right);
+                        }
+                        break;
+                    case Token.TokenKind.PyIs:
+                        {
+                            var op = Tokenizer.CurSymbol;
+                            Tokenizer.Advance();
+                            if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyNot)
+                            {
+                                var op2 = Tokenizer.CurSymbol;
+                                Tokenizer.Advance();
+                                var right = ParseOrExpr();
+                                res = new RelationExpression(startPos, Tokenizer.Position, RelationExpression.Relation.IsNot , res, op, op2, right);
+                            }
+                            else
+                            {
+                                var right = ParseOrExpr();
+                                res = new RelationExpression(startPos, Tokenizer.Position, RelationExpression.Relation.Less , res, op, null, right);
+                            }
+                        }
+                        break;
+                    case Token.TokenKind.PyNot:
+                        {
+                            var op = Tokenizer.CurSymbol;
+                            Tokenizer.Advance();
+                            if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyIn)
+                            {
+                                var right = ParseOrExpr();
+                                res = new RelationExpression(startPos, Tokenizer.Position, RelationExpression.Relation.NotIn , res, op, null, right);
+                            }
+                            else
+                            {
+                                throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol, "Expecting 'not' 'in' , but missing 'in' in relation expression!");
+                            }
+                            
+                        }
+                        break;
+                }
+            }
+            return res;
         }
         
         public ExpressionNode ParseNotTest()
@@ -328,6 +432,11 @@ namespace PythonCodeAnalyzer.Parser
         }
         
         public ExpressionNode ParseAndTest()
+        {
+            throw new NotImplementedException();
+        }
+        
+        public ExpressionNode ParseOrTest()
         {
             throw new NotImplementedException();
         }
