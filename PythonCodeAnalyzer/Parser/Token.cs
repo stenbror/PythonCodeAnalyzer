@@ -48,7 +48,7 @@ namespace PythonCodeAnalyzer.Parser
             PyLeftCurly,
             PyRightCurly,
             PyDot,
-            
+
             EOF
 
         }  

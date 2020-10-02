@@ -147,37 +147,174 @@ namespace PythonCodeAnalyzer.Parser
         
         public ExpressionNode ParseTerm()
         {
-            throw new NotImplementedException();
+            var startPos = Tokenizer.Position;
+            var res = ParseFactor();
+            while (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyMul ||
+                   Tokenizer.CurSymbol.Kind == Token.TokenKind.PyDiv ||
+                   Tokenizer.CurSymbol.Kind == Token.TokenKind.PyFloorDiv ||
+                   Tokenizer.CurSymbol.Kind == Token.TokenKind.PyModulo ||
+                   Tokenizer.CurSymbol.Kind == Token.TokenKind.PyMatrice)
+            {
+                switch (Tokenizer.CurSymbol.Kind)
+                {
+                    case Token.TokenKind.PyMul:
+                        {
+                            var op = Tokenizer.CurSymbol;
+                            Tokenizer.Advance();
+                            var right = ParseFactor();
+                            res = new TermExpression(startPos, Tokenizer.Position, TermExpression.OperatorKind.Mul, res, op, right);
+                        }
+                        break;
+                    case Token.TokenKind.PyDiv:
+                        {
+                            var op = Tokenizer.CurSymbol;
+                            Tokenizer.Advance();
+                            var right = ParseFactor();
+                            res = new TermExpression(startPos, Tokenizer.Position, TermExpression.OperatorKind.Div, res, op, right);
+                        }
+                        break;
+                    case Token.TokenKind.PyFloorDiv:
+                        {
+                            var op = Tokenizer.CurSymbol;
+                            Tokenizer.Advance();
+                            var right = ParseFactor();
+                            res = new TermExpression(startPos, Tokenizer.Position, TermExpression.OperatorKind.FloorDiv, res, op, right);
+                        }
+                        break;
+                    case Token.TokenKind.PyModulo:
+                        {
+                            var op = Tokenizer.CurSymbol;
+                            Tokenizer.Advance();
+                            var right = ParseFactor();
+                            res = new TermExpression(startPos, Tokenizer.Position, TermExpression.OperatorKind.Modulo, res, op, right);
+                        }
+                        break;
+                    case Token.TokenKind.PyMatrice:
+                        {
+                            var op = Tokenizer.CurSymbol;
+                            Tokenizer.Advance();
+                            var right = ParseFactor();
+                            res = new TermExpression(startPos, Tokenizer.Position, TermExpression.OperatorKind.Matrice, res, op, right);
+                        }
+                        break;
+                }
+            }
+            return res;
         }
         
         public ExpressionNode ParseArithExpr()
         {
-            throw new NotImplementedException();
+            var startPos = Tokenizer.Position;
+            var res = ParseTerm();
+            while (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyPlus ||
+                   Tokenizer.CurSymbol.Kind == Token.TokenKind.PyMinus )
+            {
+                switch (Tokenizer.CurSymbol.Kind)
+                {
+                    case Token.TokenKind.PyPlus:
+                        {
+                            var op = Tokenizer.CurSymbol;
+                            Tokenizer.Advance();
+                            var right = ParseTerm();
+                            res = new ArithExpression(startPos, Tokenizer.Position, ArithExpression.ArithOperatorKind.Plus, res, op, right);
+                        }
+                        break;
+                    case Token.TokenKind.PyMinus:
+                        {
+                            var op = Tokenizer.CurSymbol;
+                            Tokenizer.Advance();
+                            var right = ParseTerm();
+                            res = new ArithExpression(startPos, Tokenizer.Position, ArithExpression.ArithOperatorKind.Minus, res, op, right);
+                        }
+                        break;
+                }
+            }
+            return res;
         }
         
         public ExpressionNode ParseShiftExpr()
         {
-            throw new NotImplementedException();
+            var startPos = Tokenizer.Position;
+            var res = ParseArithExpr();
+            while (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyShiftLeft ||
+                   Tokenizer.CurSymbol.Kind == Token.TokenKind.PyShiftRight )
+            {
+                switch (Tokenizer.CurSymbol.Kind)
+                {
+                    case Token.TokenKind.PyShiftLeft:
+                    {
+                        var op = Tokenizer.CurSymbol;
+                        Tokenizer.Advance();
+                        var right = ParseArithExpr();
+                        res = new ArithExpression(startPos, Tokenizer.Position, ArithExpression.ArithOperatorKind.Plus, res, op, right);
+                    }
+                        break;
+                    case Token.TokenKind.PyShiftRight:
+                    {
+                        var op = Tokenizer.CurSymbol;
+                        Tokenizer.Advance();
+                        var right = ParseArithExpr();
+                        res = new ArithExpression(startPos, Tokenizer.Position, ArithExpression.ArithOperatorKind.Minus, res, op, right);
+                    }
+                        break;
+                }
+            }
+            return res;
         }
         
         public ExpressionNode ParseAndExpr()
         {
-            throw new NotImplementedException();
+            var startPos = Tokenizer.Position;
+            var res = ParseShiftExpr();
+            while (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyAnd) // '&'
+            {
+                var op = Tokenizer.CurSymbol;
+                Tokenizer.Advance();
+                var right = ParseShiftExpr();
+                res = new AndExpression(startPos, Tokenizer.Position, res, op, right);
+            }
+            return res;
         }
         
         public ExpressionNode ParseXorExpr()
         {
-            throw new NotImplementedException();
+            var startPos = Tokenizer.Position;
+            var res = ParseAndExpr();
+            while (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyXor) // '^'
+            {
+                var op = Tokenizer.CurSymbol;
+                Tokenizer.Advance();
+                var right = ParseAndExpr();
+                res = new XorExpression(startPos, Tokenizer.Position, res, op, right);
+            }
+            return res;
         }
         
         public ExpressionNode ParseOrExpr()
         {
-            throw new NotImplementedException();
+            var startPos = Tokenizer.Position;
+            var res = ParseXorExpr();
+            while (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyOr) // '|'
+            {
+                var op = Tokenizer.CurSymbol;
+                Tokenizer.Advance();
+                var right = ParseXorExpr();
+                res = new OrExpression(startPos, Tokenizer.Position, res, op, right);
+            }
+            return res;
         }
         
         public ExpressionNode ParseStarExpr()
         {
-            throw new NotImplementedException();
+            var startPos = Tokenizer.Position;
+            if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyMul)
+            {
+                var op = Tokenizer.CurSymbol;
+                Tokenizer.Advance();
+                var right = ParseOrExpr();
+                return new StarExpression(startPos, Tokenizer.Position, op, right);
+            }
+            throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol, "Expecting '*' in star expression!");
         }
         
         public ExpressionNode ParseComparison()
