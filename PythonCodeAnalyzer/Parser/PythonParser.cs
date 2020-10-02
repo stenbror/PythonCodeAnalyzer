@@ -4,7 +4,6 @@ using System.Linq.Expressions;
 using System.Security.Principal;
 using PythonCodeAnalyzer.Parser.Ast;
 using PythonCodeAnalyzer.Parser.Ast.Expression;
-using UnaryExpression = PythonCodeAnalyzer.Parser.Ast.Expression.UnaryExpression;
 
 namespace PythonCodeAnalyzer.Parser
 {
@@ -125,21 +124,21 @@ namespace PythonCodeAnalyzer.Parser
                     var op = Tokenizer.CurSymbol;
                     Tokenizer.Advance();
                     var right = ParseFactor();
-                    return new UnaryExpression(startPos, Tokenizer.Position, UnaryExpression.UnaryOperator.Plus, op, right);
+                    return new FactorExpression(startPos, Tokenizer.Position, FactorExpression.FactorOperatorKind.UnaryPlus, op, right);
                 }
                 case Token.TokenKind.PyMinus:
                 {
                     var op = Tokenizer.CurSymbol;
                     Tokenizer.Advance();
                     var right = ParseFactor();
-                    return new UnaryExpression(startPos, Tokenizer.Position, UnaryExpression.UnaryOperator.Minus, op, right);
+                    return new FactorExpression(startPos, Tokenizer.Position, FactorExpression.FactorOperatorKind.UnaryMinus, op, right);
                 }
                 case Token.TokenKind.PyInvert:
                 {
                     var op = Tokenizer.CurSymbol;
                     Tokenizer.Advance();
                     var right = ParseFactor();
-                    return new UnaryExpression(startPos, Tokenizer.Position, UnaryExpression.UnaryOperator.Invert, op, right);
+                    return new FactorExpression(startPos, Tokenizer.Position, FactorExpression.FactorOperatorKind.UnaryInvert, op, right);
                 }
                 default:
                     return ParsePower();

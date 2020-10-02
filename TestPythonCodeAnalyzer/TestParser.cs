@@ -209,5 +209,90 @@ namespace TestPythonCodeAnalyzer
             Assert.Equal(12UL, node.Right.End );
         }
         
+        [Fact]
+        public void TestFactorNoOperator()
+        {
+            var parser = Setup( new Token[] { new Token(0, 5, Token.TokenKind.Name ), new Token(5, 5, Token.TokenKind.EOF) } );
+            
+            Assert.True(parser != null);
+            NameLiteralExpression node = (NameLiteralExpression)parser.ParseFactor();
+            Assert.Equal(Token.TokenKind.Name, node.Name.Kind );
+            Assert.Equal(0UL, node.Start );
+            Assert.Equal(5UL, node.End );
+            Assert.Equal(0UL, node.Name.Start );
+            Assert.Equal(5UL, node.Name.End );
+        }
+        
+        [Fact]
+        public void TestFactorOperatorUnaryPlus()
+        {
+            var parser = Setup( new Token[]
+            {
+                new Token(0, 2, Token.TokenKind.PyPlus),
+                new Token(2, 6, Token.TokenKind.Name ),
+                new Token(6, 7, Token.TokenKind.EOF)
+            } );
+            
+            Assert.True(parser != null);
+            FactorExpression node = (FactorExpression)parser.ParseFactor();
+            Assert.Equal(FactorExpression.FactorOperatorKind.UnaryPlus, node.FactorOperator);
+            Assert.Equal(Token.TokenKind.PyPlus, node.Operator.Kind );
+            Assert.Equal(0UL, node.Start );
+            Assert.Equal(6UL, node.End );
+            
+            Assert.True(node.Right is NameLiteralExpression);
+            Assert.Equal(2UL, node.Right.Start );
+            Assert.Equal(6UL, node.Right.End );
+        }
+        
+        [Fact]
+        public void TestFactorOperatorUnaryMinus()
+        {
+            var parser = Setup( new Token[]
+            {
+                new Token(0, 2, Token.TokenKind.PyMinus),
+                new Token(2, 6, Token.TokenKind.Name ),
+                new Token(6, 7, Token.TokenKind.EOF)
+            } );
+            
+            Assert.True(parser != null);
+            FactorExpression node = (FactorExpression)parser.ParseFactor();
+            Assert.Equal(FactorExpression.FactorOperatorKind.UnaryMinus, node.FactorOperator);
+            Assert.Equal(Token.TokenKind.PyMinus, node.Operator.Kind );
+            Assert.Equal(0UL, node.Start );
+            Assert.Equal(6UL, node.End );
+            
+            Assert.True(node.Right is NameLiteralExpression);
+            Assert.Equal(2UL, node.Right.Start );
+            Assert.Equal(6UL, node.Right.End );
+        }
+        
+        [Fact]
+        public void TestFactorOperatorUnaryInvert()
+        {
+            var parser = Setup( new Token[]
+            {
+                new Token(0, 2, Token.TokenKind.PyInvert),
+                new Token(2, 6, Token.TokenKind.Name ),
+                new Token(6, 7, Token.TokenKind.EOF)
+            } );
+            
+            Assert.True(parser != null);
+            FactorExpression node = (FactorExpression)parser.ParseFactor();
+            Assert.Equal(FactorExpression.FactorOperatorKind.UnaryInvert, node.FactorOperator);
+            Assert.Equal(Token.TokenKind.PyInvert, node.Operator.Kind );
+            Assert.Equal(0UL, node.Start );
+            Assert.Equal(6UL, node.End );
+            
+            Assert.True(node.Right is NameLiteralExpression);
+            Assert.Equal(2UL, node.Right.Start );
+            Assert.Equal(6UL, node.Right.End );
+        }
+        
+        
+        
+        
+        
+        
     }
 }
