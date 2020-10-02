@@ -48,6 +48,8 @@ namespace PythonCodeAnalyzer.Parser
             PyLeftCurly,
             PyRightCurly,
             PyDot,
+            PyTestAnd,
+            PyTestOr,
 
             EOF
 

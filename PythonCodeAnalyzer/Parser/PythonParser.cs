@@ -428,17 +428,43 @@ namespace PythonCodeAnalyzer.Parser
         
         public ExpressionNode ParseNotTest()
         {
-            throw new NotImplementedException();
+            var startPos = Tokenizer.Position;
+            if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyNot)
+            {
+                var op = Tokenizer.CurSymbol;
+                Tokenizer.Advance();
+                var right = ParseNotTest();
+                return new NotTestExpression(startPos, Tokenizer.Position, op, right);
+            }
+            throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol, "Expecting 'not' in not test expression!");
         }
         
         public ExpressionNode ParseAndTest()
         {
-            throw new NotImplementedException();
+            var startPos = Tokenizer.Position;
+            var res = ParseNotTest();
+            while (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyTestAnd) // 'and'
+            {
+                var op = Tokenizer.CurSymbol;
+                Tokenizer.Advance();
+                var right = ParseNotTest();
+                res = new AndTestExpression(startPos, Tokenizer.Position, res, op, right);
+            }
+            return res;
         }
         
         public ExpressionNode ParseOrTest()
         {
-            throw new NotImplementedException();
+            var startPos = Tokenizer.Position;
+            var res = ParseNotTest();
+            while (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyTestOr) // 'or'
+            {
+                var op = Tokenizer.CurSymbol;
+                Tokenizer.Advance();
+                var right = ParseNotTest();
+                res = new OrTestExpression(startPos, Tokenizer.Position, res, op, right);
+            }
+            return res;
         }
         
         public ExpressionNode ParseLambda(bool isConditional)
@@ -448,17 +474,43 @@ namespace PythonCodeAnalyzer.Parser
         
         public ExpressionNode ParseNoCond()
         {
-            throw new NotImplementedException();
+            return (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyLambda) ? ParseLambda(false) : ParseOrTest();
         }
         
         public ExpressionNode ParseTest()
         {
-            throw new NotImplementedException();
+            var startPos = Tokenizer.Position;
+            if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyLambda) return ParseLambda(true);
+            var left = ParseOrTest();
+            if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyIf)
+            {
+                var op = Tokenizer.CurSymbol;
+                Tokenizer.Advance();
+                var right = ParseOrTest();
+                if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyElse)
+                {
+                    var op2 = Tokenizer.CurSymbol;
+                    Tokenizer.Advance();
+                    var next = ParseTest();
+                    return new ConditionalExpression(startPos, Tokenizer.Position, left, op, right, op2, next);
+                }
+                throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol, "Missing 'else' in test expression!");
+            }
+            return left;
         }
         
         public ExpressionNode ParseNamedExpr()
         {
-            throw new NotImplementedException();
+            var startPos = Tokenizer.Position;
+            var left = ParseTest();
+            if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyColonAssign)
+            {
+                var op = Tokenizer.CurSymbol;
+                Tokenizer.Advance();
+                var right = ParseTest();
+                return new NamedExpression(startPos, Tokenizer.Position, left, op, right);
+            }
+            return left;
         }
         
         
