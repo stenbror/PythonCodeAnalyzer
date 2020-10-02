@@ -101,7 +101,16 @@ namespace PythonCodeAnalyzer.Parser
 
         public ExpressionNode ParsePower()
         {
-            throw new NotImplementedException();
+            var startPos = Tokenizer.Position;
+            var left = ParseAtomExpression();
+            if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyPower)
+            {
+                var op = Tokenizer.CurSymbol;
+                Tokenizer.Advance();
+                var right = ParseAtomExpression();
+                return new PowerExpression(startPos, Tokenizer.Position, left, op, right);
+            }
+            return left;
         }
         
         public ExpressionNode ParseFactor()

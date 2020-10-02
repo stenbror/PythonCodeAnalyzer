@@ -24,8 +24,9 @@ namespace TestPythonCodeAnalyzer
             }
             else if (index < Symbols.Length)
             {
-                CurSymbol = Symbols[++index];
                 Position = CurSymbol.End;
+                CurSymbol = Symbols[++index];
+                
             }
             //throw new NotImplementedException();
             
@@ -148,7 +149,7 @@ namespace TestPythonCodeAnalyzer
             {
                 new Token(0, 5, Token.TokenKind.String ), 
                 new Token(10, 15, Token.TokenKind.String ), 
-                new Token(20, 25, Token.TokenKind.String ), 
+                new Token(20, 26, Token.TokenKind.String ), 
                 new Token(26, 26, Token.TokenKind.EOF)
             } );
             
@@ -165,7 +166,48 @@ namespace TestPythonCodeAnalyzer
             Assert.Equal(15UL, node.Strings[1].End );
             Assert.Equal(Token.TokenKind.String, node.Strings[2].Kind );
             Assert.Equal(20UL, node.Strings[2].Start );
-            Assert.Equal(25UL, node.Strings[2].End );
+            Assert.Equal(26UL, node.Strings[2].End );
         }
+        
+        [Fact]
+        public void TestPowerNoOperator()
+        {
+            var parser = Setup( new Token[] { new Token(0, 5, Token.TokenKind.Name ), new Token(5, 5, Token.TokenKind.EOF) } );
+            
+            Assert.True(parser != null);
+            NameLiteralExpression node = (NameLiteralExpression)parser.ParsePower();
+            Assert.Equal(Token.TokenKind.Name, node.Name.Kind );
+            Assert.Equal(0UL, node.Start );
+            Assert.Equal(5UL, node.End );
+            Assert.Equal(0UL, node.Name.Start );
+            Assert.Equal(5UL, node.Name.End );
+        }
+        
+        [Fact]
+        public void TestPowerOperator()
+        {
+            var parser = Setup( new Token[]
+            {
+                new Token(0, 5, Token.TokenKind.Name ), 
+                new Token(5, 6, Token.TokenKind.PyPower),
+                new Token(6, 12, Token.TokenKind.Name ),
+                new Token(12, 13, Token.TokenKind.EOF)
+            } );
+            
+            Assert.True(parser != null);
+            PowerExpression node = (PowerExpression)parser.ParsePower();
+            Assert.Equal(Token.TokenKind.PyPower, node.Operator.Kind );
+            Assert.Equal(0UL, node.Start );
+            Assert.Equal(12UL, node.End );
+            
+            Assert.True(node.Left is NameLiteralExpression);
+            Assert.Equal(0UL, node.Left.Start );
+            Assert.Equal(5UL, node.Left.End );
+            
+            Assert.True(node.Right is NameLiteralExpression);
+            Assert.Equal(6UL, node.Right.Start );
+            Assert.Equal(12UL, node.Right.End );
+        }
+        
     }
 }
