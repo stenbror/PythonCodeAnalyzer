@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Security.Principal;
 using PythonCodeAnalyzer.Parser.Ast;
 using PythonCodeAnalyzer.Parser.Ast.Expression;
+using UnaryExpression = PythonCodeAnalyzer.Parser.Ast.Expression.UnaryExpression;
 
 namespace PythonCodeAnalyzer.Parser
 {
@@ -107,7 +109,7 @@ namespace PythonCodeAnalyzer.Parser
             {
                 var op = Tokenizer.CurSymbol;
                 Tokenizer.Advance();
-                var right = ParseAtomExpression();
+                var right = ParseFactor();
                 return new PowerExpression(startPos, Tokenizer.Position, left, op, right);
             }
             return left;
@@ -115,7 +117,33 @@ namespace PythonCodeAnalyzer.Parser
         
         public ExpressionNode ParseFactor()
         {
-            throw new NotImplementedException();
+            var startPos = Tokenizer.Position;
+            switch (Tokenizer.CurSymbol.Kind)
+            {
+                case Token.TokenKind.PyPlus:
+                {
+                    var op = Tokenizer.CurSymbol;
+                    Tokenizer.Advance();
+                    var right = ParseFactor();
+                    return new UnaryExpression(startPos, Tokenizer.Position, UnaryExpression.UnaryOperator.Plus, op, right);
+                }
+                case Token.TokenKind.PyMinus:
+                {
+                    var op = Tokenizer.CurSymbol;
+                    Tokenizer.Advance();
+                    var right = ParseFactor();
+                    return new UnaryExpression(startPos, Tokenizer.Position, UnaryExpression.UnaryOperator.Minus, op, right);
+                }
+                case Token.TokenKind.PyInvert:
+                {
+                    var op = Tokenizer.CurSymbol;
+                    Tokenizer.Advance();
+                    var right = ParseFactor();
+                    return new UnaryExpression(startPos, Tokenizer.Position, UnaryExpression.UnaryOperator.Invert, op, right);
+                }
+                default:
+                    return ParsePower();
+            }
         }
         
         public ExpressionNode ParseTerm()
