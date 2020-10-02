@@ -512,6 +512,71 @@ namespace PythonCodeAnalyzer.Parser
             }
             return left;
         }
+
+        public ExpressionNode ParseTestListComp()
+        {
+            throw new NotImplementedException();
+        }
+        
+        public ExpressionNode ParseSubscriptList()
+        {
+            throw new NotImplementedException();
+        }
+        
+        public ExpressionNode ParseSubscript()
+        {
+            throw new NotImplementedException();
+        }
+        
+        public ExpressionNode ParseExprList()
+        {
+            throw new NotImplementedException();
+        }
+        
+        public ExpressionNode ParseTestList()
+        {
+            throw new NotImplementedException();
+        }
+        
+        public ExpressionNode ParseDictorSetMaker()
+        {
+            throw new NotImplementedException();
+        }
+        
+        public ExpressionNode ParseArgList()
+        {
+            throw new NotImplementedException();
+        }
+        
+        public ExpressionNode ParseArgument()
+        {
+            throw new NotImplementedException();
+        }
+        
+        public ExpressionNode ParseCompIter()
+        {
+            throw new NotImplementedException();
+        }
+        
+        public ExpressionNode ParseSyncCompFor()
+        {
+            throw new NotImplementedException();
+        }
+        
+        public ExpressionNode ParseCompFor()
+        {
+            throw new NotImplementedException();
+        }
+        
+        public ExpressionNode ParseCompIf()
+        {
+            throw new NotImplementedException();
+        }
+        
+        public ExpressionNode ParseYieldExpr()
+        {
+            throw new NotImplementedException();
+        }
         
         
     }
