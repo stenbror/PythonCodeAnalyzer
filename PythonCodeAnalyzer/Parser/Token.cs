@@ -50,6 +50,9 @@ namespace PythonCodeAnalyzer.Parser
             PyDot,
             PyTestAnd,
             PyTestOr,
+            PyComma,
+            PySemiColon,
+            Newline,
 
             EOF
 

@@ -530,12 +530,46 @@ namespace PythonCodeAnalyzer.Parser
         
         public ExpressionNode ParseExprList()
         {
-            throw new NotImplementedException();
+            var startPos = Tokenizer.Position;
+            var node = (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyMul) ? ParseStarExpr() : ParseOrExpr();
+            if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyComma)
+            {
+                var nodes = new List<ExpressionNode>();
+                var separators = new List<Token>();
+                nodes.Add(node);
+                while (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyComma)
+                {
+                    separators.Add(Tokenizer.CurSymbol);
+                    Tokenizer.Advance();
+                    if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyComma) throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol, "Double ',' in expression list!");
+                    if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyColon || Tokenizer.CurSymbol.Kind == Token.TokenKind.PyIn) continue;
+                    nodes.Add((Tokenizer.CurSymbol.Kind == Token.TokenKind.PyMul) ? ParseStarExpr() : ParseOrExpr());
+                }
+                return new ListExpression(startPos, Tokenizer.Position, ListExpression.ListType.TestList, nodes.ToArray(), separators.ToArray());
+            }
+            return node;
         }
         
         public ExpressionNode ParseTestList()
         {
-            throw new NotImplementedException();
+            var startPos = Tokenizer.Position;
+            var node = ParseTest();
+            if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyComma)
+            {
+                var nodes = new List<ExpressionNode>();
+                var separators = new List<Token>();
+                nodes.Add(node);
+                while (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyComma)
+                {
+                    separators.Add(Tokenizer.CurSymbol);
+                    Tokenizer.Advance();
+                    if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyComma) throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol, "Double ',' in expression list!");
+                    if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyColon || Tokenizer.CurSymbol.Kind == Token.TokenKind.PySemiColon || Tokenizer.CurSymbol.Kind == Token.TokenKind.Newline) continue;
+                    nodes.Add(ParseTest());
+                }
+                return new ListExpression(startPos, Tokenizer.Position, ListExpression.ListType.TestList, nodes.ToArray(), separators.ToArray());
+            }
+            return node;
         }
         
         public ExpressionNode ParseDictorSetMaker()
