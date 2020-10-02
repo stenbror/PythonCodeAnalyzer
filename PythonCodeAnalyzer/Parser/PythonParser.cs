@@ -84,14 +84,89 @@ namespace PythonCodeAnalyzer.Parser
             if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyLeftParen ||
                 Tokenizer.CurSymbol.Kind == Token.TokenKind.PyLeftBracket || Tokenizer.CurSymbol.Kind == Token.TokenKind.PyDot)
             {
-                // Handle Trailer later!
-                return new AtomExpression(startPos, Tokenizer.Position, awaitOp != null, awaitOp, res, null);
+                var trailers = ParseTrailer();
+                return new AtomExpression(startPos, Tokenizer.Position, awaitOp != null, awaitOp, res, trailers);
             }
             if (awaitOp != null)
             {
                 return new AtomExpression(startPos, Tokenizer.Position, true, awaitOp, res, null);
             }
             return res;
+        }
+
+        public ExpressionNode[] ParseTrailer()
+        {
+            return new ExpressionNode[] { };
+        }
+
+        public ExpressionNode ParsePower()
+        {
+            throw new NotImplementedException();
+        }
+        
+        public ExpressionNode ParseFactor()
+        {
+            throw new NotImplementedException();
+        }
+        
+        public ExpressionNode ParseTerm()
+        {
+            throw new NotImplementedException();
+        }
+        
+        public ExpressionNode ParseArithExpr()
+        {
+            throw new NotImplementedException();
+        }
+        
+        public ExpressionNode ParseShiftExpr()
+        {
+            throw new NotImplementedException();
+        }
+        
+        public ExpressionNode ParseAndExpr()
+        {
+            throw new NotImplementedException();
+        }
+        
+        public ExpressionNode ParseXorExpr()
+        {
+            throw new NotImplementedException();
+        }
+        
+        public ExpressionNode ParseOrExpr()
+        {
+            throw new NotImplementedException();
+        }
+        
+        public ExpressionNode ParseStarExpr()
+        {
+            throw new NotImplementedException();
+        }
+        
+        public ExpressionNode ParseComparison()
+        {
+            throw new NotImplementedException();
+        }
+        
+        public ExpressionNode ParseNotTest()
+        {
+            throw new NotImplementedException();
+        }
+        
+        public ExpressionNode ParseAndTest()
+        {
+            throw new NotImplementedException();
+        }
+        
+        public ExpressionNode ParseTest()
+        {
+            throw new NotImplementedException();
+        }
+        
+        public ExpressionNode ParseNamedExpr()
+        {
+            throw new NotImplementedException();
         }
         
         

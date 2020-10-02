@@ -488,17 +488,22 @@ namespace TestPythonCodeAnalyzer
         [Fact]
         public void TestAtomExprWithAwaitAndTrailers()
         {
+            var trailers = new ExpressionNode[]
+            {
+                new NoneExpression(7, 11, new Token(7, 11, Token.TokenKind.PyNone))
+            };
+            
             var test = new PythonCodeAnalyzer.Parser.Ast.Expression.AtomExpression(0, 11, true,
                 new Token(5, 6, Token.TokenKind.PyAwait),
                 new NoneExpression(7, 11, new Token(7, 11, Token.TokenKind.PyNone)),
-                new NoneExpression(7, 11, new Token(7, 11, Token.TokenKind.PyNone)));
+                trailers );
 
             Assert.Equal(0UL, test.Start);
                 Assert.Equal(11UL, test.End);
                 Assert.True(test.IsAwait);
                 Assert.True(test.Operator.Kind == Token.TokenKind.PyAwait);
                 Assert.True(test.Right is NoneExpression);
-                Assert.True(test.TrailerCollection is NoneExpression);
+                Assert.True(test.TrailerCollection is ExpressionNode[]);
                 Assert.True(test is AtomExpression);
         }
         
