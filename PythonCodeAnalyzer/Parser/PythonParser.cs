@@ -159,6 +159,16 @@ namespace PythonCodeAnalyzer.Parser
             throw new NotImplementedException();
         }
         
+        public ExpressionNode ParseLambda(bool isConditional)
+        {
+            throw new NotImplementedException();
+        }
+        
+        public ExpressionNode ParseNoCond()
+        {
+            throw new NotImplementedException();
+        }
+        
         public ExpressionNode ParseTest()
         {
             throw new NotImplementedException();
