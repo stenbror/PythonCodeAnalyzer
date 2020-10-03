@@ -157,7 +157,51 @@ namespace PythonCodeAnalyzer.Parser
 
         public ExpressionNode[] ParseTrailer()
         {
-            return new ExpressionNode[] { };
+            var nodes = new List<ExpressionNode>();
+            var startPos = Tokenizer.Position;
+            while (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyLeftParen ||
+                   Tokenizer.CurSymbol.Kind == Token.TokenKind.PyLeftBracket ||
+                   Tokenizer.CurSymbol.Kind == Token.TokenKind.PyDot)
+            {
+                if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyLeftParen)
+                {
+                    var op1 = Tokenizer.CurSymbol;
+                    Tokenizer.Advance();
+                    ExpressionNode right = null;
+                    if (Tokenizer.CurSymbol.Kind != Token.TokenKind.PyRightParen)
+                    {
+                        right = ParseArgList();
+                    }
+                    if (Tokenizer.CurSymbol.Kind != Token.TokenKind.PyRightParen) throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol, "Expecting ')'");
+                    var op2 = Tokenizer.CurSymbol;
+                    Tokenizer.Advance();
+                    nodes.Add(new PythonCodeAnalyzer.Parser.Ast.Expression.CallExpression(startPos, Tokenizer.Position, op1, right, op2));
+                }
+                else if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyLeftBracket)
+                {
+                    var op1 = Tokenizer.CurSymbol;
+                    Tokenizer.Advance();
+                    ExpressionNode right = null;
+                    if (Tokenizer.CurSymbol.Kind != Token.TokenKind.PyRightBracket)
+                    {
+                        right = ParseSubscriptList();
+                    }
+                    if (Tokenizer.CurSymbol.Kind != Token.TokenKind.PyRightBracket) throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol, "Expecting ']'");
+                    var op2 = Tokenizer.CurSymbol;
+                    Tokenizer.Advance();
+                    nodes.Add( new PythonCodeAnalyzer.Parser.Ast.Expression.IndexExpression(startPos, Tokenizer.Position, op1, right, op2) );
+                }
+                else
+                {
+                    var op1 = Tokenizer.CurSymbol;
+                    Tokenizer.Advance();
+                    if (Tokenizer.CurSymbol.Kind != Token.TokenKind.Name) throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol, "Expecting name literal after '.'");
+                    var op2 = Tokenizer.CurSymbol;
+                    Tokenizer.Advance();
+                    nodes.Add(new DotNameExpression(startPos, Tokenizer.Position, op1, op2));
+                }
+            }
+            return nodes.ToArray();
         }
 
         public ExpressionNode ParsePower()
