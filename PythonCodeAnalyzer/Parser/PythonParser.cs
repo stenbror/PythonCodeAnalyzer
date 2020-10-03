@@ -752,7 +752,99 @@ namespace PythonCodeAnalyzer.Parser
         
         public Tuple<ExpressionNode, bool> ParseDictorSetMaker()
         {
-            throw new NotImplementedException();
+            var startPos = Tokenizer.Position;
+            var Keys = new List<ExpressionNode>();
+            var Colons = new List<Token>();
+            var Values = new List<ExpressionNode>();
+            var Separators = new List<Token>();
+            bool isDictionary = true;
+            
+            if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyMul)
+            {
+                isDictionary = false;
+                Keys.Add(ParseStarExpr());
+            }
+            else if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyPower)
+            {
+                var op1 = Tokenizer.CurSymbol;
+                Tokenizer.Advance();
+                var right = ParseOrExpr();
+                Keys.Add(new PowerKeyExpression(startPos, Tokenizer.Position, op1, right));
+                Colons.Add(null);
+                Values.Add(null);
+            }
+            else
+            {
+                Keys.Add(ParseTest());
+                if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyColon)
+                {
+                    Colons.Add(Tokenizer.CurSymbol);
+                    Tokenizer.Advance();
+                    Values.Add(ParseTest());
+                }
+                else
+                {
+                    isDictionary = false;
+                }
+            }
+
+            if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyFor ||
+                Tokenizer.CurSymbol.Kind == Token.TokenKind.PyAsync)
+            {
+                Keys.Add(ParseCompFor());
+            }
+            else
+            {
+                while (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyComma)
+                {
+                    Separators.Add(Tokenizer.CurSymbol);
+                    Tokenizer.Advance();
+                    if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyRightCurly) break;
+
+                    if (isDictionary)
+                    {
+                        if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyPower)
+                        {
+                            var op1 = Tokenizer.CurSymbol;
+                            Tokenizer.Advance();
+                            var right = ParseOrExpr();
+                            Keys.Add(new PowerKeyExpression(startPos, Tokenizer.Position, op1, right));
+                            Colons.Add(null);
+                            Values.Add(null);
+                        }
+                        else
+                        {
+                            Keys.Add(ParseTest());
+                            if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyColon)
+                            {
+                                Colons.Add(Tokenizer.CurSymbol);
+                                Tokenizer.Advance();
+                                Values.Add(ParseTest());
+                            }
+                            else
+                            {
+                                throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol, "Expecting ':' in dictionary entry!");
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyMul)
+                        {
+                            Keys.Add(ParseStarExpr());
+                        }
+                        else
+                        {
+                            Keys.Add(ParseTest());
+                        }
+                    }
+                    
+                }
+            }
+            
+            return (isDictionary) 
+                ? new Tuple<ExpressionNode, bool>(new DictionaryContainerExpression(startPos, Tokenizer.Position, Keys.ToArray(), Colons.ToArray(), Values.ToArray(), Separators.ToArray()), true) 
+                : new Tuple<ExpressionNode, bool>(new SetContainerExpression(startPos, Tokenizer.Position, Keys.ToArray(), Separators.ToArray()), false);
         }
         
         public ExpressionNode ParseArgList()
@@ -957,9 +1049,6 @@ namespace PythonCodeAnalyzer.Parser
             }
             return node;
         }
-        
-        
-        
-        
+        //
     }
 }
