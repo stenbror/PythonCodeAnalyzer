@@ -7,6 +7,7 @@
             Unknown,
             ExprList,
             TestList,
+            TestListStarExpr,
             SubscriptList,
             ArgumentList,
             SetEntries,

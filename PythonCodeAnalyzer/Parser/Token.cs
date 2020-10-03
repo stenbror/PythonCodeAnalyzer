@@ -56,6 +56,19 @@ namespace PythonCodeAnalyzer.Parser
             PyAsync,
             PyFor,
             PyAssign,
+            PyPlusAssign,
+            PyMinusAssign,
+            PyMulAssign,
+            PyPowerAssign,
+            PyDivAssign,
+            PyFloorDivAssign,
+            PyModuloAssign,
+            PyMatriceAssign,
+            PyAndAssign,
+            PyOrAssign,
+            PyXorAssign,
+            PyShiftLeftAssign,
+            PyShiftRightAssign,
 
             EOF
 

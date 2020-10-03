@@ -744,6 +744,46 @@ namespace PythonCodeAnalyzer.Parser
             throw new NotImplementedException();
         }
         
+        public ExpressionNode ParseTestListStarExpr()
+        {
+            var startPos = Tokenizer.Position;
+            var node = (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyMul) ? ParseStarExpr() : ParseTest();
+            if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyComma)
+            {
+                var nodes = new List<ExpressionNode>();
+                var separators = new List<Token>();
+                nodes.Add(node);
+                while (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyComma)
+                {
+                    separators.Add(Tokenizer.CurSymbol);
+                    Tokenizer.Advance();
+                    if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyPlusAssign ||
+                        Tokenizer.CurSymbol.Kind == Token.TokenKind.PyAssign ||
+                        Tokenizer.CurSymbol.Kind == Token.TokenKind.PyColon ||
+                        Tokenizer.CurSymbol.Kind == Token.TokenKind.PyMinusAssign ||
+                        Tokenizer.CurSymbol.Kind == Token.TokenKind.PyMulAssign ||
+                        Tokenizer.CurSymbol.Kind == Token.TokenKind.PyPowerAssign ||
+                        Tokenizer.CurSymbol.Kind == Token.TokenKind.PyDivAssign ||
+                        Tokenizer.CurSymbol.Kind == Token.TokenKind.PyFloorDivAssign ||
+                        Tokenizer.CurSymbol.Kind == Token.TokenKind.PyModuloAssign ||
+                        Tokenizer.CurSymbol.Kind == Token.TokenKind.PyMatriceAssign ||
+                        Tokenizer.CurSymbol.Kind == Token.TokenKind.PyAndAssign ||
+                        Tokenizer.CurSymbol.Kind == Token.TokenKind.PyOrAssign ||
+                        Tokenizer.CurSymbol.Kind == Token.TokenKind.PyXorAssign ||
+                        Tokenizer.CurSymbol.Kind == Token.TokenKind.PyShiftLeftAssign ||
+                        Tokenizer.CurSymbol.Kind == Token.TokenKind.PyShiftRightAssign
+                    )
+                        continue;
+                    if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyComma) throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol, "Double ',' in expression list!");
+                    nodes.Add((Tokenizer.CurSymbol.Kind == Token.TokenKind.PyMul) ? ParseStarExpr() : ParseTest());
+                }
+                return new ListExpression(startPos, Tokenizer.Position, ListExpression.ListType.TestListStarExpr , nodes.ToArray(), separators.ToArray());
+            }
+            return node;
+        }
+        
+        
+        
         
     }
 }
