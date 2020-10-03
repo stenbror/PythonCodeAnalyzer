@@ -53,6 +53,9 @@ namespace PythonCodeAnalyzer.Parser
             PyComma,
             PySemiColon,
             Newline,
+            PyAsync,
+            PyFor,
+            PyAssign,
 
             EOF
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using PythonCodeAnalyzer.Parser.Ast;
 using PythonCodeAnalyzer.Parser.Ast.Expression;
 
@@ -617,13 +618,65 @@ namespace PythonCodeAnalyzer.Parser
         }
         
         public ExpressionNode ParseArgument()
-        {
-            throw new NotImplementedException();
+        { 
+            var startPos = Tokenizer.Position;
+            if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyMul)
+            {
+                var op = Tokenizer.CurSymbol;
+                Tokenizer.Advance();
+                if (Tokenizer.CurSymbol.Kind == Token.TokenKind.Name)
+                {
+                    var op2 = Tokenizer.CurSymbol;
+                    Tokenizer.Advance();
+                    return new StarArgument(startPos, Tokenizer.Position, op, op2);
+                }
+                throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol, "Expecting name literal in '*' argument!");
+            }
+            else if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyPower)
+            {
+                var op = Tokenizer.CurSymbol;
+                Tokenizer.Advance();
+                if (Tokenizer.CurSymbol.Kind == Token.TokenKind.Name)
+                {
+                    var op2 = Tokenizer.CurSymbol;
+                    Tokenizer.Advance();
+                    return new PowerArgument(startPos, Tokenizer.Position, op, op2);
+                }
+                throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol, "Expecting name literal in '**' argument!");
+            }
+            else if (Tokenizer.CurSymbol.Kind == Token.TokenKind.Name)
+            {
+                var op = Tokenizer.CurSymbol;
+                Tokenizer.Advance();
+                switch (Tokenizer.CurSymbol.Kind)
+                {
+                    case Token.TokenKind.PyAsync:
+                    case Token.TokenKind.PyFor:
+                    {
+                        var right = ParseCompFor();
+                        return new ArgumentExpression(startPos, Tokenizer.Position, op, null, right);
+                    }
+                    case Token.TokenKind.PyColonAssign:
+                    case Token.TokenKind.PyAssign:
+                    {
+                        var op2 = Tokenizer.CurSymbol;
+                        Tokenizer.Advance();
+                        var right = ParseTest();
+                        return new ArgumentExpression(startPos, Tokenizer.Position, op, op2, right);
+                    }
+                    default:
+                        return new ArgumentExpression(startPos, Tokenizer.Position, op, null, null);
+                }
+            }
+            throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol, "Expecting valid argument!");
         }
         
         public ExpressionNode ParseCompIter()
         {
-            throw new NotImplementedException();
+            return (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyAsync ||
+                    Tokenizer.CurSymbol.Kind == Token.TokenKind.PyFor)
+                ? ParseCompFor()
+                : ParseCompIf();
         }
         
         public ExpressionNode ParseSyncCompFor()
