@@ -721,7 +721,22 @@ namespace PythonCodeAnalyzer.Parser
         
         public ExpressionNode ParseCompIf()
         {
-            throw new NotImplementedException();
+            var startPos = Tokenizer.Position;
+            if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyAsync)
+            {
+                var op1 = Tokenizer.CurSymbol;
+                Tokenizer.Advance();
+                var right = ParseNoCond();
+                if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyAsync ||
+                   Tokenizer.CurSymbol.Kind == Token.TokenKind.PyFor ||
+                   Tokenizer.CurSymbol.Kind == Token.TokenKind.PyIf)
+                {
+                    var next = ParseCompIter();
+                    return new CompIfExpression(startPos, Tokenizer.Position, op1, right, next);
+                }
+                return new CompIfExpression(startPos, Tokenizer.Position, op1, right, null);
+            }
+            throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol, "Expecting 'if' in if comprehension expression!");;
         }
         
         public ExpressionNode ParseYieldExpr()
