@@ -63,9 +63,70 @@ namespace PythonCodeAnalyzer.Parser
                     return new FalseLiteralExpression(startPos, Tokenizer.Position, unit); 
                 }
                 case Token.TokenKind.PyLeftParen:
+                {
+                    var op1 = Tokenizer.CurSymbol;
+                    Tokenizer.Advance();
+                    ExpressionNode right = null;
+                    if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyRightParen)
+                    {
+                        var op2 = Tokenizer.CurSymbol;
+                        Tokenizer.Advance();
+                        return new TupleExpression(startPos, Tokenizer.Position, op1, right, op2);
+                    }
+                    right = (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyYield)
+                        ? ParseYieldExpr()
+                        : ParseTestListComp();
+                    if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyRightParen)
+                    {
+                        var op2 = Tokenizer.CurSymbol;
+                        Tokenizer.Advance();
+                        return new TupleExpression(startPos, Tokenizer.Position, op1, right, op2);
+                    }
+                    throw new SyntaxErrorException(startPos, Tokenizer.CurSymbol, "Expecting ')' in tuple declaration!");
+                }
                 case Token.TokenKind.PyLeftBracket:
+                {
+                    var op1 = Tokenizer.CurSymbol;
+                    Tokenizer.Advance();
+                    ExpressionNode right = null;
+                    if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyRightBracket)
+                    {
+                        var op2 = Tokenizer.CurSymbol;
+                        Tokenizer.Advance();
+                        return new AtomListExpression(startPos, Tokenizer.Position, op1, right, op2);
+                    }
+                    right = ParseTestListComp();
+                    if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyRightBracket)
+                    {
+                        var op2 = Tokenizer.CurSymbol;
+                        Tokenizer.Advance();
+                        return new AtomListExpression(startPos, Tokenizer.Position, op1, right, op2);
+                    }
+                    throw new SyntaxErrorException(startPos, Tokenizer.CurSymbol,
+                        "Expecting ']' in tuple declaration!");
+                }
                 case Token.TokenKind.PyLeftCurly:
-                    throw new NotImplementedException();            
+                {
+                    var op1 = Tokenizer.CurSymbol;
+                    Tokenizer.Advance();
+                    ExpressionNode right = null;
+                    bool isDictionary = true;
+                    if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyRightBracket)
+                    {
+                        var op2 = Tokenizer.CurSymbol;
+                        Tokenizer.Advance();
+                        return new DictionaryExpression(startPos, Tokenizer.Position, op1, right, op2);
+                    }
+                    (right, isDictionary) = ParseDictorSetMaker();
+                    if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyRightBracket)
+                    {
+                        var op2 = Tokenizer.CurSymbol;
+                        Tokenizer.Advance();
+                        return isDictionary ? (ExpressionNode) new DictionaryExpression(startPos, Tokenizer.Position, op1, right, op2) : new SetExpression(startPos, Tokenizer.Position, op1, right, op2);
+                    }
+                    throw new SyntaxErrorException(startPos, Tokenizer.CurSymbol,
+                        "Expecting '}' in dictionary or set declaration!");
+                }
                 default:
                     throw new SyntaxErrorException(startPos, Tokenizer.CurSymbol, "Illegal literal!");
             }
@@ -645,7 +706,7 @@ namespace PythonCodeAnalyzer.Parser
             return node;
         }
         
-        public ExpressionNode ParseDictorSetMaker()
+        public Tuple<ExpressionNode, bool> ParseDictorSetMaker()
         {
             throw new NotImplementedException();
         }
