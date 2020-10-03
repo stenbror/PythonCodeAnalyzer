@@ -69,6 +69,8 @@ namespace PythonCodeAnalyzer.Parser
             PyXorAssign,
             PyShiftLeftAssign,
             PyShiftRightAssign,
+            PyYield,
+            PyFrom,
 
             EOF
 

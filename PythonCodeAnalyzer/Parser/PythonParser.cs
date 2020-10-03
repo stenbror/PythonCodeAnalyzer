@@ -543,7 +543,37 @@ namespace PythonCodeAnalyzer.Parser
         
         public ExpressionNode ParseSubscript()
         {
-            throw new NotImplementedException();
+            var startPos = Tokenizer.Position;
+            ExpressionNode one = null, two = null, three = null;
+            Token op1 = null, op2 = null;
+            if (Tokenizer.CurSymbol.Kind != Token.TokenKind.PyColon) one = ParseTest();
+            if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyColon)
+            {
+                if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyColon)
+                {
+                    op1 = Tokenizer.CurSymbol;
+                    Tokenizer.Advance();
+                }
+
+                if (Tokenizer.CurSymbol.Kind != Token.TokenKind.PyRightBracket &&
+                    Tokenizer.CurSymbol.Kind != Token.TokenKind.PyColon &&
+                    Tokenizer.CurSymbol.Kind != Token.TokenKind.PyComma)
+                {
+                    two = ParseTest();
+                }
+
+                if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyColon)
+                {
+                    op2 = Tokenizer.CurSymbol;
+                    Tokenizer.Advance();
+                    if (Tokenizer.CurSymbol.Kind != Token.TokenKind.PyComma &&
+                        Tokenizer.CurSymbol.Kind != Token.TokenKind.PyRightBracket)
+                    {
+                        three = ParseTest();
+                    }
+                }
+            }
+            return new SubscriptExpression(startPos, Tokenizer.Position, one, op1, two, op2, three);
         }
         
         public ExpressionNode ParseExprList()
@@ -736,12 +766,28 @@ namespace PythonCodeAnalyzer.Parser
                 }
                 return new CompIfExpression(startPos, Tokenizer.Position, op1, right, null);
             }
-            throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol, "Expecting 'if' in if comprehension expression!");;
+            throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol, "Expecting 'if' in if comprehension expression!");
         }
         
         public ExpressionNode ParseYieldExpr()
         {
-            throw new NotImplementedException();
+            if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyYield)
+            {
+                var startPos = Tokenizer.Position;
+                var op1 = Tokenizer.CurSymbol;
+                Tokenizer.Advance();
+                ExpressionNode right = null;
+                if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyFrom)
+                {
+                    var op2 = Tokenizer.CurSymbol;
+                    Tokenizer.Advance();
+                    right = ParseTest();
+                    return new YieldExpression(startPos, Tokenizer.Position, op1, op2, right);
+                }
+                right = ParseTestListStarExpr();
+                return new YieldExpression(startPos, Tokenizer.Position, op1, null, right);
+            }
+            throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol, "Expecting 'yield' in yield expression!");;
         }
         
         public ExpressionNode ParseTestListStarExpr()
