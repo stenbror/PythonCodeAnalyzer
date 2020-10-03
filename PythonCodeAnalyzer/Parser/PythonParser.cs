@@ -681,7 +681,29 @@ namespace PythonCodeAnalyzer.Parser
         
         public ExpressionNode ParseSyncCompFor()
         {
-            throw new NotImplementedException();
+            if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyFor)
+            {
+                var startPos = Tokenizer.Position;
+                var op1 = Tokenizer.CurSymbol;
+                Tokenizer.Advance();
+                var left = ParseExprList();
+                if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyIn)
+                {
+                    var op2 = Tokenizer.CurSymbol;
+                    Tokenizer.Advance();
+                    var right = ParseOrTest();
+                    if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyAsync ||
+                        Tokenizer.CurSymbol.Kind == Token.TokenKind.PyFor ||
+                        Tokenizer.CurSymbol.Kind == Token.TokenKind.PyIf)
+                    {
+                        var next = ParseCompIter();
+                        return new CompSyncForExpression(startPos, Tokenizer.Position, op1, left, op2, right, next);
+                    }
+                    return new CompSyncForExpression(startPos, Tokenizer.Position, op1, left, op2, right, null);
+                }
+                throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol, "Expecting 'in' in for comprehension expression!");
+            }
+            throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol, "Expecting 'for' in for comprehension expression!");
         }
         
         public ExpressionNode ParseCompFor()
