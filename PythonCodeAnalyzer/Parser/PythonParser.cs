@@ -575,7 +575,20 @@ namespace PythonCodeAnalyzer.Parser
         
         public ExpressionNode ParseLambda(bool isConditional)
         {
-            throw new NotImplementedException();
+            var startPos = Tokenizer.Position;
+            if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyLambda)
+            {
+                var op1 = Tokenizer.CurSymbol;
+                Tokenizer.Advance();
+                ExpressionNode left = null;
+                if (Tokenizer.CurSymbol.Kind != Token.TokenKind.PyColon) left = ParseVarArgsList();
+                if (Tokenizer.CurSymbol.Kind != Token.TokenKind.PyColon) throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol, "Expecting ':' in lambda expression!");
+                var op2 = Tokenizer.CurSymbol;
+                Tokenizer.Advance();
+                ExpressionNode right = (isConditional) ? ParseTest() : ParseNoCond();
+                return new LambdaExpression(startPos, Tokenizer.Position, isConditional, op1, left, op2, right);
+            }
+            throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol, "Expecting 'lambda' in lambda expression!");
         }
         
         public ExpressionNode ParseNoCond()
@@ -1049,6 +1062,270 @@ namespace PythonCodeAnalyzer.Parser
             }
             return node;
         }
-        //
+
+        public ExpressionNode ParseVarArgsList()
+        {
+            throw new NotImplementedException();
+        }
+
+        public ExpressionNode ParseVFPDef()
+        {
+            throw new NotImplementedException();
+        }
+
+        public StatementNode ParseCompoundStmt()
+        {
+            throw new NotImplementedException();
+        }
+        
+        public StatementNode ParseAsyncStmt()
+        {
+            throw new NotImplementedException();
+        }
+        
+        public StatementNode ParseIfStmt()
+        {
+            throw new NotImplementedException();
+        }
+        
+        public StatementNode ParseElseStmt()
+        {
+            throw new NotImplementedException();
+        }
+        
+        public StatementNode ParseWhileStmt()
+        {
+            throw new NotImplementedException();
+        }
+        
+        public StatementNode ParseForStmt()
+        {
+            throw new NotImplementedException();
+        }
+        
+        public StatementNode ParseTryStmt()
+        {
+            throw new NotImplementedException();
+        }
+        
+        public StatementNode ParseWithStmt()
+        {
+            throw new NotImplementedException();
+        }
+        
+        public StatementNode ParseWithItem()
+        {
+            throw new NotImplementedException();
+        }
+        
+        public StatementNode ParseExceptStmt()
+        {
+            throw new NotImplementedException();
+        }
+        
+        public StatementNode ParseSuite()
+        {
+            throw new NotImplementedException();
+        }
+        
+        public StatementNode ParseClassDeclaration()
+        {
+            throw new NotImplementedException();
+        }
+        
+        public StatementNode ParseStmt()
+        {
+            throw new NotImplementedException();
+        }
+        
+        public StatementNode ParseSimpleStmt()
+        {
+            throw new NotImplementedException();
+        }
+        
+        public StatementNode ParseSmallStmt()
+        {
+            throw new NotImplementedException();
+        }
+        
+        public StatementNode ParseExprStmt()
+        {
+            throw new NotImplementedException();
+        }
+        
+        public StatementNode ParseAnnAssign()
+        {
+            throw new NotImplementedException();
+        }
+        
+        public StatementNode ParseDelStmt()
+        {
+            throw new NotImplementedException();
+        }
+        
+        public StatementNode ParsePassStmt()
+        {
+            throw new NotImplementedException();
+        }
+        
+        public StatementNode ParseFlowStmt()
+        {
+            throw new NotImplementedException();
+        }
+        
+        public StatementNode ParseBreakStmt()
+        {
+            throw new NotImplementedException();
+        }
+        
+        public StatementNode ParseContinueStmt()
+        {
+            throw new NotImplementedException();
+        }
+        
+        public StatementNode ParsereturnStmt()
+        {
+            throw new NotImplementedException();
+        }
+        
+        public StatementNode ParseRaiseStmt()
+        {
+            throw new NotImplementedException();
+        }
+        
+        public StatementNode ParseYieldStmt()
+        {
+            throw new NotImplementedException();
+        }
+        
+        public StatementNode ParseImportStmt()
+        {
+            throw new NotImplementedException();
+        }
+        
+        public StatementNode ParseImportName()
+        {
+            throw new NotImplementedException();
+        }
+        
+        public StatementNode ParseImportFrom()
+        {
+            throw new NotImplementedException();
+        }
+        
+        public StatementNode ParseImportAsName()
+        {
+            throw new NotImplementedException();
+        }
+        
+        public StatementNode ParseImportAsNames()
+        {
+            throw new NotImplementedException();
+        }
+        
+        public StatementNode ParseDottedAsName()
+        {
+            throw new NotImplementedException();
+        }
+        
+        public StatementNode ParseDottedAsNames()
+        {
+            throw new NotImplementedException();
+        }
+        
+        public StatementNode ParseDottedName()
+        {
+            throw new NotImplementedException();
+        }
+        
+        public StatementNode ParseGlobalStmt()
+        {
+            throw new NotImplementedException();
+        }
+        
+        public StatementNode ParseNonLocalStmt()
+        {
+            throw new NotImplementedException();
+        }
+        
+        public StatementNode ParseAssertStmt()
+        {
+            throw new NotImplementedException();
+        }
+        
+        public StatementNode ParseDecorator()
+        {
+            throw new NotImplementedException();
+        }
+        
+        public StatementNode ParseDecorators()
+        {
+            throw new NotImplementedException();
+        }
+        
+        public StatementNode ParseDecorated()
+        {
+            throw new NotImplementedException();
+        }
+        
+        public StatementNode ParseAsyncFuncDef()
+        {
+            throw new NotImplementedException();
+        }
+        
+        public StatementNode ParseFuncDefDeclaration()
+        {
+            throw new NotImplementedException();
+        }
+        
+        public StatementNode ParseParameters()
+        {
+            throw new NotImplementedException();
+        }
+        
+        public StatementNode ParseTypedArgsList()
+        {
+            throw new NotImplementedException();
+        }
+        
+        public StatementNode ParseTFPDef()
+        {
+            throw new NotImplementedException();
+        }
+        
+        public StatementNode ParseSingleInput()
+        {
+            throw new NotImplementedException();
+        }
+        
+        public StatementNode ParseFileInput()
+        {
+            throw new NotImplementedException();
+        }
+        
+        public StatementNode ParseEvalInput()
+        {
+            throw new NotImplementedException();
+        }
+
+        public StatementNode ParseFuncBodySuite()
+        {
+            throw new NotImplementedException();
+        }
+
+        public StatementNode ParseFuncInput()
+        {
+            throw new NotImplementedException();
+        }
+
+        public ExpressionNode ParseFuncType()
+        {
+            throw new NotImplementedException();
+        }
+
+        public ExpressionNode ParseTypeList()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
