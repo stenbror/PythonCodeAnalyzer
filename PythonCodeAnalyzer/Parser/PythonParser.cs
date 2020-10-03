@@ -708,7 +708,15 @@ namespace PythonCodeAnalyzer.Parser
         
         public ExpressionNode ParseCompFor()
         {
-            throw new NotImplementedException();
+            var startPos = Tokenizer.Position;
+            if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyAsync)
+            {
+                var op1 = Tokenizer.CurSymbol;
+                Tokenizer.Advance();
+                var right = ParseSyncCompFor();
+                return new CompForExpression(startPos, Tokenizer.Position, op1, right);
+            }
+            throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol, "Expecting 'async' in for comprehension expression!");
         }
         
         public ExpressionNode ParseCompIf()
