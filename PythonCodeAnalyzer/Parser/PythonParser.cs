@@ -1185,7 +1185,36 @@ namespace PythonCodeAnalyzer.Parser
         
         public StatementNode ParseForStmt()
         {
-            throw new NotImplementedException();
+            var startPos = Tokenizer.Position;
+            if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyWhile)
+            {
+                var op1 = Tokenizer.CurSymbol;
+                Tokenizer.Advance();
+                var left = ParseExprList();
+                if (Tokenizer.CurSymbol.Kind != Token.TokenKind.PyIn) throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol, "Expecting 'in' in for statement!");
+                var op2 = Tokenizer.CurSymbol;
+                Tokenizer.Advance();
+                var right = ParseTestList();
+                if (Tokenizer.CurSymbol.Kind != Token.TokenKind.PyColon) throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol, "Expecting ':' in for statement!");
+                var op3 = Tokenizer.CurSymbol;
+                Tokenizer.Advance();
+                Token typeComment = null;
+                if (Tokenizer.CurSymbol.Kind == Token.TokenKind.TypeComment)
+                {
+                    typeComment = Tokenizer.CurSymbol;
+                    Tokenizer.Advance();
+                }
+
+                var next = ParseSuite();
+                if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyElse)
+                {
+                    var elseElement = ParseElseStmt();
+                    return new ForStatement(startPos, Tokenizer.Position, op1, left, op2, right, op3, typeComment, next, elseElement);
+                }
+                
+                return new ForStatement(startPos, Tokenizer.Position, op1, left, op2, right, op3, typeComment, next, null);
+            }
+            throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol, "Expecting 'for' in for statement!");
         }
         
         public StatementNode ParseTryStmt()
