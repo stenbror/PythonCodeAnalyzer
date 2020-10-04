@@ -1566,17 +1566,72 @@ namespace PythonCodeAnalyzer.Parser
         
         public StatementNode ParseGlobalStmt()
         {
-            throw new NotImplementedException();
+            var startPos = Tokenizer.Position;
+            if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyGlobal)
+            {
+                var op = Tokenizer.CurSymbol;
+                Tokenizer.Advance();
+                var nodes = new List<Token>();
+                var separators = new List<Token>();
+                if (Tokenizer.CurSymbol.Kind == Token.TokenKind.Name) throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol, "Expecting name literal in global statement!");
+                nodes.Add(Tokenizer.CurSymbol);
+                Tokenizer.Advance();
+                while (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyComma)
+                {
+                    separators.Add(Tokenizer.CurSymbol);
+                    Tokenizer.Advance();
+                    if (Tokenizer.CurSymbol.Kind == Token.TokenKind.Name) throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol, "Expecting name literal after ',' in global statement!");
+                    nodes.Add(Tokenizer.CurSymbol);
+                    Tokenizer.Advance();
+                }
+                return new ScopeStatement(startPos, Tokenizer.Position, ScopeStatement.ScopeKind.Global, op, nodes.ToArray(), separators.ToArray());
+            }
+            throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol, "Expecting 'global' in global statement!");
         }
         
         public StatementNode ParseNonLocalStmt()
         {
-            throw new NotImplementedException();
+            var startPos = Tokenizer.Position;
+            if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyNonlocal)
+            {
+                var op = Tokenizer.CurSymbol;
+                Tokenizer.Advance();
+                var nodes = new List<Token>();
+                var separators = new List<Token>();
+                if (Tokenizer.CurSymbol.Kind == Token.TokenKind.Name) throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol, "Expecting name literal in nonlocal statement!");
+                nodes.Add(Tokenizer.CurSymbol);
+                Tokenizer.Advance();
+                while (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyComma)
+                {
+                    separators.Add(Tokenizer.CurSymbol);
+                    Tokenizer.Advance();
+                    if (Tokenizer.CurSymbol.Kind == Token.TokenKind.Name) throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol, "Expecting name literal after ',' in nonlocal statement!");
+                    nodes.Add(Tokenizer.CurSymbol);
+                    Tokenizer.Advance();
+                }
+                return new ScopeStatement(startPos, Tokenizer.Position, ScopeStatement.ScopeKind.Nonlocal, op, nodes.ToArray(), separators.ToArray());
+            }
+            throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol, "Expecting 'nonlocal' in global statement!");
         }
         
         public StatementNode ParseAssertStmt()
         {
-            throw new NotImplementedException();
+            var startPos = Tokenizer.Position;
+            if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyNonlocal)
+            {
+                var op1 = Tokenizer.CurSymbol;
+                Tokenizer.Advance();
+                var left = ParseTest();
+                if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyComma)
+                {
+                    var op2 = Tokenizer.CurSymbol;
+                    Tokenizer.Advance();
+                    var right = ParseTest();
+                    return new AssertStatement(startPos, Tokenizer.Position, op1, left, op2, right);
+                }
+                return new AssertStatement(startPos, Tokenizer.Position, op1, left, null, null);
+            }
+            throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol, "Expecting 'assert' in assert statement!");
         }
         
         public StatementNode ParseDecorator()
