@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using PythonCodeAnalyzer.Parser.Ast;
 using PythonCodeAnalyzer.Parser.Ast.Expression;
+using PythonCodeAnalyzer.Parser.Ast.Statement;
 
 namespace PythonCodeAnalyzer.Parser
 {
@@ -1075,7 +1076,29 @@ namespace PythonCodeAnalyzer.Parser
 
         public StatementNode ParseCompoundStmt()
         {
-            throw new NotImplementedException();
+            switch (Tokenizer.CurSymbol.Kind)
+            {
+                case Token.TokenKind.PyIf:
+                    return ParseIfStmt();
+                case Token.TokenKind.PyFor:
+                    return ParseForStmt();
+                case Token.TokenKind.PyWhile:
+                    return ParseWhileStmt();
+                case Token.TokenKind.PyTry:
+                    return ParseTryStmt();
+                case Token.TokenKind.PyWith:
+                    return ParseWithStmt();
+                case Token.TokenKind.PyDef:
+                    return ParseAsyncFuncDef();
+                case Token.TokenKind.PyClass:
+                    return ParseClassDeclaration();
+                case Token.TokenKind.PyMatrice:
+                    return ParseDecorated();
+                case Token.TokenKind.PyAsync:
+                    return ParseAsyncFuncDef();
+                default:
+                    throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol, "Illegal statement!");
+            }
         }
         
         public StatementNode ParseAsyncStmt()
@@ -1135,17 +1158,69 @@ namespace PythonCodeAnalyzer.Parser
         
         public StatementNode ParseStmt()
         {
-            throw new NotImplementedException();
+            switch (Tokenizer.CurSymbol.Kind)
+            {
+                case Token.TokenKind.PyIf:
+                case Token.TokenKind.PyFor:
+                case Token.TokenKind.PyWhile:
+                case Token.TokenKind.PyTry:
+                case Token.TokenKind.PyWith:
+                case Token.TokenKind.PyDef:
+                case Token.TokenKind.PyClass:
+                case Token.TokenKind.PyMatrice:
+                case Token.TokenKind.PyAsync:
+                    return ParseCompoundStmt();
+                default:
+                    return ParseSimpleStmt();
+            }
         }
         
         public StatementNode ParseSimpleStmt()
         {
-            throw new NotImplementedException();
+            var startPos = Tokenizer.Position;
+            var nodes = new List<StatementNode>();
+            var separators = new List<Token>();
+            Token newline = null;
+            nodes.Add(ParseSmallStmt());
+            while (Tokenizer.CurSymbol.Kind == Token.TokenKind.PySemiColon)
+            {
+                separators.Add(Tokenizer.CurSymbol);
+                Tokenizer.Advance();
+                if (Tokenizer.CurSymbol.Kind == Token.TokenKind.Newline) break;
+                nodes.Add(ParseSmallStmt());
+            }
+            if (Tokenizer.CurSymbol.Kind != Token.TokenKind.Newline) throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol, "Expecting Newline after statement!");
+            newline = Tokenizer.CurSymbol;
+            Tokenizer.Advance();
+            return new ListStatement(startPos, Tokenizer.Position, ListStatement.ListKind.SimpleStatementList, nodes.ToArray(), separators.ToArray(), newline);
         }
         
         public StatementNode ParseSmallStmt()
         {
-            throw new NotImplementedException();
+            switch (Tokenizer.CurSymbol.Kind)
+            {
+                case Token.TokenKind.PyDel:
+                    return ParseDelStmt();
+                case Token.TokenKind.PyPass:
+                    return ParsePassStmt();
+                case Token.TokenKind.PyBreak:
+                case Token.TokenKind.PyContinue:
+                case Token.TokenKind.PyReturn:
+                case Token.TokenKind.PyRaise:
+                case Token.TokenKind.PyYield:
+                    return ParseFlowStmt();
+                case Token.TokenKind.PyImport:
+                case Token.TokenKind.PyFrom:
+                    return ParseImportStmt();
+                case Token.TokenKind.PyGlobal:
+                    return ParseGlobalStmt();
+                case Token.TokenKind.PyNonlocal:
+                    return ParseNonLocalStmt();
+                case Token.TokenKind.PyAssert:
+                    return ParseAssertStmt();
+                default:
+                    return ParseExprStmt();
+            }
         }
         
         public StatementNode ParseExprStmt()

@@ -71,6 +71,21 @@ namespace PythonCodeAnalyzer.Parser
             PyShiftRightAssign,
             PyYield,
             PyFrom,
+            PyWhile,
+            PyTry,
+            PyWith,
+            PyClass,
+            PyDef,
+            PyDel,
+            PyPass,
+            PyContinue,
+            PyBreak,
+            PyReturn,
+            PyRaise,
+            PyImport,
+            PyGlobal,
+            PyNonlocal,
+            PyAssert,
 
             EOF
 
