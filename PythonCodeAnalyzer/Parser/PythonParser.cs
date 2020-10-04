@@ -1420,37 +1420,113 @@ namespace PythonCodeAnalyzer.Parser
         
         public StatementNode ParseFlowStmt()
         {
-            throw new NotImplementedException();
+            var startPos = Tokenizer.Position;
+            StatementNode res = null;
+            // Add check for valid place to do flow statements TODO!
+            switch (Tokenizer.CurSymbol.Kind)
+            {
+                case Token.TokenKind.PyBreak:
+                    res = ParseBreakStmt();
+                    break;
+                case Token.TokenKind.PyContinue:
+                    res = ParseContinueStmt();
+                    break;
+                case Token.TokenKind.PyReturn:
+                    res = ParseReturnStmt();
+                    break;
+                case Token.TokenKind.PyRaise:
+                    res = ParseRaiseStmt();
+                    break;
+                case Token.TokenKind.PyYield:
+                {
+                    var node = ParseYieldExpr();
+                    res = new PlainExpressionStatement(startPos, Tokenizer.Position, node);
+                    break;
+                }
+                default:
+                    throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol, "Expecting valid flow statement!");
+            }
+            return res;
         }
         
         public StatementNode ParseBreakStmt()
         {
-            throw new NotImplementedException();
+            var startPos = Tokenizer.Position;
+            if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyBreak)
+            {
+                var op = Tokenizer.CurSymbol;
+                Tokenizer.Advance();
+                return new FlowStatement(startPos, Tokenizer.Position, FlowStatement.OperatorKind.Break, op);
+            }
+            throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol, "Expecting 'break' in flow statement!");
         }
         
         public StatementNode ParseContinueStmt()
         {
-            throw new NotImplementedException();
+            var startPos = Tokenizer.Position;
+            if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyContinue)
+            {
+                var op = Tokenizer.CurSymbol;
+                Tokenizer.Advance();
+                return new FlowStatement(startPos, Tokenizer.Position, FlowStatement.OperatorKind.Continue, op);
+            }
+            throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol, "Expecting 'continue' in flow statement!");
         }
         
-        public StatementNode ParsereturnStmt()
+        public StatementNode ParseReturnStmt()
         {
-            throw new NotImplementedException();
+            var startPos = Tokenizer.Position;
+            if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyReturn)
+            {
+                var op = Tokenizer.CurSymbol;
+                Tokenizer.Advance();
+                if (Tokenizer.CurSymbol.Kind != Token.TokenKind.PySemiColon &&
+                    Tokenizer.CurSymbol.Kind != Token.TokenKind.Newline)
+                {
+                    var right = ParseTestListStarExpr();
+                    return new FlowStatement(startPos, Tokenizer.Position, FlowStatement.OperatorKind.Return, op, right);
+                }
+                return new FlowStatement(startPos, Tokenizer.Position, FlowStatement.OperatorKind.Return, op);
+            }
+            throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol, "Expecting 'return' in flow statement!");
         }
         
         public StatementNode ParseRaiseStmt()
         {
-            throw new NotImplementedException();
-        }
-        
-        public StatementNode ParseYieldStmt()
-        {
-            throw new NotImplementedException();
+            var startPos = Tokenizer.Position;
+            if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyRaise)
+            {
+                var op = Tokenizer.CurSymbol;
+                Tokenizer.Advance();
+                if (Tokenizer.CurSymbol.Kind != Token.TokenKind.PySemiColon &&
+                    Tokenizer.CurSymbol.Kind != Token.TokenKind.Newline)
+                {
+                    var left = ParseTest();
+                    if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyFrom)
+                    {
+                        var op2 = Tokenizer.CurSymbol;
+                        Tokenizer.Advance();
+                        var right = ParseTest();
+                        return new FlowStatement(startPos, Tokenizer.Position, FlowStatement.OperatorKind.Raise, op, left, op2, right);
+                    }
+                    return new FlowStatement(startPos, Tokenizer.Position, FlowStatement.OperatorKind.Raise, op, left, null, null);
+                }
+                return new FlowStatement(startPos, Tokenizer.Position, FlowStatement.OperatorKind.Raise, op, null, null, null);
+            }
+            throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol, "Expecting 'raise' in flow statement!");
         }
         
         public StatementNode ParseImportStmt()
         {
-            throw new NotImplementedException();
+            switch (Tokenizer.CurSymbol.Kind)
+            {
+                case Token.TokenKind.PyImport:
+                    return ParseImportName();
+                case Token.TokenKind.PyFrom:
+                    return ParseImportFrom();
+                default:
+                    throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol, "Expecting 'import' or 'from' in import statement!");
+            }
         }
         
         public StatementNode ParseImportName()
