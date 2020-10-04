@@ -88,7 +88,9 @@ namespace PythonCodeAnalyzer.Parser
             PyAssert,
             TypeComment,
             PyElif,
-            
+            PyExcept,
+            PyFinally,
+            PyAs,
 
             EOF
 

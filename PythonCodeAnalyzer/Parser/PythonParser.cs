@@ -1219,7 +1219,46 @@ namespace PythonCodeAnalyzer.Parser
         
         public StatementNode ParseTryStmt()
         {
-            throw new NotImplementedException();
+            var startPos = Tokenizer.Position;
+            if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyTry)
+            {
+                var op1 = Tokenizer.CurSymbol;
+                Tokenizer.Advance();
+                if (Tokenizer.CurSymbol.Kind != Token.TokenKind.PyColon) throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol, "Expecting ':' in try statement!");
+                var op2 = Tokenizer.CurSymbol;
+                Tokenizer.Advance();
+                var left = ParseSuite();
+                bool needFinally = true;
+                var excepts = new List<StatementNode>();
+                StatementNode elsePart = null;
+                StatementNode finallyPart = null;
+                
+                while (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyExcept)
+                {
+                    excepts.Add(ParseExceptStmt());
+                    needFinally = false;
+                }
+
+                if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyElse)
+                {
+                    elsePart = ParseElseStmt();
+                }
+                
+                if (Tokenizer.CurSymbol.Kind != Token.TokenKind.PyFinally && needFinally) throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol, "Expecting 'finally' in try statement missing except statements!");
+                
+                if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyFinally)
+                {
+                    var op3 = Tokenizer.CurSymbol;
+                    Tokenizer.Advance();
+                    if (Tokenizer.CurSymbol.Kind != Token.TokenKind.PyColon) throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol, "Expecting ':' in finally part of try statement!");
+                    var op4 = Tokenizer.CurSymbol;
+                    Tokenizer.Advance();
+                    var next = ParseSuite();
+                    finallyPart = new FinallyStatement(startPos, Tokenizer.Position, op3, op4, next);
+                }
+                return new TryStatement(startPos, Tokenizer.Position, op1, op2, left, excepts.ToArray(), elsePart, finallyPart);
+            }
+            throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol, "Expecting 'try' in try statement!");
         }
         
         public StatementNode ParseWithStmt()
@@ -1234,7 +1273,40 @@ namespace PythonCodeAnalyzer.Parser
         
         public StatementNode ParseExceptStmt()
         {
-            throw new NotImplementedException();
+            if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyExcept)
+            {
+                var startPos = Tokenizer.Position;
+                var op1 = Tokenizer.CurSymbol;
+                Tokenizer.Advance();
+                ExpressionNode left = null;
+                Token op2 = null;
+                Token op3 = null;
+                if (Tokenizer.CurSymbol.Kind != Token.TokenKind.PyColon)
+                {
+                    left = ParseTest();
+                    if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyAs)
+                    {
+                        op2 = Tokenizer.CurSymbol;
+                        Tokenizer.Advance();
+                        if (Tokenizer.CurSymbol.Kind != Token.TokenKind.Name)
+                            throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol,
+                                "Expecting name literal in except statement after 'as'!");
+                        op3 = Tokenizer.CurSymbol;
+                        Tokenizer.Advance();
+                    }
+                }
+
+                if (Tokenizer.CurSymbol.Kind != Token.TokenKind.PyColon)
+                    throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol,
+                        "Expecting ':' in except statement!");
+                var op4 = Tokenizer.CurSymbol;
+                Tokenizer.Advance();
+                var right = ParseSuite();
+                return new ExceptStatement(startPos, Tokenizer.Position, op1, left, op2, op3, op4, right);
+            }
+
+            throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol,
+                "Expecting 'except' in except statement!");
         }
         
         public StatementNode ParseSuite()
