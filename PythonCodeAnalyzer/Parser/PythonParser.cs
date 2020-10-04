@@ -1395,12 +1395,27 @@ namespace PythonCodeAnalyzer.Parser
         
         public StatementNode ParseDelStmt()
         {
-            throw new NotImplementedException();
+            var startPos = Tokenizer.Position;
+            if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyDel)
+            {
+                var op = Tokenizer.CurSymbol;
+                Tokenizer.Advance();
+                var right = ParseExprList();
+                return new DelStatement(startPos, Tokenizer.Position, op, right);
+            }
+            throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol, "Expecting 'del' in del statement!");
         }
         
         public StatementNode ParsePassStmt()
         {
-            throw new NotImplementedException();
+            var startPos = Tokenizer.Position;
+            if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyPass)
+            {
+                var op = Tokenizer.CurSymbol;
+                Tokenizer.Advance();
+                return new PassStatement(startPos, Tokenizer.Position, op);
+            }
+            throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol, "Expecting 'pass' in pass statement!");
         }
         
         public StatementNode ParseFlowStmt()
