@@ -1108,12 +1108,56 @@ namespace PythonCodeAnalyzer.Parser
         
         public StatementNode ParseIfStmt()
         {
-            throw new NotImplementedException();
+            var startPos = Tokenizer.Position;
+            if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyIf)
+            {
+                var op1 = Tokenizer.CurSymbol;
+                Tokenizer.Advance();
+                var left = ParseTest();
+                if (Tokenizer.CurSymbol.Kind != Token.TokenKind.PyColon) throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol, "Expecting ':' in if statement!");
+                var op2 = Tokenizer.CurSymbol;
+                Tokenizer.Advance();
+                var right = ParseSuite();
+                if (Tokenizer.CurSymbol.Kind != Token.TokenKind.PyElif &&
+                    Tokenizer.CurSymbol.Kind != Token.TokenKind.PyElse)
+                {
+                    return new IfStatement(startPos, Tokenizer.Position, op1, left, op2, right, null, null);
+                }
+                
+                var elifElements = new List<StatementNode>();
+                StatementNode elseElement = null;
+                while (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyElif)
+                {
+                    var op3 = Tokenizer.CurSymbol;
+                    Tokenizer.Advance();
+                    var first = ParseTest();
+                    if (Tokenizer.CurSymbol.Kind != Token.TokenKind.PyColon) throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol, "Expecting ':' in elif statement!");
+                    var op4 = Tokenizer.CurSymbol;
+                    Tokenizer.Advance();
+                    var second = ParseSuite();
+                    elifElements.Add(new ElifStatement(startPos, Tokenizer.Position, op3, first, op4, second));
+                }
+
+                if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyElse) elseElement = ParseElseStmt();
+                return new IfStatement(startPos, Tokenizer.Position, op1, left, op2, right, elifElements.ToArray(), elseElement);
+            }
+            throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol, "Expecting 'if' in if statement!");
         }
         
         public StatementNode ParseElseStmt()
         {
-            throw new NotImplementedException();
+            var startPos = Tokenizer.Position;
+            if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyElse)
+            {
+                var op1 = Tokenizer.CurSymbol;
+                Tokenizer.Advance();
+                if (Tokenizer.CurSymbol.Kind != Token.TokenKind.PyColon) throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol, "Expecting ':' in else statement!");
+                var op2 = Tokenizer.CurSymbol;
+                Tokenizer.Advance();
+                var right = ParseSuite();
+                return new ElseStatement(startPos, Tokenizer.Position, op1, op2, right);
+            }
+            throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol, "Expecting 'else' in else statement!");
         }
         
         public StatementNode ParseWhileStmt()
