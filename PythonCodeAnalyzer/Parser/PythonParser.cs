@@ -1225,12 +1225,172 @@ namespace PythonCodeAnalyzer.Parser
         
         public StatementNode ParseExprStmt()
         {
-            throw new NotImplementedException();
+            var startPos = Tokenizer.Position;
+            var left = ParseTestListStarExpr();
+            switch (Tokenizer.CurSymbol.Kind)
+            {
+                case Token.TokenKind.PyPlusAssign:
+                {
+                    var op = Tokenizer.CurSymbol;
+                    Tokenizer.Advance();
+                    var right = (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyYield)
+                        ? ParseYieldExpr()
+                        : ParseTestList();
+                    return new AugAssignStatement(startPos, Tokenizer.Position, AugAssignStatement.OperatorKind.PlusAssign, left, op, right);
+                }
+                case Token.TokenKind.PyMinusAssign:
+                {
+                    var op = Tokenizer.CurSymbol;
+                    Tokenizer.Advance();
+                    var right = (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyYield)
+                        ? ParseYieldExpr()
+                        : ParseTestList();
+                    return new AugAssignStatement(startPos, Tokenizer.Position, AugAssignStatement.OperatorKind.MinusAssign, left, op, right);
+                }
+                case Token.TokenKind.PyMulAssign:
+                {
+                    var op = Tokenizer.CurSymbol;
+                    Tokenizer.Advance();
+                    var right = (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyYield)
+                        ? ParseYieldExpr()
+                        : ParseTestList();
+                    return new AugAssignStatement(startPos, Tokenizer.Position, AugAssignStatement.OperatorKind.MulAssign, left, op, right);
+                }
+                case Token.TokenKind.PyPower:
+                {
+                    var op = Tokenizer.CurSymbol;
+                    Tokenizer.Advance();
+                    var right = (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyYield)
+                        ? ParseYieldExpr()
+                        : ParseTestList();
+                    return new AugAssignStatement(startPos, Tokenizer.Position, AugAssignStatement.OperatorKind.PowerAssign, left, op, right);
+                }
+                case Token.TokenKind.PyDivAssign:
+                {
+                    var op = Tokenizer.CurSymbol;
+                    Tokenizer.Advance();
+                    var right = (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyYield)
+                        ? ParseYieldExpr()
+                        : ParseTestList();
+                    return new AugAssignStatement(startPos, Tokenizer.Position, AugAssignStatement.OperatorKind.DivAssign, left, op, right);
+                }
+                case Token.TokenKind.PyFloorDivAssign:
+                {
+                    var op = Tokenizer.CurSymbol;
+                    Tokenizer.Advance();
+                    var right = (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyYield)
+                        ? ParseYieldExpr()
+                        : ParseTestList();
+                    return new AugAssignStatement(startPos, Tokenizer.Position, AugAssignStatement.OperatorKind.FloorDivAssign, left, op, right);
+                }
+                case Token.TokenKind.PyModuloAssign:
+                {
+                    var op = Tokenizer.CurSymbol;
+                    Tokenizer.Advance();
+                    var right = (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyYield)
+                        ? ParseYieldExpr()
+                        : ParseTestList();
+                    return new AugAssignStatement(startPos, Tokenizer.Position, AugAssignStatement.OperatorKind.ModuloAssign, left, op, right);
+                }
+                case Token.TokenKind.PyMatriceAssign:
+                {
+                    var op = Tokenizer.CurSymbol;
+                    Tokenizer.Advance();
+                    var right = (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyYield)
+                        ? ParseYieldExpr()
+                        : ParseTestList();
+                    return new AugAssignStatement(startPos, Tokenizer.Position, AugAssignStatement.OperatorKind.MatriceAssign, left, op, right);
+                }
+                case Token.TokenKind.PyAndAssign:
+                {
+                    var op = Tokenizer.CurSymbol;
+                    Tokenizer.Advance();
+                    var right = (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyYield)
+                        ? ParseYieldExpr()
+                        : ParseTestList();
+                    return new AugAssignStatement(startPos, Tokenizer.Position, AugAssignStatement.OperatorKind.AndAssign, left, op, right);
+                }
+                case Token.TokenKind.PyOrAssign:
+                {
+                    var op = Tokenizer.CurSymbol;
+                    Tokenizer.Advance();
+                    var right = (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyYield)
+                        ? ParseYieldExpr()
+                        : ParseTestList();
+                    return new AugAssignStatement(startPos, Tokenizer.Position, AugAssignStatement.OperatorKind.OrAssign, left, op, right);
+                }
+                case Token.TokenKind.PyXorAssign:
+                {
+                    var op = Tokenizer.CurSymbol;
+                    Tokenizer.Advance();
+                    var right = (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyYield)
+                        ? ParseYieldExpr()
+                        : ParseTestList();
+                    return new AugAssignStatement(startPos, Tokenizer.Position, AugAssignStatement.OperatorKind.XorAssign, left, op, right);
+                }
+                case Token.TokenKind.PyShiftLeftAssign:
+                {
+                    var op = Tokenizer.CurSymbol;
+                    Tokenizer.Advance();
+                    var right = (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyYield)
+                        ? ParseYieldExpr()
+                        : ParseTestList();
+                    return new AugAssignStatement(startPos, Tokenizer.Position, AugAssignStatement.OperatorKind.ShiftLeftAssign, left, op, right);
+                }
+                case Token.TokenKind.PyShiftRightAssign:
+                {
+                    var op = Tokenizer.CurSymbol;
+                    Tokenizer.Advance();
+                    var right = (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyYield)
+                        ? ParseYieldExpr()
+                        : ParseTestList();
+                    return new AugAssignStatement(startPos, Tokenizer.Position, AugAssignStatement.OperatorKind.ShiftRightAssign, left, op, right);
+                }
+                case Token.TokenKind.PyColon:
+                    return ParseAnnAssign(startPos, left);
+                case Token.TokenKind.PyAssign:
+                {
+                    var res = (Node)left;
+                    while (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyAssign)
+                    {
+                        var op = Tokenizer.CurSymbol;
+                        Tokenizer.Advance();
+                        var right = (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyYield)
+                            ? ParseYieldExpr()
+                            : ParseTestListStarExpr();
+                        res = new AssignmentStatement(startPos, Tokenizer.Position, res, op, right);
+                    }
+
+                    if (Tokenizer.CurSymbol.Kind == Token.TokenKind.TypeComment)
+                    {
+                        var op2 = Tokenizer.CurSymbol;
+                        Tokenizer.Advance();
+                        ((AssignmentStatement) res).TypeComment = op2;
+                    }
+                    return (StatementNode)res;
+                }
+                default:
+                    return new PlainExpressionStatement(startPos, Tokenizer.Position, left);
+            }
         }
         
-        public StatementNode ParseAnnAssign()
+        public StatementNode ParseAnnAssign(uint start, ExpressionNode left)
         {
-            throw new NotImplementedException();
+            if (Tokenizer.CurSymbol.Kind != Token.TokenKind.PyColon) throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol, "Expecting ':' in AnnAssign Statement!");
+            var colon = Tokenizer.CurSymbol;
+            Tokenizer.Advance();
+            var type = ParseTest();
+            Token assign = null;
+            ExpressionNode right = null;
+            if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyAssign)
+            {
+                assign = Tokenizer.CurSymbol;
+                Tokenizer.Advance();
+                right = (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyYield)
+                    ? ParseYieldExpr()
+                    : ParseTestListStarExpr();
+            }
+            return new AnnAssignStatement(start, Tokenizer.Position, left, colon, type, assign, right);
         }
         
         public StatementNode ParseDelStmt()

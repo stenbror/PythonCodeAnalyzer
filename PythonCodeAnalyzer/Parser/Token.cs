@@ -86,6 +86,7 @@ namespace PythonCodeAnalyzer.Parser
             PyGlobal,
             PyNonlocal,
             PyAssert,
+            TypeComment,
 
             EOF
 
