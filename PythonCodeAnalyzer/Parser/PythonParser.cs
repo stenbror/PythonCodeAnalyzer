@@ -1113,7 +1113,7 @@ namespace PythonCodeAnalyzer.Parser
             {
                 var op1 = Tokenizer.CurSymbol;
                 Tokenizer.Advance();
-                var left = ParseTest();
+                var left = ParseNamedExpr();
                 if (Tokenizer.CurSymbol.Kind != Token.TokenKind.PyColon) throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol, "Expecting ':' in if statement!");
                 var op2 = Tokenizer.CurSymbol;
                 Tokenizer.Advance();
@@ -1130,7 +1130,7 @@ namespace PythonCodeAnalyzer.Parser
                 {
                     var op3 = Tokenizer.CurSymbol;
                     Tokenizer.Advance();
-                    var first = ParseTest();
+                    var first = ParseNamedExpr();
                     if (Tokenizer.CurSymbol.Kind != Token.TokenKind.PyColon) throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol, "Expecting ':' in elif statement!");
                     var op4 = Tokenizer.CurSymbol;
                     Tokenizer.Advance();
@@ -1162,7 +1162,25 @@ namespace PythonCodeAnalyzer.Parser
         
         public StatementNode ParseWhileStmt()
         {
-            throw new NotImplementedException();
+            var startPos = Tokenizer.Position;
+            if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyWhile)
+            {
+                var op1 = Tokenizer.CurSymbol;
+                Tokenizer.Advance();
+                var left = ParseNamedExpr();
+                if (Tokenizer.CurSymbol.Kind != Token.TokenKind.PyColon) throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol, "Expecting ':' in while statement!");
+                var op2 = Tokenizer.CurSymbol;
+                Tokenizer.Advance();
+                var right = ParseSuite();
+                if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyElse)
+                {
+                    var elseElement = ParseElseStmt();
+                    return new WhileStatement(startPos, Tokenizer.Position, op1, left, op2, right, elseElement);
+                }
+
+                return new WhileStatement(startPos, Tokenizer.Position, op1, left, op2, right, null);
+            }
+            throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol, "Expecting 'while' in while statement!");
         }
         
         public StatementNode ParseForStmt()
