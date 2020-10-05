@@ -1263,12 +1263,53 @@ namespace PythonCodeAnalyzer.Parser
         
         public StatementNode ParseWithStmt()
         {
-            throw new NotImplementedException();
+            if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyWith)
+            {
+                var startPos = Tokenizer.Position;
+                var op1 = Tokenizer.CurSymbol;
+                Tokenizer.Advance();
+                var nodes = new List<StatementNode>();
+                var separators = new List<Token>();
+                Token typeComment = null;
+                nodes.Add(ParseWithItem());
+                while (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyComma)
+                {
+                    separators.Add(Tokenizer.CurSymbol);
+                    Tokenizer.Advance();
+                    nodes.Add(ParseWithItem());
+                }
+
+                if (Tokenizer.CurSymbol.Kind != Token.TokenKind.PyColon)
+                    throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol,
+                        "Expecting ':' in with statement!");
+                var colon = Tokenizer.CurSymbol;
+                Tokenizer.Advance();
+                if (Tokenizer.CurSymbol.Kind == Token.TokenKind.TypeComment)
+                {
+                    typeComment = Tokenizer.CurSymbol;
+                    Tokenizer.Advance();
+                }
+
+                var right = ParseSuite();
+                return new WithStatement(startPos, Tokenizer.Position, op1, nodes.ToArray(), separators.ToArray(),
+                    colon, typeComment, right);
+            }
+            throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol,
+                "Expecting 'with' in with statement!");
         }
         
         public StatementNode ParseWithItem()
         {
-            throw new NotImplementedException();
+            var startPos = Tokenizer.Position;
+            var left = ParseTest();
+            if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyAs)
+            {
+                var op = Tokenizer.CurSymbol;
+                Tokenizer.Advance();
+                var right = ParseOrExpr();
+                return new WithItemStatement(startPos, Tokenizer.Position, left, op, right);
+            }
+            return new WithItemStatement(startPos, Tokenizer.Position, left, null, null);
         }
         
         public StatementNode ParseExceptStmt()
