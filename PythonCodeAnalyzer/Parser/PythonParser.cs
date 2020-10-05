@@ -1373,7 +1373,28 @@ namespace PythonCodeAnalyzer.Parser
         
         public StatementNode ParseSuite()
         {
-            throw new NotImplementedException();
+            var startPos = Tokenizer.Position;
+            if (Tokenizer.CurSymbol.Kind == Token.TokenKind.Newline)
+            {
+                var op1 = Tokenizer.CurSymbol;
+                Tokenizer.Advance();
+                if (Tokenizer.CurSymbol.Kind != Token.TokenKind.Indent)
+                    throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol,
+                        "Expecting indent in block level of statement block!");
+                var op2 = Tokenizer.CurSymbol;
+                Tokenizer.Advance();
+                var nodes = new List<StatementNode>();
+                nodes.Add(ParseStmt());
+                while (Tokenizer.CurSymbol.Kind != Token.TokenKind.Dedent)
+                {
+                    nodes.Add(ParseStmt());
+                }
+                var op3 = Tokenizer.CurSymbol;
+                Tokenizer.Advance();
+                return new SuiteStatement(startPos, Tokenizer.Position, op1, op2, nodes.ToArray(), op3);
+            }
+
+            return ParseSimpleStmt();
         }
         
         public StatementNode ParseClassDeclaration()

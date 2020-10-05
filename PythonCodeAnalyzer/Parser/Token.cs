@@ -91,6 +91,8 @@ namespace PythonCodeAnalyzer.Parser
             PyExcept,
             PyFinally,
             PyAs,
+            Indent,
+            Dedent,
 
             EOF
 
