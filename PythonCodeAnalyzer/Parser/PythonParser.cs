@@ -1103,7 +1103,28 @@ namespace PythonCodeAnalyzer.Parser
         
         public StatementNode ParseAsyncStmt()
         {
-            throw new NotImplementedException();
+            var startPos = Tokenizer.Position;
+            if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyAsync)
+            {
+                var op = Tokenizer.CurSymbol;
+                Tokenizer.Advance();
+                StatementNode right = null;
+                switch (Tokenizer.CurSymbol.Kind)
+                {
+                    case Token.TokenKind.PyDef:
+                        right = ParseFuncDefDeclaration();
+                        return new AsyncStatement(startPos, Tokenizer.Position, op, right);
+                    case Token.TokenKind.PyWith:
+                        right = ParseWithStmt();
+                        return new AsyncStatement(startPos, Tokenizer.Position, op, right);
+                    case Token.TokenKind.PyFor:
+                        right = ParseForStmt();
+                        return new AsyncStatement(startPos, Tokenizer.Position, op, right);
+                    default:
+                        throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol, "Expecting 'def', 'with' or 'for' in async statement!");
+                }
+            }
+            throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol, "Expecting 'async' in async statement!");
         }
         
         public StatementNode ParseIfStmt()
