@@ -1399,7 +1399,42 @@ namespace PythonCodeAnalyzer.Parser
         
         public StatementNode ParseClassDeclaration()
         {
-            throw new NotImplementedException();
+            var startPos = Tokenizer.Position;
+            if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyClass)
+            {
+                var op1 = Tokenizer.CurSymbol;
+                Tokenizer.Advance();
+                if (Tokenizer.CurSymbol.Kind != Token.TokenKind.Name)
+                    throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol,
+                        "Expecting name of class declaration!");
+                var name = Tokenizer.CurSymbol;
+                Tokenizer.Advance();
+                if (Tokenizer.CurSymbol.Kind != Token.TokenKind.PyLeftParen)
+                    throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol,
+                        "Expecting '(' in class declaration!");
+                var op2 = Tokenizer.CurSymbol;
+                Tokenizer.Advance();
+                ExpressionNode left = null;
+                if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyRightParen)
+                {
+                    left = ParseArgList();
+                }
+                if (Tokenizer.CurSymbol.Kind != Token.TokenKind.PyRightParen)
+                    throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol,
+                        "Expecting ')' in class declaration!");
+                var op3 = Tokenizer.CurSymbol;
+                Tokenizer.Advance();
+                if (Tokenizer.CurSymbol.Kind != Token.TokenKind.PyColon)
+                    throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol,
+                        "Expecting ':' in class declaration!");
+                var op4 = Tokenizer.CurSymbol;
+                Tokenizer.Advance();
+                var right = ParseSuite();
+                return new ClassDeclarationStatement(startPos, Tokenizer.Position, op1, name, op2, left, op3, op4, right);
+            }
+
+            throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol,
+                "Expecting 'class' in class declaration!");
         }
         
         public StatementNode ParseStmt()
