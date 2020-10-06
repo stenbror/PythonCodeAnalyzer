@@ -93,7 +93,7 @@ namespace PythonCodeAnalyzer.Parser
             PyAs,
             Indent,
             Dedent,
-
+            PyArrow,
             EOF
 
         }  

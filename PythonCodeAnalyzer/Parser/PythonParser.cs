@@ -1999,7 +1999,37 @@ namespace PythonCodeAnalyzer.Parser
         
         public StatementNode ParseFuncDefDeclaration()
         {
-            throw new NotImplementedException();
+            var startPos = Tokenizer.Position;
+            if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyDef)
+            {
+                var op1 = Tokenizer.CurSymbol;
+                Tokenizer.Advance();
+                if (Tokenizer.CurSymbol.Kind != Token.TokenKind.Name) 
+                    throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol, "Expecting name literal in func statement!");
+                var op2 = Tokenizer.CurSymbol;
+                Tokenizer.Advance();
+                var left = ParseParameters();
+                Token op3 = null, op4 = null, op5 = null;
+                ExpressionNode right = null;
+                if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyArrow)
+                {
+                    op3 = Tokenizer.CurSymbol;
+                    Tokenizer.Advance();
+                    right = ParseTest();
+                }
+                if (Tokenizer.CurSymbol.Kind != Token.TokenKind.PyColon) 
+                    throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol, "Expecting ':' in func statement!");
+                op4 = Tokenizer.CurSymbol;
+                Tokenizer.Advance();
+                if (Tokenizer.CurSymbol.Kind == Token.TokenKind.TypeComment)
+                {
+                    op5= Tokenizer.CurSymbol;
+                    Tokenizer.Advance();
+                }
+                var next = ParseFuncBodySuite();
+                return new FuncDeclarationStatement(startPos, Tokenizer.Position, op1, op2, left, op3, right, op4, op5, next);
+            }
+            throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol, "Expecting 'def' in func statement!");
         }
         
         public StatementNode ParseParameters()
