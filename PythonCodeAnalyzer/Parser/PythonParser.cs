@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using PythonCodeAnalyzer.Parser.Ast;
 using PythonCodeAnalyzer.Parser.Ast.Expression;
@@ -2062,11 +2063,11 @@ namespace PythonCodeAnalyzer.Parser
         
         public StatementNode ParseSingleInput()
         {
-            var startPos = Tokenizer.Position;
             Token op = null;
             StatementNode right = null;
             Tokenizer.Advance();
-
+            var startPos = Tokenizer.Position;
+            
             switch (Tokenizer.CurSymbol.Kind)
             {
                 case Token.TokenKind.PyIf:
@@ -2098,7 +2099,27 @@ namespace PythonCodeAnalyzer.Parser
         
         public StatementNode ParseFileInput()
         {
-            throw new NotImplementedException();
+            Tokenizer.Advance();
+            var startPos = Tokenizer.Position;
+            var newlines = new List<Token>();
+            var nodes = new List<StatementNode>();
+            
+            while (Tokenizer.CurSymbol.Kind != Token.TokenKind.EOF)
+            {
+                if (Tokenizer.CurSymbol.Kind == Token.TokenKind.Newline)
+                {
+                    newlines.Add(Tokenizer.CurSymbol);
+                    Tokenizer.Advance();
+                }
+                else
+                {
+                    nodes.Add(ParseStmt());
+                }
+            }
+
+            var eof = Tokenizer.CurSymbol; 
+            
+            return new FileInputStatement(startPos, Tokenizer.Position, newlines.ToArray(), nodes.ToArray(), eof);
         }
         
         public StatementNode ParseEvalInput()
