@@ -2124,7 +2124,19 @@ namespace PythonCodeAnalyzer.Parser
         
         public StatementNode ParseEvalInput()
         {
-            throw new NotImplementedException();
+            Tokenizer.Advance();
+            var startPos = Tokenizer.Position;
+            var right = ParseTestList();
+            var newlines = new List<Token>();
+            while (Tokenizer.CurSymbol.Kind == Token.TokenKind.Newline)
+            {
+                newlines.Add(Tokenizer.CurSymbol);
+                Tokenizer.Advance();
+            }
+            if (Tokenizer.CurSymbol.Kind != Token.TokenKind.EOF) 
+                throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol,
+                    "Expecting end of file!");
+            return new EvalInputStatement(startPos, Tokenizer.Position, right, newlines.ToArray(), Tokenizer.CurSymbol);
         }
 
         public StatementNode ParseFuncBodySuite()
