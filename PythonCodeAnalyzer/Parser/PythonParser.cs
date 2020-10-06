@@ -2141,7 +2141,40 @@ namespace PythonCodeAnalyzer.Parser
 
         public StatementNode ParseFuncBodySuite()
         {
-            throw new NotImplementedException();
+            var startPos = Tokenizer.Position;
+            if (Tokenizer.CurSymbol.Kind == Token.TokenKind.Newline)
+            {
+                var op1 = Tokenizer.CurSymbol;
+                Tokenizer.Advance();
+                Token op2 = null, op3 = null;
+                if (Tokenizer.CurSymbol.Kind == Token.TokenKind.TypeComment)
+                {
+                    op2 = Tokenizer.CurSymbol;
+                    Tokenizer.Advance();
+                    if (Tokenizer.CurSymbol.Kind != Token.TokenKind.Newline)
+                        throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol,
+                            "Expecting newline after type comment in block level of statement block!");
+                    op3 = Tokenizer.CurSymbol;
+                    Tokenizer.Advance();
+                }
+                
+                if (Tokenizer.CurSymbol.Kind != Token.TokenKind.Indent)
+                    throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol,
+                        "Expecting indent in block level of statement block!");
+                var op4 = Tokenizer.CurSymbol;
+                Tokenizer.Advance();
+                var nodes = new List<StatementNode>();
+                nodes.Add(ParseStmt());
+                while (Tokenizer.CurSymbol.Kind != Token.TokenKind.Dedent)
+                {
+                    nodes.Add(ParseStmt());
+                }
+                var op5 = Tokenizer.CurSymbol;
+                Tokenizer.Advance();
+                return new FuncSuiteStatement(startPos, Tokenizer.Position, op1, op2, op3, op4,nodes.ToArray(), op5);
+            }
+
+            return ParseSimpleStmt();
         }
 
         public StatementNode ParseFuncInput()
