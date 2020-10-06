@@ -2004,7 +2004,20 @@ namespace PythonCodeAnalyzer.Parser
         
         public StatementNode ParseParameters()
         {
-            throw new NotImplementedException();
+            var startPos = Tokenizer.Position;
+            if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyLeftParen)
+            {
+                var op1 = Tokenizer.CurSymbol;
+                Tokenizer.Advance();
+                StatementNode right = null;
+                if (Tokenizer.CurSymbol.Kind != Token.TokenKind.PyRightParen) right = ParseTypedArgsList();
+                if (Tokenizer.CurSymbol.Kind != Token.TokenKind.PyDef) 
+                    throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol, "Expecting ')' in parameter of func statement!");
+                var op2 = Tokenizer.CurSymbol;
+                Tokenizer.Advance();
+                return new ParameterStatement(startPos, Tokenizer.Position, op1, right, op2);
+            }
+            throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol, "Expecting '(' in parameter of func statement!");
         }
         
         public StatementNode ParseTypedArgsList()
