@@ -2179,12 +2179,50 @@ namespace PythonCodeAnalyzer.Parser
 
         public StatementNode ParseFuncInput()
         {
-            throw new NotImplementedException();
+            Tokenizer.Advance();
+            var startPos = Tokenizer.Position;
+            var right = ParseFuncType();
+            var newlines = new List<Token>();
+            while (Tokenizer.CurSymbol.Kind == Token.TokenKind.Newline)
+            {
+                newlines.Add(Tokenizer.CurSymbol);
+                Tokenizer.Advance();
+            }
+            if (Tokenizer.CurSymbol.Kind != Token.TokenKind.EOF) 
+                throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol,
+                    "Expecting end of file!");
+
+            return new FuncInputStatement(startPos, Tokenizer.Position, right, newlines.ToArray(), Tokenizer.CurSymbol);
         }
 
         public ExpressionNode ParseFuncType()
         {
-            throw new NotImplementedException();
+            if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyLeftParen)
+            {
+                var startPos = Tokenizer.Position;
+                var op1 = Tokenizer.CurSymbol;
+                Tokenizer.Advance();
+                ExpressionNode left = null;
+                if (Tokenizer.CurSymbol.Kind != Token.TokenKind.PyRightParen)
+                {
+                    left = ParseTypeList();
+                }
+                if (Tokenizer.CurSymbol.Kind != Token.TokenKind.PyRightParen)
+                    throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol,
+                    "Expecting ')' om FuncType expression!");
+                var op2 = Tokenizer.CurSymbol;
+                Tokenizer.Advance();
+                if (Tokenizer.CurSymbol.Kind != Token.TokenKind.PyArrow)
+                    throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol,
+                        "Expecting '->' om FuncType expression!");
+                var op3 = Tokenizer.CurSymbol;
+                Tokenizer.Advance();
+                var right = ParseTest();
+
+                return new FuncTypeExpression(startPos, Tokenizer.Position, op1, left, op2, op3, right);
+            }
+            throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol,
+                "Expecting '(' om FuncType expression!");
         }
 
         public ExpressionNode ParseTypeList()
