@@ -2062,7 +2062,38 @@ namespace PythonCodeAnalyzer.Parser
         
         public StatementNode ParseSingleInput()
         {
-            throw new NotImplementedException();
+            var startPos = Tokenizer.Position;
+            Token op = null;
+            StatementNode right = null;
+            Tokenizer.Advance();
+
+            switch (Tokenizer.CurSymbol.Kind)
+            {
+                case Token.TokenKind.PyIf:
+                case Token.TokenKind.PyFor:
+                case Token.TokenKind.PyWhile:
+                case Token.TokenKind.PyTry:
+                case Token.TokenKind.PyWith:
+                case Token.TokenKind.PyDef:
+                case Token.TokenKind.PyClass:
+                case Token.TokenKind.PyMatrice:
+                case Token.TokenKind.PyAsync:
+                    right = ParseCompoundStmt();
+                    if (Tokenizer.CurSymbol.Kind != Token.TokenKind.Newline) 
+                        throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol, 
+                            "Expecting newline after block statement!");
+                    op = Tokenizer.CurSymbol;
+                    Tokenizer.Advance();
+                    break;
+                case Token.TokenKind.Newline:
+                    op = Tokenizer.CurSymbol;
+                    Tokenizer.Advance();
+                    break;
+                default:
+                    right = ParseSimpleStmt();
+                    break;
+            }
+            return new SingleInputStatement(startPos, Tokenizer.Position, right, op);
         }
         
         public StatementNode ParseFileInput()
