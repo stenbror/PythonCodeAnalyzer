@@ -6,7 +6,8 @@
         {
             Unknown,
             StatementList,
-            SimpleStatementList
+            SimpleStatementList,
+            DecoratorList
         }
 
         public ListKind Kind { get; set; }

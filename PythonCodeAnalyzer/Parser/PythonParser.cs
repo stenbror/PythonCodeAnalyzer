@@ -1917,17 +1917,70 @@ namespace PythonCodeAnalyzer.Parser
         
         public StatementNode ParseDecorator()
         {
-            throw new NotImplementedException();
+            var startPos = Tokenizer.Position;
+            if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyMatrice)
+            {
+                var op1 = Tokenizer.CurSymbol;
+                Tokenizer.Advance();
+                var left = ParseDottedName();
+                Token op2 = null, op3 = null;
+                ExpressionNode right = null;
+                if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyLeftParen)
+                {
+                    op2 = Tokenizer.CurSymbol;
+                    Tokenizer.Advance();
+                    if (Tokenizer.CurSymbol.Kind != Token.TokenKind.PyRightParen) right = ParseArgList();
+                    if (Tokenizer.CurSymbol.Kind != Token.TokenKind.PyRightParen) throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol, "Expecting ')' in decorator statement!");
+                    op3 = Tokenizer.CurSymbol;
+                    Tokenizer.Advance();
+                }
+                if (Tokenizer.CurSymbol.Kind != Token.TokenKind.Newline) throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol, "Expecting newline in decorator statement!");
+                var op4 = Tokenizer.CurSymbol;
+                Tokenizer.Advance();
+                return new DecoratorStatement(startPos, Tokenizer.Position, op1, left, op2, right, op3, op4);
+            }
+            throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol, "Expecting '@' in decorator statement!");
         }
         
         public StatementNode ParseDecorators()
         {
-            throw new NotImplementedException();
+            var startPos = Tokenizer.Position;
+            if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyMatrice)
+            {
+                var nodes = new List<StatementNode>();
+                while (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyMatrice)
+                {
+                    nodes.Add(ParseDecorator());
+                }
+                return new ListStatement(startPos, Tokenizer.Position, ListStatement.ListKind.DecoratorList, nodes.ToArray(), null, null);
+            }
+            throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol, "Expecting '@' in decorator statement!");
         }
         
         public StatementNode ParseDecorated()
         {
-            throw new NotImplementedException();
+            var startPos = Tokenizer.Position;
+            if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyMatrice)
+            {
+                var left = ParseDecorators();
+                StatementNode right = null;
+                switch (Tokenizer.CurSymbol.Kind)
+                {
+                    case Token.TokenKind.PyClass:
+                        right = ParseClassDeclaration();
+                        break;
+                    case Token.TokenKind.PyDef:
+                        right = ParseFuncDefDeclaration();
+                        break;
+                    case Token.TokenKind.PyAsync:
+                        right = ParseAsyncFuncDef();
+                        break;
+                    default:
+                        throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol, "Expecting 'class', 'def' or 'async' in decorated statement!");
+                }
+                return new DecoratedStatement(startPos, Tokenizer.Position, left, right);
+            }
+            throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol, "Expecting '@' in decorator statement!");
         }
         
         public StatementNode ParseAsyncFuncDef()
