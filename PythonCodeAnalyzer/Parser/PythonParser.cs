@@ -1985,7 +1985,16 @@ namespace PythonCodeAnalyzer.Parser
         
         public StatementNode ParseAsyncFuncDef()
         {
-            throw new NotImplementedException();
+            var startPos = Tokenizer.Position;
+            if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyAsync)
+            {
+                var op = Tokenizer.CurSymbol;
+                Tokenizer.Advance();
+                if (Tokenizer.CurSymbol.Kind != Token.TokenKind.PyDef) throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol, "Expecting 'def' in async statement!");
+                var right = ParseFuncDefDeclaration();
+                return new AsyncStatement(startPos, Tokenizer.Position, op, right);
+            }
+            throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol, "Expecting 'async' in async statement!");
         }
         
         public StatementNode ParseFuncDefDeclaration()
