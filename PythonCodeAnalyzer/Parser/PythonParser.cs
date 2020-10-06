@@ -2227,7 +2227,103 @@ namespace PythonCodeAnalyzer.Parser
 
         public ExpressionNode ParseTypeList()
         {
-            throw new NotImplementedException();
+            var startPos = Tokenizer.Position;
+            Token mul = null, power = null;
+            ExpressionNode right = null, left = null;
+            var elements = new List<ExpressionNode>();
+            var separators = new List<Token>();
+
+            if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyMul)
+            {
+                mul = Tokenizer.CurSymbol;
+                if (Tokenizer.CurSymbol.Kind != Token.TokenKind.PyComma &&
+                    Tokenizer.CurSymbol.Kind != Token.TokenKind.PyRightParen)
+                {
+                    Tokenizer.Advance();
+                    left = ParseTest();
+                }
+
+                while (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyComma)
+                {
+                    separators.Add(Tokenizer.CurSymbol);
+                    Tokenizer.Advance();
+                    if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyPower)
+                    {
+                        power = Tokenizer.CurSymbol;
+                        Tokenizer.Advance();
+                        right = ParseTest();
+                        if (Tokenizer.CurSymbol.Kind != Token.TokenKind.PyRightParen)
+                            throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol,
+                                "Expecting ')' om FuncType expression!");
+                    }
+                    else
+                    {
+                        Tokenizer.Advance();
+                        elements.Add(ParseTest());   
+                    }
+                }
+            }
+            else if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyPower)
+            {
+                power = Tokenizer.CurSymbol;
+                Tokenizer.Advance();
+                right = ParseTest();
+            }
+            else
+            {
+                elements.Add(ParseTest());
+                while (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyComma)
+                {
+                    separators.Add(Tokenizer.CurSymbol);
+                    Tokenizer.Advance();
+                    
+                    if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyMul)
+                    {
+                        mul = Tokenizer.CurSymbol;
+                        if (Tokenizer.CurSymbol.Kind != Token.TokenKind.PyComma &&
+                            Tokenizer.CurSymbol.Kind != Token.TokenKind.PyRightParen)
+                        {
+                            Tokenizer.Advance();
+                            left = ParseTest();
+                        }
+
+                        while (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyComma)
+                        {
+                            separators.Add(Tokenizer.CurSymbol);
+                            Tokenizer.Advance();
+                            if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyPower)
+                            {
+                                power = Tokenizer.CurSymbol;
+                                Tokenizer.Advance();
+                                right = ParseTest();
+                                if (Tokenizer.CurSymbol.Kind != Token.TokenKind.PyRightParen)
+                                    throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol,
+                                        "Expecting ')' om FuncType expression!");
+                            }
+                            else
+                            {
+                                Tokenizer.Advance();
+                                elements.Add(ParseTest());   
+                            }
+                        }
+                    }
+                    else if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyPower)
+                    {
+                        power = Tokenizer.CurSymbol;
+                        Tokenizer.Advance();
+                        right = ParseTest();
+                        if (Tokenizer.CurSymbol.Kind != Token.TokenKind.PyRightParen)
+                            throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol,
+                                "Expecting ')' om FuncType expression!");
+                    }
+                    else
+                    {
+                        elements.Add(ParseTest());
+                    }
+                }
+            }
+            
+            return new TypeListExpression(startPos, Tokenizer.Position, mul, left, power, right, elements.ToArray(), separators.ToArray());
         }
     }
 }
