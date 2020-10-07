@@ -1813,7 +1813,15 @@ namespace PythonCodeAnalyzer.Parser
         
         public StatementNode ParseImportName()
         {
-            throw new NotImplementedException();
+            var startPos = Tokenizer.Position;
+            if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyImport)
+            {
+                var op = Tokenizer.CurSymbol;
+                Tokenizer.Advance();
+                var right = ParseDottedAsNames();
+                return new ImportStatement(startPos, Tokenizer.Position, op, right);
+            }
+            throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol, "Expecting 'import' in import statement!");
         }
         
         public StatementNode ParseImportFrom()
