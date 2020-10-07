@@ -7,7 +7,7 @@
         
         public DottedNameStatement(uint start, uint end, Token[] names, Token[] dots) : base(start, end)
         {
-            names = names;
+            Names = names;
             Dots = dots;
         }
     }

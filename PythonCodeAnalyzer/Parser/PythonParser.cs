@@ -1828,7 +1828,22 @@ namespace PythonCodeAnalyzer.Parser
         
         public StatementNode ParseImportAsNames()
         {
-            throw new NotImplementedException();
+            var startPos = Tokenizer.Position;
+            var elements = new List<StatementNode>();
+            var commas = new List<Token>();
+            elements.Add(ParseImportAsName());
+            while (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyComma)
+            {
+                commas.Add(Tokenizer.CurSymbol);
+                Tokenizer.Advance();
+                if (Tokenizer.CurSymbol.Kind != Token.TokenKind.PyRightParen &&
+                    Tokenizer.CurSymbol.Kind != Token.TokenKind.Newline &&
+                    Tokenizer.CurSymbol.Kind != Token.TokenKind.PySemiColon)
+                {
+                    elements.Add(ParseImportAsName());
+                }
+            }
+            return new ImportListStatement(startPos, Tokenizer.Position, ImportListStatement.ListKind.ImportAsNames, elements.ToArray(), commas.ToArray());
         }
         
         public StatementNode ParseDottedAsName()
@@ -1838,7 +1853,17 @@ namespace PythonCodeAnalyzer.Parser
         
         public StatementNode ParseDottedAsNames()
         {
-            throw new NotImplementedException();
+            var startPos = Tokenizer.Position;
+            var elements = new List<StatementNode>();
+            var commas = new List<Token>();
+            elements.Add(ParseDottedAsName());
+            while (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyComma)
+            {
+                commas.Add(Tokenizer.CurSymbol);
+                Tokenizer.Advance();
+                elements.Add(ParseDottedAsName());
+            }
+            return new ImportListStatement(startPos, Tokenizer.Position, ImportListStatement.ListKind.DottedAsNames, elements.ToArray(), commas.ToArray());
         }
         
         public StatementNode ParseDottedName()
