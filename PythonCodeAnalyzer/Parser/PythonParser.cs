@@ -1823,7 +1823,24 @@ namespace PythonCodeAnalyzer.Parser
         
         public StatementNode ParseImportAsName()
         {
-            throw new NotImplementedException();
+            var startPos = Tokenizer.Position;
+            if (Tokenizer.CurSymbol.Kind == Token.TokenKind.Name)
+            {
+                var left = Tokenizer.CurSymbol;
+                Tokenizer.Advance();
+                if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyAs)
+                {
+                    var op = Tokenizer.CurSymbol;
+                    Tokenizer.Advance();
+                    if (Tokenizer.CurSymbol.Kind != Token.TokenKind.Name) 
+                        throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol, "Expecting Name literal!");
+                    var right = Tokenizer.CurSymbol;
+                    Tokenizer.Advance();
+                    return new ImportAsNameStatement(startPos, Tokenizer.Position, left, op, right);
+                }
+                return new ImportAsNameStatement(startPos, Tokenizer.Position, left, null, null);
+            } 
+            throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol, "Expecting Name literal!");
         }
         
         public StatementNode ParseImportAsNames()
@@ -1848,7 +1865,20 @@ namespace PythonCodeAnalyzer.Parser
         
         public StatementNode ParseDottedAsName()
         {
-            throw new NotImplementedException();
+            var startPos = Tokenizer.Position;
+            var left = ParseDottedName();
+            if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyAs)
+            {
+                var op = Tokenizer.CurSymbol;
+                Tokenizer.Advance();
+                if (Tokenizer.CurSymbol.Kind != Token.TokenKind.Name) 
+                    throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol, "Expecting Name literal!");
+                var right = Tokenizer.CurSymbol;
+                Tokenizer.Advance();
+                return new DottedAsNameStatement(startPos, Tokenizer.Position, left, op, right);
+            }
+
+            return left;
         }
         
         public StatementNode ParseDottedAsNames()
