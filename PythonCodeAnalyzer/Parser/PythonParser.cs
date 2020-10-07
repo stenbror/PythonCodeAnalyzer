@@ -1843,7 +1843,24 @@ namespace PythonCodeAnalyzer.Parser
         
         public StatementNode ParseDottedName()
         {
-            throw new NotImplementedException();
+            var startPos = Tokenizer.Position;
+            if (Tokenizer.CurSymbol.Kind == Token.TokenKind.Name)
+            {
+                var names = new List<Token>();
+                var dots = new List<Token>();
+                names.Add(Tokenizer.CurSymbol);
+                Tokenizer.Advance();
+                while (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyDot)
+                {
+                    dots.Add(Tokenizer.CurSymbol);
+                    Tokenizer.Advance();
+                    if (Tokenizer.CurSymbol.Kind != Token.TokenKind.Name) 
+                        throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol, "Expecting Name literal!");
+                    names.Add(Tokenizer.CurSymbol);
+                    Tokenizer.Advance();
+                }
+            }
+            throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol, "Expecting Name literal!");
         }
         
         public StatementNode ParseGlobalStmt()
