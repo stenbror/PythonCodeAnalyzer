@@ -1826,7 +1826,49 @@ namespace PythonCodeAnalyzer.Parser
         
         public StatementNode ParseImportFrom()
         {
-            throw new NotImplementedException();
+            var startPos = Tokenizer.Position;
+            if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyFrom)
+            {
+                var op1 = Tokenizer.CurSymbol; // 'from'
+                Tokenizer.Advance();
+                var dots = new List<Token>();
+                while (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyDot || Tokenizer.CurSymbol.Kind == Token.TokenKind.PyElipsis)
+                {
+                    dots.Add(Tokenizer.CurSymbol);
+                    Tokenizer.Advance();
+                }
+                if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyImport && dots.Count == 0)
+                    throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol, "Expecting '.' or dotted name before 'import'!");
+                var left = (Tokenizer.CurSymbol.Kind != Token.TokenKind.PyImport) ? ParseDottedName() : null;
+                if (Tokenizer.CurSymbol.Kind != Token.TokenKind.PyImport) 
+                    throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol, "Expecting 'import' in from import statement!");
+                var op2 = Tokenizer.CurSymbol;
+                Tokenizer.Advance();
+                Token op3 = null, op4 = null;
+                StatementNode right = null;
+                switch (Tokenizer.CurSymbol.Kind)
+                {
+                    case Token.TokenKind.PyMul:
+                        op3 = Tokenizer.CurSymbol;
+                        Tokenizer.Advance();
+                        break;
+                    case Token.TokenKind.PyLeftParen:
+                        op3 = Tokenizer.CurSymbol;
+                        Tokenizer.Advance();
+                        right = ParseImportAsNames();
+                        if (Tokenizer.CurSymbol.Kind != Token.TokenKind.PyImport) 
+                            throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol, "Expecting ')' in from import statement!");
+                        op4 = Tokenizer.CurSymbol;
+                        Tokenizer.Advance();
+                        break;
+                    default:
+                        right = ParseImportAsNames();
+                        break;
+                }
+                
+                return new ImportFromStatement(startPos, Tokenizer.Position, op1, dots.ToArray(), left, op2, op3, right, op4);
+            }
+            throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol, "Expecting 'from' in import statement!");
         }
         
         public StatementNode ParseImportAsName()
