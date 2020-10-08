@@ -2180,7 +2180,21 @@ namespace PythonCodeAnalyzer.Parser
         
         public StatementNode ParseTFPDef()
         {
-            throw new NotImplementedException();
+            var startPos = Tokenizer.Position;
+            if (Tokenizer.CurSymbol.Kind == Token.TokenKind.Name)
+            {
+                var op1 = Tokenizer.CurSymbol;
+                Tokenizer.Advance();
+                if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyColon)
+                {
+                    var op2 = Tokenizer.CurSymbol;
+                    Tokenizer.Advance();
+                    var right = ParseTest();
+                    return new TFPDefStatement(startPos, Tokenizer.Position, op1, op2, right);
+                }
+                return new TFPDefStatement(startPos, Tokenizer.Position, op1, null, null);
+            }
+            throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol, "Expecting name literal in argument!");
         }
         
         public StatementNode ParseSingleInput()
