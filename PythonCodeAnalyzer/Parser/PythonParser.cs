@@ -1072,7 +1072,14 @@ namespace PythonCodeAnalyzer.Parser
 
         public ExpressionNode ParseVFPDef()
         {
-            throw new NotImplementedException();
+            var startPos = Tokenizer.Position;
+            if (Tokenizer.CurSymbol.Kind == Token.TokenKind.Name)
+            {
+                var op1 = Tokenizer.CurSymbol;
+                Tokenizer.Advance();
+                return new VFPDefExpression(startPos, Tokenizer.Position, op1);
+            }
+            throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol, "Expecting name literal in argument!");
         }
 
         public StatementNode ParseCompoundStmt()
