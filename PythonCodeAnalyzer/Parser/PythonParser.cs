@@ -1065,9 +1065,186 @@ namespace PythonCodeAnalyzer.Parser
             return node;
         }
 
+        public ExpressionNode ParseArgumentExpression()
+        {
+            var startPos = Tokenizer.Position;
+            var left = ParseVFPDef();
+            if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyAssign)
+            {
+                var op = Tokenizer.CurSymbol;
+                Tokenizer.Advance();
+                var right = ParseTest();
+                return new VarArgumentExpression(startPos, Tokenizer.Position, left, op, right);
+            }
+
+            return left;
+        }
+        
         public ExpressionNode ParseVarArgsList()
         {
-            throw new NotImplementedException();
+            var startPos = Tokenizer.Position;
+            var elements = new List<ExpressionNode>();
+            var separators = new List<Token>();
+            Token div = null;
+            
+            if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyMul)
+            {
+                var op1 = Tokenizer.CurSymbol;
+                Tokenizer.Advance();
+                var rigthMul = ParseArgumentExpression();
+                Token op2 = null;
+                ExpressionNode rightPower = null;
+                
+                elements.Add(new StarExpression(startPos, Tokenizer.Position, op1, rigthMul));
+                
+                while (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyComma)
+                {
+                    separators.Add(Tokenizer.CurSymbol);
+                    Tokenizer.Advance();
+                    if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyComma)
+                        throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol,
+                            "Unexpected ',' in argument list!");
+                    if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyColon) continue;
+                    if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyPower)
+                    {
+                        op2 = Tokenizer.CurSymbol;
+                        Tokenizer.Advance();
+                        rightPower = ParseArgumentExpression();
+                        if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyComma)
+                        {
+                            separators.Add(Tokenizer.CurSymbol);
+                            Tokenizer.Advance();
+                        }
+                        if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyComma)
+                            throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol,
+                                "Unexpected ',' in argument list!");
+                        elements.Add(new VarArgumentKWExpression(startPos, Tokenizer.Position, op2, rightPower));
+                        continue;
+                    }
+                    elements.Add(ParseArgumentExpression());
+                }
+                
+                return new VarArgsListExpression(startPos, Tokenizer.Position, elements.ToArray(), separators.ToArray(), div);
+            }
+            else if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyPower)
+            {
+                var op2 = Tokenizer.CurSymbol;
+                Tokenizer.Advance();
+                var rightPower = ParseArgumentExpression();
+                if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyComma)
+                {
+                    separators.Add(Tokenizer.CurSymbol);
+                    Tokenizer.Advance();
+                }
+                if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyComma)
+                    throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol,
+                        "Unexpected ',' in argument list!");
+                elements.Add(new VarArgumentKWExpression(startPos, Tokenizer.Position, op2, rightPower));
+                return new VarArgsListExpression(startPos, Tokenizer.Position, elements.ToArray(), separators.ToArray(), null);
+            }
+            else
+            {
+                elements.Add(ParseArgumentExpression());
+                while (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyComma)
+                {
+                    separators.Add(Tokenizer.CurSymbol);
+                    Tokenizer.Advance();
+                    if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyComma)
+                        throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol,
+                            "Unexpected ',' in argument list!");
+                    if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyDiv ||
+                        Tokenizer.CurSymbol.Kind == Token.TokenKind.PyColon ||
+                        Tokenizer.CurSymbol.Kind == Token.TokenKind.PyMul ||
+                        Tokenizer.CurSymbol.Kind == Token.TokenKind.PyPower) continue;
+                    elements.Add(ParseArgumentExpression());
+                }
+
+                if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyDiv)
+                {
+                    div = Tokenizer.CurSymbol;
+                    Tokenizer.Advance();
+
+                    Token lastSymbol = div;
+                    
+                    while (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyComma)
+                    {
+                        separators.Add(Tokenizer.CurSymbol);
+                        lastSymbol = Tokenizer.CurSymbol;
+                        Tokenizer.Advance();
+                        if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyComma)
+                            throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol,
+                                "Unexpected ',' in argument list!");
+                        if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyMul ||
+                            Tokenizer.CurSymbol.Kind == Token.TokenKind.PyPower) continue;
+                        elements.Add(ParseArgumentExpression());
+                        if (Tokenizer.CurSymbol.Kind != Token.TokenKind.PyComma)
+                        {
+                            return new VarArgsListExpression(startPos, Tokenizer.Position, elements.ToArray(), separators.ToArray(), div);
+                        }
+                    }
+                    
+                    if (lastSymbol.Kind != Token.TokenKind.PyComma) 
+                        throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol,
+                        "Expected ',' in argument list!");
+                    
+                    if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyMul)
+                    {
+                        var op1 = Tokenizer.CurSymbol;
+                        Tokenizer.Advance();
+                        var rigthMul = ParseArgumentExpression();
+                        Token op2 = null;
+                        ExpressionNode rightPower = null;
+                        
+                        elements.Add(new StarExpression(startPos, Tokenizer.Position, op1, rigthMul));
+                        
+                        while (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyComma)
+                        {
+                            separators.Add(Tokenizer.CurSymbol);
+                            Tokenizer.Advance();
+                            if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyComma)
+                                throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol,
+                                    "Unexpected ',' in argument list!");
+                            if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyColon) continue;
+                            if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyPower)
+                            {
+                                op2 = Tokenizer.CurSymbol;
+                                Tokenizer.Advance();
+                                rightPower = ParseArgumentExpression();
+                                if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyComma)
+                                {
+                                    separators.Add(Tokenizer.CurSymbol);
+                                    Tokenizer.Advance();
+                                }
+                                if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyComma)
+                                    throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol,
+                                        "Unexpected ',' in argument list!");
+                                elements.Add(new VarArgumentKWExpression(startPos, Tokenizer.Position, op2, rightPower));
+                                continue;
+                            }
+                            elements.Add(ParseArgumentExpression());
+                        }
+                        
+                        return new VarArgsListExpression(startPos, Tokenizer.Position, elements.ToArray(), separators.ToArray(), div);
+                    }
+                    else if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyPower)
+                    {
+                        var op2 = Tokenizer.CurSymbol;
+                        Tokenizer.Advance();
+                        var rightPower = ParseArgumentExpression();
+                        if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyComma)
+                        {
+                            separators.Add(Tokenizer.CurSymbol);
+                            Tokenizer.Advance();
+                        }
+                        if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyComma)
+                            throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol,
+                                "Unexpected ',' in argument list!");
+                        elements.Add(new VarArgumentKWExpression(startPos, Tokenizer.Position, op2, rightPower));
+                        return new VarArgsListExpression(startPos, Tokenizer.Position, elements.ToArray(), separators.ToArray(), null);
+                    }
+                }
+                return new VarArgsListExpression(startPos, Tokenizer.Position, elements.ToArray(), separators.ToArray(), null);
+            }
         }
 
         public ExpressionNode ParseVFPDef()
