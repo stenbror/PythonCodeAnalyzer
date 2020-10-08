@@ -2357,6 +2357,21 @@ namespace PythonCodeAnalyzer.Parser
             throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol, "Expecting '(' in parameter of func statement!");
         }
         
+        public StatementNode ParseArgumentStatement()
+        {
+            var startPos = Tokenizer.Position;
+            var left = ParseTFPDef();
+            if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyAssign)
+            {
+                var op = Tokenizer.CurSymbol;
+                Tokenizer.Advance();
+                var right = ParseTest();
+                return new TypedArgumentStatement(startPos, Tokenizer.Position, left, op, right);
+            }
+
+            return left;
+        }
+        
         public StatementNode ParseTypedArgsList()
         {
             throw new NotImplementedException();
