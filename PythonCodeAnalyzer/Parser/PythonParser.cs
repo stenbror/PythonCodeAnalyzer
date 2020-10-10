@@ -2397,6 +2397,11 @@ namespace PythonCodeAnalyzer.Parser
                     if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyComma)
                         throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol,
                             "Unexpected ',' in argument list!");
+                    else if (Tokenizer.CurSymbol.Kind == Token.TokenKind.TypeComment)
+                    {
+                        typeComments.Add(Tokenizer.CurSymbol);
+                        Tokenizer.Advance();
+                    }
                     if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyColon) continue;
                     if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyPower)
                     {
@@ -2407,6 +2412,16 @@ namespace PythonCodeAnalyzer.Parser
                         {
                             separators.Add(Tokenizer.CurSymbol);
                             Tokenizer.Advance();
+                        }
+                        if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyComma)
+                        {
+                            separators.Add(Tokenizer.CurSymbol);
+                            Tokenizer.Advance();
+                            if (Tokenizer.CurSymbol.Kind == Token.TokenKind.TypeComment)
+                            {
+                                typeComments.Add(Tokenizer.CurSymbol);
+                                Tokenizer.Advance();
+                            }
                         }
                         if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyComma)
                             throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol,
@@ -2429,9 +2444,17 @@ namespace PythonCodeAnalyzer.Parser
                     separators.Add(Tokenizer.CurSymbol);
                     Tokenizer.Advance();
                 }
+
                 if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyComma)
-                    throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol,
-                        "Unexpected ',' in argument list!");
+                {
+                    separators.Add(Tokenizer.CurSymbol);
+                    Tokenizer.Advance();
+                    if (Tokenizer.CurSymbol.Kind == Token.TokenKind.TypeComment)
+                    {
+                        typeComments.Add(Tokenizer.CurSymbol);
+                        Tokenizer.Advance();
+                    }
+                }
                 elements.Add(new TypedPowerArgumentStatement(startPos, Tokenizer.Position, op2, rightPower));
                 return new TypedArgsStatement(startPos, Tokenizer.Position, elements.ToArray(), separators.ToArray(), null, null);
             }
@@ -2445,6 +2468,11 @@ namespace PythonCodeAnalyzer.Parser
                     if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyComma)
                         throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol,
                             "Unexpected ',' in argument list!");
+                    else if (Tokenizer.CurSymbol.Kind == Token.TokenKind.TypeComment)
+                    {
+                        typeComments.Add(Tokenizer.CurSymbol);
+                        Tokenizer.Advance();
+                    }
                     if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyDiv ||
                         Tokenizer.CurSymbol.Kind == Token.TokenKind.PyColon ||
                         Tokenizer.CurSymbol.Kind == Token.TokenKind.PyMul ||
@@ -2467,8 +2495,14 @@ namespace PythonCodeAnalyzer.Parser
                         if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyComma)
                             throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol,
                                 "Unexpected ',' in argument list!");
+                        else if (Tokenizer.CurSymbol.Kind == Token.TokenKind.TypeComment)
+                        {
+                            typeComments.Add(Tokenizer.CurSymbol);
+                            Tokenizer.Advance();
+                        }
                         if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyMul ||
-                            Tokenizer.CurSymbol.Kind == Token.TokenKind.PyPower) continue;
+                            Tokenizer.CurSymbol.Kind == Token.TokenKind.PyPower ||
+                            Tokenizer.CurSymbol.Kind == Token.TokenKind.TypeComment) continue;
                         elements.Add(ParseArgumentStatement());
                         if (Tokenizer.CurSymbol.Kind != Token.TokenKind.PyComma)
                         {
@@ -2479,6 +2513,12 @@ namespace PythonCodeAnalyzer.Parser
                     if (lastSymbol.Kind != Token.TokenKind.PyComma) 
                         throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol,
                         "Expected ',' in argument list!");
+                    
+                    if (Tokenizer.CurSymbol.Kind == Token.TokenKind.TypeComment)
+                    {
+                        typeComments.Add(Tokenizer.CurSymbol);
+                        Tokenizer.Advance();
+                    }
                     
                     if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyMul)
                     {
@@ -2497,6 +2537,11 @@ namespace PythonCodeAnalyzer.Parser
                             if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyComma)
                                 throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol,
                                     "Unexpected ',' in argument list!");
+                            else if (Tokenizer.CurSymbol.Kind == Token.TokenKind.TypeComment)
+                            {
+                                typeComments.Add(Tokenizer.CurSymbol);
+                                Tokenizer.Advance();
+                            }
                             if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyColon) continue;
                             if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyPower)
                             {
@@ -2508,9 +2553,19 @@ namespace PythonCodeAnalyzer.Parser
                                     separators.Add(Tokenizer.CurSymbol);
                                     Tokenizer.Advance();
                                 }
+
                                 if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyComma)
-                                    throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol,
-                                        "Unexpected ',' in argument list!");
+                                {
+                                    separators.Add(Tokenizer.CurSymbol);
+                                    Tokenizer.Advance();
+                                    if (Tokenizer.CurSymbol.Kind == Token.TokenKind.TypeComment)
+                                    {
+                                        typeComments.Add(Tokenizer.CurSymbol);
+                                        Tokenizer.Advance();
+                                    }
+
+                                    break;
+                                }
                                 elements.Add(new TypedPowerArgumentStatement(startPos, Tokenizer.Position, op2, rightPower));
                                 continue;
                             }
