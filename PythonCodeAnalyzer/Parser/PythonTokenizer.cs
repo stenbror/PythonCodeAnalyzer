@@ -55,6 +55,10 @@ namespace PythonCodeAnalyzer.Parser
             { "with", Token.TokenKind.PyWith },
             { "yield", Token.TokenKind.PyYield }
         };
+        
+        private uint[] _indentStack = new uint[100];
+        private uint _indentLevel = 0;
+        private int _pending = 0;
 
         public Token.TokenKind IsReservedKeywordOrLiteralName(string key)
         {
