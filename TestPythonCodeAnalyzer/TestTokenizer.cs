@@ -373,6 +373,166 @@ namespace TestPythonCodeAnalyzer
             Assert.Equal(2u, tok1.End);
         }
         
+        [Fact]
+        public void TestOperatorOrDelimiterInvert()
+        {
+            var lex = new PythonTokenizer("~".ToCharArray(), false, 8);
+            var tok1 = lex.GetSymbol();
+            Assert.Equal(Token.TokenKind.PyInvert, tok1.Kind);
+            Assert.Equal(0u, tok1.Start);
+            Assert.Equal(1u, tok1.End);
+        }
+        
+        [Fact]
+        public void TestOperatorOrDelimiterLess()
+        {
+            var lex = new PythonTokenizer("< ".ToCharArray(), false, 8);
+            var tok1 = lex.GetSymbol();
+            Assert.Equal(Token.TokenKind.PyLess, tok1.Kind);
+            Assert.Equal(0u, tok1.Start);
+            Assert.Equal(1u, tok1.End);
+        }
+        
+        [Fact]
+        public void TestOperatorOrDelimiterLessEqual()
+        {
+            var lex = new PythonTokenizer("<=".ToCharArray(), false, 8);
+            var tok1 = lex.GetSymbol();
+            Assert.Equal(Token.TokenKind.PyLessEqual, tok1.Kind);
+            Assert.Equal(0u, tok1.Start);
+            Assert.Equal(2u, tok1.End);
+        }
+        
+        [Fact]
+        public void TestOperatorOrDelimiterNotEqual()
+        {
+            var lex = new PythonTokenizer("<>".ToCharArray(), false, 8);
+            var tok1 = lex.GetSymbol();
+            Assert.Equal(Token.TokenKind.PyNotEqual, tok1.Kind);
+            Assert.Equal(0u, tok1.Start);
+            Assert.Equal(2u, tok1.End);
+        }
+        
+        [Fact]
+        public void TestOperatorOrDelimiterShiftLeft()
+        {
+            var lex = new PythonTokenizer("<< ".ToCharArray(), false, 8);
+            var tok1 = lex.GetSymbol();
+            Assert.Equal(Token.TokenKind.PyShiftLeft, tok1.Kind);
+            Assert.Equal(0u, tok1.Start);
+            Assert.Equal(2u, tok1.End);
+        }
+        
+        [Fact]
+        public void TestOperatorOrDelimiterShiftLeftAssign()
+        {
+            var lex = new PythonTokenizer("<<=".ToCharArray(), false, 8);
+            var tok1 = lex.GetSymbol();
+            Assert.Equal(Token.TokenKind.PyShiftLeftAssign, tok1.Kind);
+            Assert.Equal(0u, tok1.Start);
+            Assert.Equal(3u, tok1.End);
+        }
+        
+        [Fact]
+        public void TestOperatorOrDelimiterShiftRight()
+        {
+            var lex = new PythonTokenizer(">> ".ToCharArray(), false, 8);
+            var tok1 = lex.GetSymbol();
+            Assert.Equal(Token.TokenKind.PyShiftRight, tok1.Kind);
+            Assert.Equal(0u, tok1.Start);
+            Assert.Equal(2u, tok1.End);
+        }
+        
+        [Fact]
+        public void TestOperatorOrDelimiterShiftRightAssign()
+        {
+            var lex = new PythonTokenizer(">>=".ToCharArray(), false, 8);
+            var tok1 = lex.GetSymbol();
+            Assert.Equal(Token.TokenKind.PyShiftRightAssign, tok1.Kind);
+            Assert.Equal(0u, tok1.Start);
+            Assert.Equal(3u, tok1.End);
+        }
+        
+        [Fact]
+        public void TestOperatorOrDelimiterGreater()
+        {
+            var lex = new PythonTokenizer("> ".ToCharArray(), false, 8);
+            var tok1 = lex.GetSymbol();
+            Assert.Equal(Token.TokenKind.PyGreater, tok1.Kind);
+            Assert.Equal(0u, tok1.Start);
+            Assert.Equal(1u, tok1.End);
+        }
+        
+        [Fact]
+        public void TestOperatorOrDelimiterGreaterEqual()
+        {
+            var lex = new PythonTokenizer(">=".ToCharArray(), false, 8);
+            var tok1 = lex.GetSymbol();
+            Assert.Equal(Token.TokenKind.PyGreaterEqual, tok1.Kind);
+            Assert.Equal(0u, tok1.Start);
+            Assert.Equal(2u, tok1.End);
+        }
+        
+        [Fact]
+        public void TestOperatorOrDelimiterEqual()
+        {
+            var lex = new PythonTokenizer("==".ToCharArray(), false, 8);
+            var tok1 = lex.GetSymbol();
+            Assert.Equal(Token.TokenKind.PyEqual, tok1.Kind);
+            Assert.Equal(0u, tok1.Start);
+            Assert.Equal(2u, tok1.End);
+        }
+        
+        [Fact]
+        public void TestOperatorOrDelimiterAssign()
+        {
+            var lex = new PythonTokenizer("= ".ToCharArray(), false, 8);
+            var tok1 = lex.GetSymbol();
+            Assert.Equal(Token.TokenKind.PyAssign, tok1.Kind);
+            Assert.Equal(0u, tok1.Start);
+            Assert.Equal(1u, tok1.End);
+        }
+        
+        [Fact]
+        public void TestOperatorOrDelimiterNotEqual2()
+        {
+            var lex = new PythonTokenizer("!=".ToCharArray(), false, 8);
+            var tok1 = lex.GetSymbol();
+            Assert.Equal(Token.TokenKind.PyNotEqual, tok1.Kind);
+            Assert.Equal(0u, tok1.Start);
+            Assert.Equal(2u, tok1.End);
+        }
+        
+        [Fact]
+        public void TestOperatorOrDelimiterColon()
+        {
+            var lex = new PythonTokenizer(": ".ToCharArray(), false, 8);
+            var tok1 = lex.GetSymbol();
+            Assert.Equal(Token.TokenKind.PyColon, tok1.Kind);
+            Assert.Equal(0u, tok1.Start);
+            Assert.Equal(1u, tok1.End);
+        }
+        
+        [Fact]
+        public void TestOperatorOrDelimiterColonAssign()
+        {
+            var lex = new PythonTokenizer(":=".ToCharArray(), false, 8);
+            var tok1 = lex.GetSymbol();
+            Assert.Equal(Token.TokenKind.PyColonAssign, tok1.Kind);
+            Assert.Equal(0u, tok1.Start);
+            Assert.Equal(2u, tok1.End);
+        }
+        
+        [Fact]
+        public void TestOperatorOrDelimiterComma()
+        {
+            var lex = new PythonTokenizer(",".ToCharArray(), false, 8);
+            var tok1 = lex.GetSymbol();
+            Assert.Equal(Token.TokenKind.PyComma, tok1.Kind);
+            Assert.Equal(0u, tok1.Start);
+            Assert.Equal(1u, tok1.End);
+        }
+        
         
         
         
