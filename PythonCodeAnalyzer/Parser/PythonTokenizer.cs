@@ -70,6 +70,16 @@ namespace PythonCodeAnalyzer.Parser
             return Token.TokenKind.Name;
         }
 
+        public static bool IsLiteralNameStartCharacter(char ch)
+        {
+            return ch == '_' || char.IsLetter(ch);
+        }
+
+        public static bool IsLiteralCharacterOrDigit(char ch)
+        {
+            return ch == '_' || char.IsLetterOrDigit(ch);
+        }
+
         public void Advance()
         {
             
