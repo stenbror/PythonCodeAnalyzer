@@ -11,7 +11,7 @@ namespace TestPythonCodeAnalyzer
         [Fact]
         public void TestReservedKeywords()
         {
-            var lex = new PythonTokenizer();
+            var lex = new PythonTokenizer("".ToCharArray(), false, 8);
             Assert.Equal(Token.TokenKind.PyFalse, lex.IsReservedKeywordOrLiteralName("False"));
             Assert.Equal(Token.TokenKind.PyNone, lex.IsReservedKeywordOrLiteralName("None"));
             Assert.Equal(Token.TokenKind.PyTrue, lex.IsReservedKeywordOrLiteralName("True"));
@@ -52,8 +52,50 @@ namespace TestPythonCodeAnalyzer
         [Fact]
         public void TestReservedKeywordsFoundNameLiteral()
         {
-            var lex = new PythonTokenizer();
+            var lex = new PythonTokenizer("".ToCharArray(), false, 8);
             Assert.Equal(Token.TokenKind.Name, lex.IsReservedKeywordOrLiteralName("_yield_"));
+        }
+
+        [Fact]
+        public void TestLevelParenthezis()
+        {
+            var lex = new PythonTokenizer("()".ToCharArray(), false, 8);
+            var tok1 = lex.GetSymbol();
+            Assert.Equal(Token.TokenKind.PyLeftParen, tok1.Kind);
+            Assert.Equal(0u, tok1.Start);
+            Assert.Equal(1u, tok1.End);
+            var tok2 = lex.GetSymbol();
+            Assert.Equal(1u, tok2.Start);
+            Assert.Equal(2u, tok2.End);
+            Assert.Equal(Token.TokenKind.PyRightParen, tok2.Kind);
+        }
+        
+        [Fact]
+        public void TestLevelBrackets()
+        {
+            var lex = new PythonTokenizer("[]".ToCharArray(), false, 8);
+            var tok1 = lex.GetSymbol();
+            Assert.Equal(Token.TokenKind.PyLeftBracket, tok1.Kind);
+            Assert.Equal(0u, tok1.Start);
+            Assert.Equal(1u, tok1.End);
+            var tok2 = lex.GetSymbol();
+            Assert.Equal(1u, tok2.Start);
+            Assert.Equal(2u, tok2.End);
+            Assert.Equal(Token.TokenKind.PyRightBracket, tok2.Kind);
+        }
+        
+        [Fact]
+        public void TestLevelCurlys()
+        {
+            var lex = new PythonTokenizer("{}".ToCharArray(), false, 8);
+            var tok1 = lex.GetSymbol();
+            Assert.Equal(Token.TokenKind.PyLeftCurly, tok1.Kind);
+            Assert.Equal(0u, tok1.Start);
+            Assert.Equal(1u, tok1.End);
+            var tok2 = lex.GetSymbol();
+            Assert.Equal(1u, tok2.Start);
+            Assert.Equal(2u, tok2.End);
+            Assert.Equal(Token.TokenKind.PyRightCurly, tok2.Kind);
         }
         
         

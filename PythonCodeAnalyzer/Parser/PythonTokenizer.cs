@@ -59,6 +59,30 @@ namespace PythonCodeAnalyzer.Parser
         private uint[] _indentStack = new uint[100];
         private uint _indentLevel = 0;
         private int _pending = 0;
+        private uint _index = 0;
+        private uint _TokenStartPos = 0;
+        private uint _TokenEndPos = 0;
+        private bool _atBOL = false;
+        private Stack<char> _LevelStack;
+        
+        private char[] SourceCode { get; set; }
+        public uint TabSize { get; set; }
+        private bool IsInteractiveMode { get; set; }
+
+        public PythonTokenizer(char[] sourceCode, bool isInteractive, uint tabSize)
+        {
+            SourceCode = sourceCode;
+            TabSize = tabSize;
+            IsInteractiveMode = isInteractive;
+            _indentLevel = 0;
+            _pending = 0;
+            _index = 0;
+            _TokenStartPos = 0;
+            _TokenEndPos = 0;
+            for (var i = 0; i < 100; i++) _indentStack[i] = 0;
+            _atBOL = true;
+            _LevelStack = new Stack<char>();
+        }
 
         public Token.TokenKind IsReservedKeywordOrLiteralName(string key)
         {
@@ -82,7 +106,80 @@ namespace PythonCodeAnalyzer.Parser
 
         public void Advance()
         {
+            CurSymbol = GetSymbol();
+        }
+
+        public Token GetSymbol()
+        {
+            _TokenStartPos = _index;
             
+            /* Handle whitespace and other Trivia below */
+            
+            /* Handle End Of File */
+            
+            /* Handle Name literal or Reserved keywords */
+            
+            /* Handle Newline - Token or Trivia */
+            
+            /* Period or start of Number */
+            
+            /* Handle Numbers */
+            
+            /* Handle String */
+            
+            /* Handle Line continuation */
+            
+            /* Handle Operators or Delimiters */
+            switch (SourceCode[_index])
+            {
+                case '(':
+                    _LevelStack.Push(')');
+                    _index++;
+                    return new Token(_TokenStartPos, _index, Token.TokenKind.PyLeftParen);
+                    break;
+                case '[':
+                    _LevelStack.Push(']');
+                    _index++;
+                    return new Token(_TokenStartPos, _index, Token.TokenKind.PyLeftBracket);
+                    break;
+                case '{':
+                    _LevelStack.Push('}');
+                    _index++;
+                    return new Token(_TokenStartPos, _index, Token.TokenKind.PyLeftCurly);
+                    break;
+                case ')':
+                    if (SourceCode[_index] != _LevelStack.Peek())
+                    {
+                        throw new NotImplementedException(); // Needs new LexicalException
+                    }
+                    _LevelStack.Pop();
+                    _index++;
+                    return new Token(_TokenStartPos, _index, Token.TokenKind.PyRightParen);
+                    break;
+                case ']':
+                    if (SourceCode[_index] != _LevelStack.Peek())
+                    {
+                        throw new NotImplementedException(); // Needs new LexicalException
+                    }
+                    _LevelStack.Pop();
+                    _index++;
+                    return new Token(_TokenStartPos, _index, Token.TokenKind.PyRightBracket);
+                    break;
+                case '}':
+                    if (SourceCode[_index] != _LevelStack.Peek())
+                    {
+                        throw new NotImplementedException(); // Needs new LexicalException
+                    }
+                    _LevelStack.Pop();
+                    _index++;
+                    return new Token(_TokenStartPos, _index, Token.TokenKind.PyRightCurly);
+                    break;
+                
+            }
+            
+            
+
+            throw new NotImplementedException(); // Needs new LexicalException
         }
     }
 }
