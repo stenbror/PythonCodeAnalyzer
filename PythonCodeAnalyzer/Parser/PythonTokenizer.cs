@@ -136,45 +136,209 @@ namespace PythonCodeAnalyzer.Parser
                     _LevelStack.Push(')');
                     _index++;
                     return new Token(_TokenStartPos, _index, Token.TokenKind.PyLeftParen);
-                    break;
                 case '[':
                     _LevelStack.Push(']');
                     _index++;
                     return new Token(_TokenStartPos, _index, Token.TokenKind.PyLeftBracket);
-                    break;
                 case '{':
                     _LevelStack.Push('}');
                     _index++;
                     return new Token(_TokenStartPos, _index, Token.TokenKind.PyLeftCurly);
-                    break;
                 case ')':
-                    if (SourceCode[_index] != _LevelStack.Peek())
+                    if (_LevelStack.Count == 0 || SourceCode[_index] != _LevelStack.Peek())
                     {
                         throw new NotImplementedException(); // Needs new LexicalException
                     }
                     _LevelStack.Pop();
                     _index++;
                     return new Token(_TokenStartPos, _index, Token.TokenKind.PyRightParen);
-                    break;
                 case ']':
-                    if (SourceCode[_index] != _LevelStack.Peek())
+                    if (_LevelStack.Count == 0 || SourceCode[_index] != _LevelStack.Peek())
                     {
                         throw new NotImplementedException(); // Needs new LexicalException
                     }
                     _LevelStack.Pop();
                     _index++;
                     return new Token(_TokenStartPos, _index, Token.TokenKind.PyRightBracket);
-                    break;
                 case '}':
-                    if (SourceCode[_index] != _LevelStack.Peek())
+                    if (_LevelStack.Count == 0 || SourceCode[_index] != _LevelStack.Peek())
                     {
                         throw new NotImplementedException(); // Needs new LexicalException
                     }
                     _LevelStack.Pop();
                     _index++;
                     return new Token(_TokenStartPos, _index, Token.TokenKind.PyRightCurly);
-                    break;
-                
+                case ';':
+                    _index++;
+                    return new Token(_TokenStartPos, _index, Token.TokenKind.PySemiColon);
+                case ',':
+                    _index++;
+                    return new Token(_TokenStartPos, _index, Token.TokenKind.PyColon);
+                case '~':
+                    _index++;
+                    return new Token(_TokenStartPos, _index, Token.TokenKind.PyInvert);
+                case '+':
+                    _index++;
+                    if (SourceCode[_index] == '=')
+                    {
+                        _index++;
+                        return new Token(_TokenStartPos, _index, Token.TokenKind.PyPlusAssign);
+                    }
+                    return new Token(_TokenStartPos, _index, Token.TokenKind.PyPlus);
+                case '-':
+                    _index++;
+                    if (SourceCode[_index] == '=')
+                    {
+                        _index++;
+                        return new Token(_TokenStartPos, _index, Token.TokenKind.PyMinusAssign);
+                    }
+                    else if (SourceCode[_index] == '>')
+                    {
+                        _index++;
+                        return new Token(_TokenStartPos, _index, Token.TokenKind.PyArrow);
+                    } 
+                    return new Token(_TokenStartPos, _index, Token.TokenKind.PyMinus);
+                case '*':
+                    _index++;
+                    if (SourceCode[_index] == '*')
+                    {
+                        _index++;
+                        if (SourceCode[_index] == '=')
+                        {
+                            _index++;
+                            return new Token(_TokenStartPos, _index, Token.TokenKind.PyPowerAssign);
+                        }
+                        return new Token(_TokenStartPos, _index, Token.TokenKind.PyPower);
+                    }
+                    else if (SourceCode[_index] == '=')
+                    {
+                        _index++;
+                        return new Token(_TokenStartPos, _index, Token.TokenKind.PyMulAssign);
+                    } 
+                    return new Token(_TokenStartPos, _index, Token.TokenKind.PyMul);
+                case '/':
+                    _index++;
+                    if (SourceCode[_index] == '/')
+                    {
+                        _index++;
+                        if (SourceCode[_index] == '=')
+                        {
+                            _index++;
+                            return new Token(_TokenStartPos, _index, Token.TokenKind.PyFloorDivAssign);
+                        }
+                        return new Token(_TokenStartPos, _index, Token.TokenKind.PyFloorDiv);
+                    }
+                    else if (SourceCode[_index] == '=')
+                    {
+                        _index++;
+                        return new Token(_TokenStartPos, _index, Token.TokenKind.PyDivAssign);
+                    } 
+                    return new Token(_TokenStartPos, _index, Token.TokenKind.PyDiv);
+                case '<':
+                    _index++;
+                    if (SourceCode[_index] == '<')
+                    {
+                        _index++;
+                        if (SourceCode[_index] == '=')
+                        {
+                            _index++;
+                            return new Token(_TokenStartPos, _index, Token.TokenKind.PyShiftLeftAssign);
+                        }
+                        return new Token(_TokenStartPos, _index, Token.TokenKind.PyShiftLeft);
+                    }
+                    else if (SourceCode[_index] == '=')
+                    {
+                        _index++;
+                        return new Token(_TokenStartPos, _index, Token.TokenKind.PyLessEqual);
+                    } 
+                    else if (SourceCode[_index] == '>') // Yes, it is not standard anymore in CPython, but i want it.
+                    {
+                        _index++;
+                        return new Token(_TokenStartPos, _index, Token.TokenKind.PyNotEqual);
+                    } 
+                    return new Token(_TokenStartPos, _index, Token.TokenKind.PyLess);
+                case '>':
+                    _index++;
+                    if (SourceCode[_index] == '>')
+                    {
+                        _index++;
+                        if (SourceCode[_index] == '=')
+                        {
+                            _index++;
+                            return new Token(_TokenStartPos, _index, Token.TokenKind.PyShiftRightAssign);
+                        }
+                        return new Token(_TokenStartPos, _index, Token.TokenKind.PyShiftRight);
+                    }
+                    else if (SourceCode[_index] == '=')
+                    {
+                        _index++;
+                        return new Token(_TokenStartPos, _index, Token.TokenKind.PyGreaterEqual);
+                    }
+                    return new Token(_TokenStartPos, _index, Token.TokenKind.PyGreater);
+                case '%':
+                    _index++;
+                    if (SourceCode[_index] == '=')
+                    {
+                        _index++;
+                        return new Token(_TokenStartPos, _index, Token.TokenKind.PyModuloAssign);
+                    }
+                    return new Token(_TokenStartPos, _index, Token.TokenKind.PyModulo);
+                case '@':
+                    _index++;
+                    if (SourceCode[_index] == '=')
+                    {
+                        _index++;
+                        return new Token(_TokenStartPos, _index, Token.TokenKind.PyMatriceAssign);
+                    }
+                    return new Token(_TokenStartPos, _index, Token.TokenKind.PyMatrice);
+                case '&':
+                    _index++;
+                    if (SourceCode[_index] == '=')
+                    {
+                        _index++;
+                        return new Token(_TokenStartPos, _index, Token.TokenKind.PyAndAssign);
+                    }
+                    return new Token(_TokenStartPos, _index, Token.TokenKind.PyAnd);
+                case '|':
+                    _index++;
+                    if (SourceCode[_index] == '=')
+                    {
+                        _index++;
+                        return new Token(_TokenStartPos, _index, Token.TokenKind.PyOrAssign);
+                    }
+                    return new Token(_TokenStartPos, _index, Token.TokenKind.PyOr);
+                case '^':
+                    _index++;
+                    if (SourceCode[_index] == '=')
+                    {
+                        _index++;
+                        return new Token(_TokenStartPos, _index, Token.TokenKind.PyXorAssign);
+                    }
+                    return new Token(_TokenStartPos, _index, Token.TokenKind.PyXor);
+                case '=':
+                    _index++;
+                    if (SourceCode[_index] == '=')
+                    {
+                        _index++;
+                        return new Token(_TokenStartPos, _index, Token.TokenKind.PyEqual);
+                    }
+                    return new Token(_TokenStartPos, _index, Token.TokenKind.PyAssign);
+                case '!':
+                    _index++;
+                    if (SourceCode[_index] == '=')
+                    {
+                        _index++;
+                        return new Token(_TokenStartPos, _index, Token.TokenKind.PyNotEqual);
+                    }
+                    throw new NotImplementedException();
+                case ':':
+                    _index++;
+                    if (SourceCode[_index] == '=')
+                    {
+                        _index++;
+                        return new Token(_TokenStartPos, _index, Token.TokenKind.PyColonAssign);
+                    }
+                    return new Token(_TokenStartPos, _index, Token.TokenKind.PyColon);
             }
             
             

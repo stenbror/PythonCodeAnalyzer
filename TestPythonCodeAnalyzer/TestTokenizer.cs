@@ -98,6 +98,49 @@ namespace TestPythonCodeAnalyzer
             Assert.Equal(Token.TokenKind.PyRightCurly, tok2.Kind);
         }
         
+        [Fact]
+        public void TestLevelParenthisMissingStart()
+        {
+            var lex = new PythonTokenizer(")".ToCharArray(), false, 8);
+            try
+            {
+                var tok1 = lex.GetSymbol();
+                Assert.True(false);
+            }
+            catch (Exception e)
+            {
+                Assert.True(true);
+            }
+        }
         
+        [Fact]
+        public void TestLevelBracketMissingStart()
+        {
+            var lex = new PythonTokenizer("]".ToCharArray(), false, 8);
+            try
+            {
+                var tok1 = lex.GetSymbol();
+                Assert.True(false);
+            }
+            catch (Exception e)
+            {
+                Assert.True(true);
+            }
+        }
+        
+        [Fact]
+        public void TestLevelCurlyMissingStart()
+        {
+            var lex = new PythonTokenizer("}".ToCharArray(), false, 8);
+            try
+            {
+                var tok1 = lex.GetSymbol();
+                Assert.True(false);
+            }
+            catch (Exception e)
+            {
+                Assert.True(true);
+            }
+        }
     }
 }
