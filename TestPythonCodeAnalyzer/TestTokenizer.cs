@@ -142,5 +142,60 @@ namespace TestPythonCodeAnalyzer
                 Assert.True(true);
             }
         }
+        
+        [Fact]
+        public void TestOperatorOrDelimiterPlus()
+        {
+            var lex = new PythonTokenizer("+ ".ToCharArray(), false, 8);
+            var tok1 = lex.GetSymbol();
+            Assert.Equal(Token.TokenKind.PyPlus, tok1.Kind);
+            Assert.Equal(0u, tok1.Start);
+            Assert.Equal(1u, tok1.End);
+        }
+        
+        [Fact]
+        public void TestOperatorOrDelimiterPlusAssign()
+        {
+            var lex = new PythonTokenizer("+=".ToCharArray(), false, 8);
+            var tok1 = lex.GetSymbol();
+            Assert.Equal(Token.TokenKind.PyPlusAssign, tok1.Kind);
+            Assert.Equal(0u, tok1.Start);
+            Assert.Equal(2u, tok1.End);
+        }
+        
+        [Fact]
+        public void TestOperatorOrDelimiterMinus()
+        {
+            var lex = new PythonTokenizer("- ".ToCharArray(), false, 8);
+            var tok1 = lex.GetSymbol();
+            Assert.Equal(Token.TokenKind.PyMinus, tok1.Kind);
+            Assert.Equal(0u, tok1.Start);
+            Assert.Equal(1u, tok1.End);
+        }
+        
+        [Fact]
+        public void TestOperatorOrDelimiterMinusAssign()
+        {
+            var lex = new PythonTokenizer("-=".ToCharArray(), false, 8);
+            var tok1 = lex.GetSymbol();
+            Assert.Equal(Token.TokenKind.PyMinusAssign, tok1.Kind);
+            Assert.Equal(0u, tok1.Start);
+            Assert.Equal(2u, tok1.End);
+        }
+        
+        [Fact]
+        public void TestOperatorOrDelimiterArrow()
+        {
+            var lex = new PythonTokenizer("->".ToCharArray(), false, 8);
+            var tok1 = lex.GetSymbol();
+            Assert.Equal(Token.TokenKind.PyArrow, tok1.Kind);
+            Assert.Equal(0u, tok1.Start);
+            Assert.Equal(2u, tok1.End);
+        }
+        
+        
+        
+        
+        
     }
 }
