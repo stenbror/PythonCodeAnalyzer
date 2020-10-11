@@ -313,6 +313,26 @@ namespace TestPythonCodeAnalyzer
             Assert.Equal(2u, tok1.End);
         }
         
+        [Fact]
+        public void TestOperatorOrDelimiterAnd()
+        {
+            var lex = new PythonTokenizer("& ".ToCharArray(), false, 8);
+            var tok1 = lex.GetSymbol();
+            Assert.Equal(Token.TokenKind.PyAnd, tok1.Kind);
+            Assert.Equal(0u, tok1.Start);
+            Assert.Equal(1u, tok1.End);
+        }
+        
+        [Fact]
+        public void TestOperatorOrDelimiterAndAssign()
+        {
+            var lex = new PythonTokenizer("&=".ToCharArray(), false, 8);
+            var tok1 = lex.GetSymbol();
+            Assert.Equal(Token.TokenKind.PyAndAssign, tok1.Kind);
+            Assert.Equal(0u, tok1.Start);
+            Assert.Equal(2u, tok1.End);
+        }
+        
         
         
         
