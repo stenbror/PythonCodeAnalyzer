@@ -122,8 +122,25 @@ namespace PythonCodeAnalyzer.Parser
             /* Handle Newline - Token or Trivia */
             
             /* Period or start of Number */
+            if (SourceCode[_index] == '.')
+            {
+                if (SourceCode[_index + 1] == '.' && SourceCode[_index + 2] == '.')
+                {
+                    _index += 3;
+                    return new Token(_TokenStartPos, _index, Token.TokenKind.PyElipsis);
+                }
+                else if (!char.IsDigit(SourceCode[_index + 1]))
+                {
+                    _index++;
+                    return new Token(_TokenStartPos, _index, Token.TokenKind.PyDot);
+                }
+            }
             
             /* Handle Numbers */
+            if (char.IsDigit(SourceCode[_index]) || SourceCode[_index] == '.')
+            {
+                
+            }
             
             /* Handle String */
             
