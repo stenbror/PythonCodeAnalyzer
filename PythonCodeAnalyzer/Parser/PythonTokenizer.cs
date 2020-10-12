@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.VisualBasic;
 
 namespace PythonCodeAnalyzer.Parser
 {
@@ -83,27 +84,7 @@ namespace PythonCodeAnalyzer.Parser
             _atBOL = true;
             _LevelStack = new Stack<char>();
         }
-
-        public Token.TokenKind IsReservedKeywordOrLiteralName(string key)
-        {
-            if (ReservedKeywords.ContainsKey(key))
-            {
-                return ReservedKeywords[key];
-            }
-
-            return Token.TokenKind.Name;
-        }
-
-        public static bool IsLiteralNameStartCharacter(char ch)
-        {
-            return ch == '_' || char.IsLetter(ch);
-        }
-
-        public static bool IsLiteralCharacterOrDigit(char ch)
-        {
-            return ch == '_' || char.IsLetterOrDigit(ch);
-        }
-
+        
         public void Advance()
         {
             CurSymbol = GetSymbol();
@@ -112,15 +93,24 @@ namespace PythonCodeAnalyzer.Parser
         public Token GetSymbol()
         {
             _TokenStartPos = _index;
-            
+
             /* Handle whitespace and other Trivia below */
-            
+
             /* Handle End Of File */
-            
+
             /* Handle Name literal or Reserved keywords */
+            if (Char.IsLetter(SourceCode[_index]) || SourceCode[_index] == '_')
+            {
+                _index++;
+                while (Char.IsLetterOrDigit(SourceCode[_index]) || SourceCode[_index] == '_') _index++;
+                var key = new String( SourceCode[ (int) _TokenStartPos .. (int) _index ] );
+                
+                if (ReservedKeywords.ContainsKey(key)) return new Token(_TokenStartPos, _index, ReservedKeywords[key] );
+                else return new Token(_TokenStartPos, _index, Token.TokenKind.Name);
+            }
             
             /* Handle Newline - Token or Trivia */
-            
+
             /* Period or start of Number */
             if (SourceCode[_index] == '.')
             {
