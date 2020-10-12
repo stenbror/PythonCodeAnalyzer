@@ -138,6 +138,16 @@ namespace TestPythonCodeAnalyzer
             Assert.Equal(8u, lex.CurSymbol.End);
         }
         
+        [Fact]
+        public void TestReservedKeywords_del()
+        {
+            var lex = new PythonTokenizer("del ".ToCharArray(), false, 8);
+            lex.Advance();
+            Assert.Equal(Token.TokenKind.PyDel, lex.CurSymbol.Kind);
+            Assert.Equal(0u, lex.CurSymbol.Start);
+            Assert.Equal(3u, lex.CurSymbol.End);
+        }
+        
 
         
         [Fact]
@@ -636,6 +646,8 @@ namespace TestPythonCodeAnalyzer
             Assert.Equal(0u, tok1.Start);
             Assert.Equal(3u, tok1.End);
         }
+        
+        
         
         
         
