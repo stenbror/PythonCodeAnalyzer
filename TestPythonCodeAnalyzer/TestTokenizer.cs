@@ -139,6 +139,16 @@ namespace TestPythonCodeAnalyzer
         }
         
         [Fact]
+        public void TestReservedKeywords_def()
+        {
+            var lex = new PythonTokenizer("def ".ToCharArray(), false, 8);
+            lex.Advance();
+            Assert.Equal(Token.TokenKind.PyDef, lex.CurSymbol.Kind);
+            Assert.Equal(0u, lex.CurSymbol.Start);
+            Assert.Equal(3u, lex.CurSymbol.End);
+        }
+        
+        [Fact]
         public void TestReservedKeywords_del()
         {
             var lex = new PythonTokenizer("del ".ToCharArray(), false, 8);
@@ -148,7 +158,225 @@ namespace TestPythonCodeAnalyzer
             Assert.Equal(3u, lex.CurSymbol.End);
         }
         
-
+        [Fact]
+        public void TestReservedKeywords_elif()
+        {
+            var lex = new PythonTokenizer("elif ".ToCharArray(), false, 8);
+            lex.Advance();
+            Assert.Equal(Token.TokenKind.PyElif, lex.CurSymbol.Kind);
+            Assert.Equal(0u, lex.CurSymbol.Start);
+            Assert.Equal(4u, lex.CurSymbol.End);
+        }
+        
+        [Fact]
+        public void TestReservedKeywords_else()
+        {
+            var lex = new PythonTokenizer("else ".ToCharArray(), false, 8);
+            lex.Advance();
+            Assert.Equal(Token.TokenKind.PyElse, lex.CurSymbol.Kind);
+            Assert.Equal(0u, lex.CurSymbol.Start);
+            Assert.Equal(4u, lex.CurSymbol.End);
+        }
+        
+        [Fact]
+        public void TestReservedKeywords_except()
+        {
+            var lex = new PythonTokenizer("except ".ToCharArray(), false, 8);
+            lex.Advance();
+            Assert.Equal(Token.TokenKind.PyExcept, lex.CurSymbol.Kind);
+            Assert.Equal(0u, lex.CurSymbol.Start);
+            Assert.Equal(6u, lex.CurSymbol.End);
+        }
+        
+        [Fact]
+        public void TestReservedKeywords_finally()
+        {
+            var lex = new PythonTokenizer("finally ".ToCharArray(), false, 8);
+            lex.Advance();
+            Assert.Equal(Token.TokenKind.PyFinally, lex.CurSymbol.Kind);
+            Assert.Equal(0u, lex.CurSymbol.Start);
+            Assert.Equal(7u, lex.CurSymbol.End);
+        }
+        
+        [Fact]
+        public void TestReservedKeywords_for()
+        {
+            var lex = new PythonTokenizer("for ".ToCharArray(), false, 8);
+            lex.Advance();
+            Assert.Equal(Token.TokenKind.PyFor, lex.CurSymbol.Kind);
+            Assert.Equal(0u, lex.CurSymbol.Start);
+            Assert.Equal(3u, lex.CurSymbol.End);
+        }
+        
+        [Fact]
+        public void TestReservedKeywords_from()
+        {
+            var lex = new PythonTokenizer("from ".ToCharArray(), false, 8);
+            lex.Advance();
+            Assert.Equal(Token.TokenKind.PyFrom, lex.CurSymbol.Kind);
+            Assert.Equal(0u, lex.CurSymbol.Start);
+            Assert.Equal(4u, lex.CurSymbol.End);
+        }
+        
+        [Fact]
+        public void TestReservedKeywords_global()
+        {
+            var lex = new PythonTokenizer("global ".ToCharArray(), false, 8);
+            lex.Advance();
+            Assert.Equal(Token.TokenKind.PyGlobal, lex.CurSymbol.Kind);
+            Assert.Equal(0u, lex.CurSymbol.Start);
+            Assert.Equal(6u, lex.CurSymbol.End);
+        }
+        
+        [Fact]
+        public void TestReservedKeywords_if()
+        {
+            var lex = new PythonTokenizer("if ".ToCharArray(), false, 8);
+            lex.Advance();
+            Assert.Equal(Token.TokenKind.PyIf, lex.CurSymbol.Kind);
+            Assert.Equal(0u, lex.CurSymbol.Start);
+            Assert.Equal(2u, lex.CurSymbol.End);
+        }
+        
+        [Fact]
+        public void TestReservedKeywords_import()
+        {
+            var lex = new PythonTokenizer("import ".ToCharArray(), false, 8);
+            lex.Advance();
+            Assert.Equal(Token.TokenKind.PyImport, lex.CurSymbol.Kind);
+            Assert.Equal(0u, lex.CurSymbol.Start);
+            Assert.Equal(6u, lex.CurSymbol.End);
+        }
+        
+        [Fact]
+        public void TestReservedKeywords_in()
+        {
+            var lex = new PythonTokenizer("in ".ToCharArray(), false, 8);
+            lex.Advance();
+            Assert.Equal(Token.TokenKind.PyIn, lex.CurSymbol.Kind);
+            Assert.Equal(0u, lex.CurSymbol.Start);
+            Assert.Equal(2u, lex.CurSymbol.End);
+        }
+        
+        [Fact]
+        public void TestReservedKeywords_is()
+        {
+            var lex = new PythonTokenizer("is ".ToCharArray(), false, 8);
+            lex.Advance();
+            Assert.Equal(Token.TokenKind.PyIs, lex.CurSymbol.Kind);
+            Assert.Equal(0u, lex.CurSymbol.Start);
+            Assert.Equal(2u, lex.CurSymbol.End);
+        }
+        
+        [Fact]
+        public void TestReservedKeywords_lambda()
+        {
+            var lex = new PythonTokenizer("lambda ".ToCharArray(), false, 8);
+            lex.Advance();
+            Assert.Equal(Token.TokenKind.PyLambda, lex.CurSymbol.Kind);
+            Assert.Equal(0u, lex.CurSymbol.Start);
+            Assert.Equal(6u, lex.CurSymbol.End);
+        }
+        
+        [Fact]
+        public void TestReservedKeywords_nonlocal()
+        {
+            var lex = new PythonTokenizer("nonlocal ".ToCharArray(), false, 8);
+            lex.Advance();
+            Assert.Equal(Token.TokenKind.PyNonlocal, lex.CurSymbol.Kind);
+            Assert.Equal(0u, lex.CurSymbol.Start);
+            Assert.Equal(8u, lex.CurSymbol.End);
+        }
+        
+        [Fact]
+        public void TestReservedKeywords_not()
+        {
+            var lex = new PythonTokenizer("not ".ToCharArray(), false, 8);
+            lex.Advance();
+            Assert.Equal(Token.TokenKind.PyNot, lex.CurSymbol.Kind);
+            Assert.Equal(0u, lex.CurSymbol.Start);
+            Assert.Equal(3u, lex.CurSymbol.End);
+        }
+        
+        [Fact]
+        public void TestReservedKeywords_or()
+        {
+            var lex = new PythonTokenizer("or ".ToCharArray(), false, 8);
+            lex.Advance();
+            Assert.Equal(Token.TokenKind.PyOr, lex.CurSymbol.Kind);
+            Assert.Equal(0u, lex.CurSymbol.Start);
+            Assert.Equal(2u, lex.CurSymbol.End);
+        }
+        
+        [Fact]
+        public void TestReservedKeywords_pass()
+        {
+            var lex = new PythonTokenizer("pass ".ToCharArray(), false, 8);
+            lex.Advance();
+            Assert.Equal(Token.TokenKind.PyPass, lex.CurSymbol.Kind);
+            Assert.Equal(0u, lex.CurSymbol.Start);
+            Assert.Equal(4u, lex.CurSymbol.End);
+        }
+        
+        [Fact]
+        public void TestReservedKeywords_raise()
+        {
+            var lex = new PythonTokenizer("raise ".ToCharArray(), false, 8);
+            lex.Advance();
+            Assert.Equal(Token.TokenKind.PyRaise, lex.CurSymbol.Kind);
+            Assert.Equal(0u, lex.CurSymbol.Start);
+            Assert.Equal(5u, lex.CurSymbol.End);
+        }
+        
+        [Fact]
+        public void TestReservedKeywords_return()
+        {
+            var lex = new PythonTokenizer("return ".ToCharArray(), false, 8);
+            lex.Advance();
+            Assert.Equal(Token.TokenKind.PyReturn, lex.CurSymbol.Kind);
+            Assert.Equal(0u, lex.CurSymbol.Start);
+            Assert.Equal(6u, lex.CurSymbol.End);
+        }
+        
+        [Fact]
+        public void TestReservedKeywords_try()
+        {
+            var lex = new PythonTokenizer("try ".ToCharArray(), false, 8);
+            lex.Advance();
+            Assert.Equal(Token.TokenKind.PyTry, lex.CurSymbol.Kind);
+            Assert.Equal(0u, lex.CurSymbol.Start);
+            Assert.Equal(3u, lex.CurSymbol.End);
+        }
+        
+        [Fact]
+        public void TestReservedKeywords_while()
+        {
+            var lex = new PythonTokenizer("while ".ToCharArray(), false, 8);
+            lex.Advance();
+            Assert.Equal(Token.TokenKind.PyWhile, lex.CurSymbol.Kind);
+            Assert.Equal(0u, lex.CurSymbol.Start);
+            Assert.Equal(5u, lex.CurSymbol.End);
+        }
+        
+        [Fact]
+        public void TestReservedKeywords_with()
+        {
+            var lex = new PythonTokenizer("with ".ToCharArray(), false, 8);
+            lex.Advance();
+            Assert.Equal(Token.TokenKind.PyWith, lex.CurSymbol.Kind);
+            Assert.Equal(0u, lex.CurSymbol.Start);
+            Assert.Equal(4u, lex.CurSymbol.End);
+        }
+        
+        [Fact]
+        public void TestReservedKeywords_yield()
+        {
+            var lex = new PythonTokenizer("yield ".ToCharArray(), false, 8);
+            lex.Advance();
+            Assert.Equal(Token.TokenKind.PyYield, lex.CurSymbol.Kind);
+            Assert.Equal(0u, lex.CurSymbol.Start);
+            Assert.Equal(5u, lex.CurSymbol.End);
+        }
         
         [Fact]
         public void TestLevelParenthezis()
