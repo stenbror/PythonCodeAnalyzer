@@ -252,7 +252,15 @@ namespace PythonCodeAnalyzer.Parser
                     }
                     if (SourceCode[_index] == 'e' || SourceCode[_index] == 'E')
                     {
-                            
+                        _index++;
+                        if (SourceCode[_index] == '+' || SourceCode[_index] == '-')
+                        {
+                            _index++;
+                            if (!char.IsDigit(SourceCode[_index])) throw new NotImplementedException();
+                        }
+                        else if (!char.IsDigit(SourceCode[_index])) throw new NotImplementedException();
+                        
+                        // Handle rest later!
                     }
                     else if (SourceCode[_index] == 'j' || SourceCode[_index] == 'J')
                     {
