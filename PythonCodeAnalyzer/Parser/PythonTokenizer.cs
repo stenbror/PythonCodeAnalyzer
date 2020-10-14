@@ -130,6 +130,7 @@ namespace PythonCodeAnalyzer.Parser
             if (char.IsDigit(SourceCode[_index]) || SourceCode[_index] == '.')
             {
                 
+                return new Token(_TokenStartPos, _index, Token.TokenKind.Number);
             }
             
             /* Handle String */
