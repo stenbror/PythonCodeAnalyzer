@@ -130,6 +130,136 @@ namespace PythonCodeAnalyzer.Parser
             if (char.IsDigit(SourceCode[_index]) || SourceCode[_index] == '.')
             {
                 
+                if (SourceCode[_index] == '0')
+                {
+                    _index++;
+                    if (SourceCode[_index] == 'x' || SourceCode[_index] == 'X')
+                    {
+                        _index++;
+                        do
+                        {
+                            if (SourceCode[_index] == '_') _index++;
+                            
+                            if (!char.IsDigit(SourceCode[_index])) throw new NotImplementedException();
+                            
+                            do
+                            {
+                                _index++;
+                            } while (char.IsDigit(SourceCode[_index]) 
+                                     || (SourceCode[_index] >= 'a' && SourceCode[_index] <= 'f') 
+                                     || (SourceCode[_index] >= 'A' && SourceCode[_index] <= 'F'));
+                            
+                        } while (SourceCode[_index] == '_');
+                    }
+                    else if (SourceCode[_index] == 'o' || SourceCode[_index] == 'O')
+                    {
+                        _index++;
+                        do
+                        {
+                            if (SourceCode[_index] == '_') _index++;
+                            
+                            if (SourceCode[_index] < '0' || SourceCode[_index] > '7')
+                            {
+                                if (char.IsDigit(SourceCode[_index])) throw new NotImplementedException();
+                                else new NotImplementedException();
+                            }
+
+                            do
+                            {
+                                _index++;
+                            } while (SourceCode[_index] >= '0' && SourceCode[_index] < '8');
+                            
+                        } while (SourceCode[_index] == '_');
+                        
+                        if (char.IsDigit(SourceCode[_index])) throw new NotImplementedException();
+                    }
+                    else if (SourceCode[_index] == 'b' || SourceCode[_index] == 'B')
+                    {
+                        _index++;
+
+                        do
+                        {
+                            if (SourceCode[_index] == '_') _index++;
+                            
+                            if (SourceCode[_index] < '0' || SourceCode[_index] > '1')
+                            {
+                                if (char.IsDigit(SourceCode[_index])) throw new NotImplementedException();
+                                else new NotImplementedException();
+                            }
+
+                            do
+                            {
+                                _index++;
+                            } while (SourceCode[_index] == '0' || SourceCode[_index] == '1');
+                            
+                        } while (SourceCode[_index] == '_');
+                        
+                        if (char.IsDigit(SourceCode[_index])) throw new NotImplementedException();
+                    }
+                    else
+                    {
+                        bool nonZero = false;
+
+                        if (SourceCode[_index] != '.')
+                        {
+                            while (true)
+                            {
+                                if (SourceCode[_index] == '_')
+                                {
+                                    _index++;
+                                    if (!char.IsDigit(SourceCode[_index])) throw new NotImplementedException();
+                                }
+
+                                if (SourceCode[_index] != '0') break;
+
+                                _index++;
+                            }
+                        }
+
+                        if (char.IsDigit(SourceCode[_index]))
+                        {
+                            nonZero = true;
+                            
+                            // Handle Later!
+                        }
+
+                        if (SourceCode[_index] == '.')
+                        {
+                            
+                        }
+                        else if (SourceCode[_index] == 'e' || SourceCode[_index] == 'E')
+                        {
+                            
+                        }
+                        else if (SourceCode[_index] == 'j' || SourceCode[_index] == 'J')
+                        {
+                            
+                        }
+                        else if (!nonZero) throw new NotImplementedException();
+                    }
+                }
+                else /* Decimal */
+                {
+                    if (SourceCode[_index] != '.')
+                    {
+                        // Handle later    
+                    }
+                    
+                    if (SourceCode[_index] == '.')
+                    {
+                        _index++;
+                        // Handle later.
+                    }
+                    if (SourceCode[_index] == 'e' || SourceCode[_index] == 'E')
+                    {
+                            
+                    }
+                    else if (SourceCode[_index] == 'j' || SourceCode[_index] == 'J')
+                    {
+                        _index++;
+                    }
+                }
+                
                 return new Token(_TokenStartPos, _index, Token.TokenKind.Number);
             }
             
