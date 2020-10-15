@@ -204,36 +204,58 @@ namespace PythonCodeAnalyzer.Parser
                         {
                             while (true)
                             {
-                                if (SourceCode[_index] == '_')
+                                do
                                 {
                                     _index++;
-                                    if (!char.IsDigit(SourceCode[_index])) throw new NotImplementedException();
-                                }
-
-                                if (SourceCode[_index] != '0') break;
-
+                                } while (char.IsDigit(SourceCode[_index]));
+                        
+                                if (SourceCode[_index] != '_') break;
                                 _index++;
+                                if (!char.IsDigit(SourceCode[_index])) throw new NotImplementedException();
                             }
                         }
-
-                        if (char.IsDigit(SourceCode[_index]))
-                        {
-                            nonZero = true;
-                            
-                            // Handle Later!
-                        }
-
+                        
                         if (SourceCode[_index] == '.')
                         {
-                            
+                            _index++;
+                            while (true)
+                            {
+                                do
+                                {
+                                    _index++;
+                                } while (char.IsDigit(SourceCode[_index]));
+
+                                if (SourceCode[_index] != '_') break;
+                                _index++;
+                                if (!char.IsDigit(SourceCode[_index])) throw new NotImplementedException();
+                            }
+
                         }
                         else if (SourceCode[_index] == 'e' || SourceCode[_index] == 'E')
                         {
+                            _index++;
+                            if (SourceCode[_index] == '+' || SourceCode[_index] == '-')
+                            {
+                                _index++;
+                                if (!char.IsDigit(SourceCode[_index])) throw new NotImplementedException();
+                            }
+                            else if (!char.IsDigit(SourceCode[_index])) throw new NotImplementedException();
                             
+                            while (true)
+                            {
+                                do
+                                {
+                                    _index++;
+                                } while (char.IsDigit(SourceCode[_index]));
+
+                                if (SourceCode[_index] != '_') break;
+                                _index++;
+                                if (!char.IsDigit(SourceCode[_index])) throw new NotImplementedException();
+                            }
                         }
                         else if (SourceCode[_index] == 'j' || SourceCode[_index] == 'J')
                         {
-                            
+                            _index++;
                         }
                         else if (!nonZero) throw new NotImplementedException();
                     }
@@ -242,14 +264,35 @@ namespace PythonCodeAnalyzer.Parser
                 {
                     if (SourceCode[_index] != '.')
                     {
-                        // Handle later    
+                        while (true)
+                        {
+                            do
+                            {
+                                _index++;
+                            } while (char.IsDigit(SourceCode[_index]));
+
+                            if (SourceCode[_index] != '_') break;
+                            _index++;
+                            if (!char.IsDigit(SourceCode[_index])) throw new NotImplementedException();
+                        }
                     }
                     
                     if (SourceCode[_index] == '.')
                     {
                         _index++;
-                        // Handle later.
+                        while (true)
+                        {
+                            do
+                            {
+                                _index++;
+                            } while (char.IsDigit(SourceCode[_index]));
+
+                            if (SourceCode[_index] != '_') break;
+                            _index++;
+                            if (!char.IsDigit(SourceCode[_index])) throw new NotImplementedException();
+                        }
                     }
+                    
                     if (SourceCode[_index] == 'e' || SourceCode[_index] == 'E')
                     {
                         _index++;
@@ -260,7 +303,17 @@ namespace PythonCodeAnalyzer.Parser
                         }
                         else if (!char.IsDigit(SourceCode[_index])) throw new NotImplementedException();
                         
-                        // Handle rest later!
+                        while (true)
+                        {
+                            do
+                            {
+                                _index++;
+                            } while (char.IsDigit(SourceCode[_index]));
+
+                            if (SourceCode[_index] != '_') break;
+                            _index++;
+                            if (!char.IsDigit(SourceCode[_index])) throw new NotImplementedException();
+                        }
                     }
                     else if (SourceCode[_index] == 'j' || SourceCode[_index] == 'J')
                     {
