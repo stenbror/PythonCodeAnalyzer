@@ -140,7 +140,7 @@ namespace PythonCodeAnalyzer.Parser
                         {
                             if (SourceCode[_index] == '_') _index++;
                             
-                            if (!char.IsDigit(SourceCode[_index])) throw new NotImplementedException();
+                            if (!char.IsDigit(SourceCode[_index])) throw new LexicalErrorException(_index, "");
                             
                             do
                             {
@@ -160,8 +160,8 @@ namespace PythonCodeAnalyzer.Parser
                             
                             if (SourceCode[_index] < '0' || SourceCode[_index] > '7')
                             {
-                                if (char.IsDigit(SourceCode[_index])) throw new NotImplementedException();
-                                else new NotImplementedException();
+                                if (char.IsDigit(SourceCode[_index])) throw new LexicalErrorException(_index, "");
+                                else new LexicalErrorException(_index, "");
                             }
 
                             do
@@ -171,7 +171,7 @@ namespace PythonCodeAnalyzer.Parser
                             
                         } while (SourceCode[_index] == '_');
                         
-                        if (char.IsDigit(SourceCode[_index])) throw new NotImplementedException();
+                        if (char.IsDigit(SourceCode[_index])) throw new LexicalErrorException(_index, "");
                     }
                     else if (SourceCode[_index] == 'b' || SourceCode[_index] == 'B')
                     {
@@ -183,8 +183,8 @@ namespace PythonCodeAnalyzer.Parser
                             
                             if (SourceCode[_index] < '0' || SourceCode[_index] > '1')
                             {
-                                if (char.IsDigit(SourceCode[_index])) throw new NotImplementedException();
-                                else new NotImplementedException();
+                                if (char.IsDigit(SourceCode[_index])) throw new LexicalErrorException(_index, "");
+                                else new LexicalErrorException(_index, "");
                             }
 
                             do
@@ -194,7 +194,7 @@ namespace PythonCodeAnalyzer.Parser
                             
                         } while (SourceCode[_index] == '_');
                         
-                        if (char.IsDigit(SourceCode[_index])) throw new NotImplementedException();
+                        if (char.IsDigit(SourceCode[_index])) throw new LexicalErrorException(_index, "");
                     }
                     else
                     {
@@ -211,7 +211,7 @@ namespace PythonCodeAnalyzer.Parser
                         
                                 if (SourceCode[_index] != '_') break;
                                 _index++;
-                                if (!char.IsDigit(SourceCode[_index])) throw new NotImplementedException();
+                                if (!char.IsDigit(SourceCode[_index])) throw new LexicalErrorException(_index, "");
                             }
                         }
                         
@@ -227,19 +227,20 @@ namespace PythonCodeAnalyzer.Parser
 
                                 if (SourceCode[_index] != '_') break;
                                 _index++;
-                                if (!char.IsDigit(SourceCode[_index])) throw new NotImplementedException();
+                                if (!char.IsDigit(SourceCode[_index])) throw new LexicalErrorException(_index, "");
                             }
 
                         }
-                        else if (SourceCode[_index] == 'e' || SourceCode[_index] == 'E')
+                        
+                        if (SourceCode[_index] == 'e' || SourceCode[_index] == 'E')
                         {
                             _index++;
                             if (SourceCode[_index] == '+' || SourceCode[_index] == '-')
                             {
                                 _index++;
-                                if (!char.IsDigit(SourceCode[_index])) throw new NotImplementedException();
+                                if (!char.IsDigit(SourceCode[_index])) throw new LexicalErrorException(_index, "");
                             }
-                            else if (!char.IsDigit(SourceCode[_index])) throw new NotImplementedException();
+                            else if (!char.IsDigit(SourceCode[_index])) throw new LexicalErrorException(_index, "");
                             
                             while (true)
                             {
@@ -250,14 +251,15 @@ namespace PythonCodeAnalyzer.Parser
 
                                 if (SourceCode[_index] != '_') break;
                                 _index++;
-                                if (!char.IsDigit(SourceCode[_index])) throw new NotImplementedException();
+                                if (!char.IsDigit(SourceCode[_index])) throw new LexicalErrorException(_index, "");
                             }
                         }
-                        else if (SourceCode[_index] == 'j' || SourceCode[_index] == 'J')
+                        
+                        if (SourceCode[_index] == 'j' || SourceCode[_index] == 'J')
                         {
                             _index++;
                         }
-                        else if (!nonZero) throw new NotImplementedException();
+                        else if (!nonZero) throw new LexicalErrorException(_index, "");
                     }
                 }
                 else /* Decimal */
@@ -273,7 +275,7 @@ namespace PythonCodeAnalyzer.Parser
 
                             if (SourceCode[_index] != '_') break;
                             _index++;
-                            if (!char.IsDigit(SourceCode[_index])) throw new NotImplementedException();
+                            if (!char.IsDigit(SourceCode[_index])) throw new LexicalErrorException(_index, "");
                         }
                     }
                     
@@ -289,7 +291,7 @@ namespace PythonCodeAnalyzer.Parser
 
                             if (SourceCode[_index] != '_') break;
                             _index++;
-                            if (!char.IsDigit(SourceCode[_index])) throw new NotImplementedException();
+                            if (!char.IsDigit(SourceCode[_index])) throw new LexicalErrorException(_index, "");
                         }
                     }
                     
@@ -299,9 +301,9 @@ namespace PythonCodeAnalyzer.Parser
                         if (SourceCode[_index] == '+' || SourceCode[_index] == '-')
                         {
                             _index++;
-                            if (!char.IsDigit(SourceCode[_index])) throw new NotImplementedException();
+                            if (!char.IsDigit(SourceCode[_index])) throw new LexicalErrorException(_index, "");
                         }
-                        else if (!char.IsDigit(SourceCode[_index])) throw new NotImplementedException();
+                        else if (!char.IsDigit(SourceCode[_index])) throw new LexicalErrorException(_index, "");
                         
                         while (true)
                         {
@@ -312,10 +314,11 @@ namespace PythonCodeAnalyzer.Parser
 
                             if (SourceCode[_index] != '_') break;
                             _index++;
-                            if (!char.IsDigit(SourceCode[_index])) throw new NotImplementedException();
+                            if (!char.IsDigit(SourceCode[_index])) throw new LexicalErrorException(_index, "");
                         }
                     }
-                    else if (SourceCode[_index] == 'j' || SourceCode[_index] == 'J')
+                    
+                    if (SourceCode[_index] == 'j' || SourceCode[_index] == 'J')
                     {
                         _index++;
                     }
@@ -346,7 +349,7 @@ namespace PythonCodeAnalyzer.Parser
                 case ')':
                     if (_LevelStack.Count == 0 || SourceCode[_index] != _LevelStack.Peek())
                     {
-                        throw new NotImplementedException(); // Needs new LexicalException
+                        throw new LexicalErrorException(_index, "");
                     }
                     _LevelStack.Pop();
                     _index++;
@@ -354,7 +357,7 @@ namespace PythonCodeAnalyzer.Parser
                 case ']':
                     if (_LevelStack.Count == 0 || SourceCode[_index] != _LevelStack.Peek())
                     {
-                        throw new NotImplementedException(); // Needs new LexicalException
+                        throw new LexicalErrorException(_index, "");
                     }
                     _LevelStack.Pop();
                     _index++;
@@ -362,7 +365,7 @@ namespace PythonCodeAnalyzer.Parser
                 case '}':
                     if (_LevelStack.Count == 0 || SourceCode[_index] != _LevelStack.Peek())
                     {
-                        throw new NotImplementedException(); // Needs new LexicalException
+                        throw new LexicalErrorException(_index, "");
                     }
                     _LevelStack.Pop();
                     _index++;
@@ -542,7 +545,7 @@ namespace PythonCodeAnalyzer.Parser
             
             
 
-            throw new NotImplementedException(); // Needs new LexicalException
+            throw new LexicalErrorException(_index, "Illegal character in sourcecode!");
         }
     }
 }
