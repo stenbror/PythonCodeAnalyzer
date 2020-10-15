@@ -204,10 +204,11 @@ namespace PythonCodeAnalyzer.Parser
                         {
                             while (true)
                             {
-                                do
+                                var tst = char.IsDigit(SourceCode[_index]);
+                                while (SourceCode[_index] >= '0' && SourceCode[_index] <= '9')
                                 {
                                     _index++;
-                                } while (char.IsDigit(SourceCode[_index]));
+                                };
                         
                                 if (SourceCode[_index] != '_') break;
                                 _index++;
@@ -259,7 +260,7 @@ namespace PythonCodeAnalyzer.Parser
                         {
                             _index++;
                         }
-                        else if (!nonZero) throw new LexicalErrorException(_index, "");
+                        else if (nonZero) throw new LexicalErrorException(_index, "");
                     }
                 }
                 else /* Decimal */

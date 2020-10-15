@@ -875,6 +875,36 @@ namespace TestPythonCodeAnalyzer
             Assert.Equal(3u, tok1.End);
         }
         
+        [Fact]
+        public void TestNumberZero()
+        {
+            var lex = new PythonTokenizer("0 ".ToCharArray(), false, 8);
+            var tok1 = lex.GetSymbol();
+            Assert.Equal(Token.TokenKind.Number, tok1.Kind);
+            Assert.Equal(0u, tok1.Start);
+            Assert.Equal(1u, tok1.End);
+        }
+        
+        [Fact]
+        public void TestNumberZeroImaginary_j()
+        {
+            var lex = new PythonTokenizer("0j".ToCharArray(), false, 8);
+            var tok1 = lex.GetSymbol();
+            Assert.Equal(Token.TokenKind.Number, tok1.Kind);
+            Assert.Equal(0u, tok1.Start);
+            Assert.Equal(2u, tok1.End);
+        }
+        
+        [Fact]
+        public void TestNumberZeroImaginary_J()
+        {
+            var lex = new PythonTokenizer("0J".ToCharArray(), false, 8);
+            var tok1 = lex.GetSymbol();
+            Assert.Equal(Token.TokenKind.Number, tok1.Kind);
+            Assert.Equal(0u, tok1.Start);
+            Assert.Equal(2u, tok1.End);
+        }
+        
         
         
         
