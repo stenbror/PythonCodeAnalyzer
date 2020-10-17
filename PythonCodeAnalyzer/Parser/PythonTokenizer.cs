@@ -4,15 +4,7 @@ using Microsoft.VisualBasic;
 
 namespace PythonCodeAnalyzer.Parser
 {
-    public interface IPythonTokenizer
-    {
-        public Token CurSymbol { get; set; }
-        public uint Position { get; set; }
-        public void Advance();
-        public Token[] Symbols { get; set; }
-    }
-    
-    public class PythonTokenizer : IPythonTokenizer
+    public class PythonTokenizer
     {
         public Token CurSymbol { get; set; }
         public uint Position { get; set; }
@@ -104,7 +96,10 @@ namespace PythonCodeAnalyzer.Parser
         
         public void Advance()
         {
-            CurSymbol = GetSymbol();
+            var tok = GetSymbol();
+            tok.Text = new string(SourceCode[(int) _TokenStartPos .. (int) _index]);
+            Position = _TokenStartPos;
+            CurSymbol = tok;
         }
 
         public Token GetSymbol()

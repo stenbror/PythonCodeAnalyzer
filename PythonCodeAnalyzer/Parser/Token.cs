@@ -101,6 +101,7 @@ namespace PythonCodeAnalyzer.Parser
         public TokenKind Kind { get; set; }
         public uint Start { get; set; }
         public uint End { get; set; }
+        public string Text { get; set; }
 
         public Token(uint start, uint end, TokenKind kind)
         {

@@ -10,7 +10,7 @@ namespace PythonCodeAnalyzer.Parser
 {
     public class PythonParser
     {
-        public IPythonTokenizer Tokenizer { get; set; }
+        public PythonTokenizer Tokenizer { get; set; }
 
 
         public ExpressionNode ParseAtom()
