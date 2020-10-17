@@ -84,6 +84,23 @@ namespace PythonCodeAnalyzer.Parser
             _atBOL = true;
             _LevelStack = new Stack<char>();
         }
+
+        protected bool IsHexDigit(char ch)
+        {
+            if ( (char.IsDigit(ch)) || (SourceCode[_index] >= 'a' && SourceCode[_index] <= 'f') 
+                || (SourceCode[_index] >= 'A' && SourceCode[_index] <= 'F') ) return true;
+            return false;
+        }
+
+        protected bool IsOctalDigit(char ch)
+        {
+            return (ch >= '0' && ch <= '7');
+        }
+
+        protected bool IsBinaryDigit(char ch)
+        {
+            return (ch == '0' || ch == '1');
+        }
         
         public void Advance()
         {
@@ -140,14 +157,12 @@ namespace PythonCodeAnalyzer.Parser
                         {
                             if (SourceCode[_index] == '_') _index++;
                             
-                            if (!char.IsDigit(SourceCode[_index])) throw new LexicalErrorException(_index, "");
+                            if (!IsHexDigit(SourceCode[_index])) throw new LexicalErrorException(_index, "");
                             
                             do
                             {
                                 _index++;
-                            } while (char.IsDigit(SourceCode[_index]) 
-                                     || (SourceCode[_index] >= 'a' && SourceCode[_index] <= 'f') 
-                                     || (SourceCode[_index] >= 'A' && SourceCode[_index] <= 'F'));
+                            } while (IsHexDigit(SourceCode[_index]));
                             
                         } while (SourceCode[_index] == '_');
                     }
@@ -158,7 +173,7 @@ namespace PythonCodeAnalyzer.Parser
                         {
                             if (SourceCode[_index] == '_') _index++;
                             
-                            if (SourceCode[_index] < '0' || SourceCode[_index] > '7')
+                            if (!IsOctalDigit(SourceCode[_index]))
                             {
                                 if (char.IsDigit(SourceCode[_index])) throw new LexicalErrorException(_index, "");
                                 else new LexicalErrorException(_index, "");
@@ -167,7 +182,7 @@ namespace PythonCodeAnalyzer.Parser
                             do
                             {
                                 _index++;
-                            } while (SourceCode[_index] >= '0' && SourceCode[_index] < '8');
+                            } while (IsOctalDigit(SourceCode[_index]));
                             
                         } while (SourceCode[_index] == '_');
                         
@@ -181,7 +196,7 @@ namespace PythonCodeAnalyzer.Parser
                         {
                             if (SourceCode[_index] == '_') _index++;
                             
-                            if (SourceCode[_index] < '0' || SourceCode[_index] > '1')
+                            if (!IsBinaryDigit(SourceCode[_index]))
                             {
                                 if (char.IsDigit(SourceCode[_index])) throw new LexicalErrorException(_index, "");
                                 else new LexicalErrorException(_index, "");
@@ -190,7 +205,7 @@ namespace PythonCodeAnalyzer.Parser
                             do
                             {
                                 _index++;
-                            } while (SourceCode[_index] == '0' || SourceCode[_index] == '1');
+                            } while (IsBinaryDigit(SourceCode[_index]));
                             
                         } while (SourceCode[_index] == '_');
                         
