@@ -1135,7 +1135,125 @@ namespace TestPythonCodeAnalyzer
             Assert.Equal(12u, tok1.End);
         }
         
+        [Fact]
+        public void TestNumber1()
+        {
+            var lex = new PythonTokenizer("45 ".ToCharArray(), false, 8);
+            var tok1 = lex.GetSymbol();
+            Assert.Equal(Token.TokenKind.Number, tok1.Kind);
+            Assert.Equal(0u, tok1.Start);
+            Assert.Equal(2u, tok1.End);
+        }
         
+        [Fact]
+        public void TestNumber2()
+        {
+            var lex = new PythonTokenizer("45. ".ToCharArray(), false, 8);
+            var tok1 = lex.GetSymbol();
+            Assert.Equal(Token.TokenKind.Number, tok1.Kind);
+            Assert.Equal(0u, tok1.Start);
+            Assert.Equal(3u, tok1.End);
+        }
+        
+        [Fact]
+        public void TestNumber3()
+        {
+            var lex = new PythonTokenizer("45.3 ".ToCharArray(), false, 8);
+            var tok1 = lex.GetSymbol();
+            Assert.Equal(Token.TokenKind.Number, tok1.Kind);
+            Assert.Equal(0u, tok1.Start);
+            Assert.Equal(4u, tok1.End);
+        }
+        
+        [Fact]
+        public void TestNumber4()
+        {
+            var lex = new PythonTokenizer("45.3e-3 ".ToCharArray(), false, 8);
+            var tok1 = lex.GetSymbol();
+            Assert.Equal(Token.TokenKind.Number, tok1.Kind);
+            Assert.Equal(0u, tok1.Start);
+            Assert.Equal(7u, tok1.End);
+        }
+        
+        [Fact]
+        public void TestNumber5()
+        {
+            var lex = new PythonTokenizer("45.3E-3 ".ToCharArray(), false, 8);
+            var tok1 = lex.GetSymbol();
+            Assert.Equal(Token.TokenKind.Number, tok1.Kind);
+            Assert.Equal(0u, tok1.Start);
+            Assert.Equal(7u, tok1.End);
+        }
+        
+        [Fact]
+        public void TestNumber6()
+        {
+            var lex = new PythonTokenizer("45.3e+3 ".ToCharArray(), false, 8);
+            var tok1 = lex.GetSymbol();
+            Assert.Equal(Token.TokenKind.Number, tok1.Kind);
+            Assert.Equal(0u, tok1.Start);
+            Assert.Equal(7u, tok1.End);
+        }
+        
+        [Fact]
+        public void TestNumber7()
+        {
+            var lex = new PythonTokenizer("45.3E+3 ".ToCharArray(), false, 8);
+            var tok1 = lex.GetSymbol();
+            Assert.Equal(Token.TokenKind.Number, tok1.Kind);
+            Assert.Equal(0u, tok1.Start);
+            Assert.Equal(7u, tok1.End);
+        }
+        
+        [Fact]
+        public void TestNumber8()
+        {
+            var lex = new PythonTokenizer("45.3e3 ".ToCharArray(), false, 8);
+            var tok1 = lex.GetSymbol();
+            Assert.Equal(Token.TokenKind.Number, tok1.Kind);
+            Assert.Equal(0u, tok1.Start);
+            Assert.Equal(6u, tok1.End);
+        }
+        
+        [Fact]
+        public void TestNumber9()
+        {
+            var lex = new PythonTokenizer("45.3E3 ".ToCharArray(), false, 8);
+            var tok1 = lex.GetSymbol();
+            Assert.Equal(Token.TokenKind.Number, tok1.Kind);
+            Assert.Equal(0u, tok1.Start);
+            Assert.Equal(6u, tok1.End);
+        }
+        
+        [Fact]
+        public void TestNumber10()
+        {
+            var lex = new PythonTokenizer("45.3e-3j ".ToCharArray(), false, 8);
+            var tok1 = lex.GetSymbol();
+            Assert.Equal(Token.TokenKind.Number, tok1.Kind);
+            Assert.Equal(0u, tok1.Start);
+            Assert.Equal(8u, tok1.End);
+        }
+        
+        [Fact]
+        public void TestNumber11()
+        {
+            var lex = new PythonTokenizer("45.3E-3J ".ToCharArray(), false, 8);
+            var tok1 = lex.GetSymbol();
+            Assert.Equal(Token.TokenKind.Number, tok1.Kind);
+            Assert.Equal(0u, tok1.Start);
+            Assert.Equal(8u, tok1.End);
+        }
+        
+        [Fact]
+        public void TestNumber12()
+        {
+            var lex = new PythonTokenizer("4_5.3_4_5E-3_5J ".ToCharArray(), false, 8);
+            var tok1 = lex.GetSymbol();
+            Assert.Equal(Token.TokenKind.Number, tok1.Kind);
+            Assert.Equal(0u, tok1.Start);
+            Assert.Equal(15u, tok1.End);
+        }
         
         
     }

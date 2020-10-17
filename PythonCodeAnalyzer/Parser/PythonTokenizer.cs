@@ -300,10 +300,10 @@ namespace PythonCodeAnalyzer.Parser
                         _index++;
                         while (true)
                         {
-                            do
+                            while (char.IsDigit(SourceCode[_index]))
                             {
                                 _index++;
-                            } while (char.IsDigit(SourceCode[_index]));
+                            };
 
                             if (SourceCode[_index] != '_') break;
                             _index++;
