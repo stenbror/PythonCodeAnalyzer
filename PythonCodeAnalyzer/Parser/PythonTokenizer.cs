@@ -118,6 +118,22 @@ namespace PythonCodeAnalyzer.Parser
             /* Handle Name literal or Reserved keywords */
             if (Char.IsLetter(SourceCode[_index]) || SourceCode[_index] == '_')
             {
+                bool saw_b = false, saw_r = false, saw_u = false, saw_f = false;
+                while (true)
+                {
+                    if (!(saw_b || saw_u || saw_f) && (SourceCode[_index] == 'b' || SourceCode[_index] == 'B'))
+                        saw_b = true;
+                    else if (!(saw_b || saw_u || saw_r || saw_f) &&
+                             (SourceCode[_index] == 'u' || SourceCode[_index] == 'U')) saw_u = true;
+                    else if (!(saw_r || saw_u) && (SourceCode[_index] == 'r' || SourceCode[_index] == 'R'))
+                        saw_r = true;
+                    else if (!(saw_f || saw_b || saw_u) && (SourceCode[_index] == 'f' || SourceCode[_index] == 'F'))
+                        saw_f = true;
+                    else break;
+                    _index++;
+                    if (SourceCode[_index] == '\'' || SourceCode[_index] == '"') goto _letterQuote;
+                }
+                
                 _index++;
                 while (Char.IsLetterOrDigit(SourceCode[_index]) || SourceCode[_index] == '_') _index++;
                 var key = new String( SourceCode[ (int) _TokenStartPos .. (int) _index ] );
