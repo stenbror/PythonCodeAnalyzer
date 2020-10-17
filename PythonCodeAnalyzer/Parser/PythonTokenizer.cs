@@ -343,7 +343,65 @@ namespace PythonCodeAnalyzer.Parser
                 return new Token(_TokenStartPos, _index, Token.TokenKind.Number);
             }
             
+_letterQuote:
             /* Handle String */
+            if (SourceCode[_index] == '\'' || SourceCode[_index] == '"')
+            {
+                var quote = SourceCode[_index++];
+                var quoteSize = 1;
+                var quoteEndSize = 0;
+
+                if (SourceCode[_index] == quote)
+                {
+                    _index++;
+                    if (SourceCode[_index] == quote)
+                    {
+                        quoteSize = 3;
+                    }
+                    else
+                    {
+                        quoteEndSize = 1;
+                    }
+                }
+                else _index--;
+                
+                while (quoteEndSize != quoteSize)
+                {
+                    _index++;
+                    if (SourceCode[_index] == '\0')
+                    {
+                        if (quoteSize == 3)
+                        {
+                            
+                        }
+                        else
+                        {
+                            throw new LexicalErrorException(_index, "");
+                        }
+                    }
+
+                    if (quoteSize == 1 && (SourceCode[_index] == '\n' || SourceCode[_index] == '\r'))
+                    {
+                        throw new LexicalErrorException(_index, "");
+                    }
+
+                    if (quote == SourceCode[_index])
+                    {
+                        quoteEndSize += 1;
+                        if (quoteEndSize == quoteSize) _index++;
+                    }
+                    else
+                    {
+                        quoteEndSize = 0;
+                        if (SourceCode[_index] == '\\')
+                        {
+                            _index++;
+                        }
+                    }
+                }
+                
+                return new Token(_TokenStartPos, _index, Token.TokenKind.String);
+            }
             
             /* Handle Line continuation */
             

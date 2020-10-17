@@ -1255,6 +1255,44 @@ namespace TestPythonCodeAnalyzer
             Assert.Equal(15u, tok1.End);
         }
         
+        [Fact]
+        public void TestString1()
+        {
+            var lex = new PythonTokenizer("'' ".ToCharArray(), false, 8);
+            var tok1 = lex.GetSymbol();
+            Assert.Equal(Token.TokenKind.String, tok1.Kind);
+            Assert.Equal(0u, tok1.Start);
+            Assert.Equal(2u, tok1.End);
+        }
         
+        [Fact]
+        public void TestString2()
+        {
+            var lex = new PythonTokenizer("\"\" ".ToCharArray(), false, 8);
+            var tok1 = lex.GetSymbol();
+            Assert.Equal(Token.TokenKind.String, tok1.Kind);
+            Assert.Equal(0u, tok1.Start);
+            Assert.Equal(2u, tok1.End);
+        }
+        
+        [Fact]
+        public void TestString3()
+        {
+            var lex = new PythonTokenizer("'''''' ".ToCharArray(), false, 8);
+            var tok1 = lex.GetSymbol();
+            Assert.Equal(Token.TokenKind.String, tok1.Kind);
+            Assert.Equal(0u, tok1.Start);
+            Assert.Equal(6u, tok1.End);
+        }
+        
+        [Fact]
+        public void TestString4()
+        {
+            var lex = new PythonTokenizer("\"\"\"\"\"\" ".ToCharArray(), false, 8);
+            var tok1 = lex.GetSymbol();
+            Assert.Equal(Token.TokenKind.String, tok1.Kind);
+            Assert.Equal(0u, tok1.Start);
+            Assert.Equal(6u, tok1.End);
+        }
     }
 }
