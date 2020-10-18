@@ -9,7 +9,6 @@ namespace PythonCodeAnalyzer.Parser
     {
         public Token CurSymbol { get; set; }
         public uint Position { get; set; }
-        public Token[] Symbols { get; set; }
         
         private Dictionary<string, Token.TokenKind> ReservedKeywords = new Dictionary<string, Token.TokenKind>()
         {
@@ -49,13 +48,11 @@ namespace PythonCodeAnalyzer.Parser
             { "with", Token.TokenKind.PyWith },
             { "yield", Token.TokenKind.PyYield }
         };
-        
-        private uint[] _indentStack = new uint[100];
-        private uint _indentLevel = 0;
+
+        private Stack<uint> _IndentStack;
         private int _pending = 0;
         private uint _index = 0;
         private uint _TokenStartPos = 0;
-        private uint _TokenEndPos = 0;
         private bool _atBOL = false;
         private Stack<char> _LevelStack;
         
@@ -68,12 +65,11 @@ namespace PythonCodeAnalyzer.Parser
             SourceCode = sourceCode;
             TabSize = tabSize;
             IsInteractiveMode = isInteractive;
-            _indentLevel = 0;
             _pending = 0;
             _index = 0;
             _TokenStartPos = 0;
-            _TokenEndPos = 0;
-            for (var i = 0; i < 100; i++) _indentStack[i] = 0;
+            _IndentStack = new Stack<uint>();
+            _IndentStack.Push(0U);
             _atBOL = true;
             _LevelStack = new Stack<char>();
         }
@@ -105,6 +101,81 @@ namespace PythonCodeAnalyzer.Parser
 
         public Token GetSymbol()
         {
+            /* Handle indentation and dedentation in sourcecode. Block controll in Python */
+            bool isBlankline = false;
+
+//_nextline:
+            isBlankline = false;
+            if (_atBOL)
+            {
+                _atBOL = false;
+                uint col = 0;
+                while (SourceCode[_index] == ' ' || SourceCode[_index] == '\t' || SourceCode[_index] == 0x0c)
+                {
+                    if (SourceCode[_index] == ' ')
+                    {
+                        col++;
+                    }
+                    else if (SourceCode[_index] == '\t')
+                    {
+                        col = (col / TabSize + 1) * TabSize;
+                    }
+                    else col = 0;
+
+                    _index++;
+                }
+
+                if (SourceCode[_index] == '#' || SourceCode[_index] == '\r' || SourceCode[_index] == '\n' ||
+                    SourceCode[_index] == '\\')
+                {
+                    if (col == 0 && (SourceCode[_index] == '\r' || SourceCode[_index] == '\n') && IsInteractiveMode)
+                        isBlankline = false;
+                    else if (IsInteractiveMode) // lineno = 1 in interactive mode
+                    {
+                        col = 0;
+                        isBlankline = false;
+                    }
+                    else isBlankline = true;
+                }
+
+                if (!isBlankline && _LevelStack.Count == 0)
+                {
+                    if (col == _IndentStack.Peek())
+                    {
+                        // No change
+                    }
+                    else if (col > _IndentStack.Peek())
+                    {
+                        _IndentStack.Push(col);
+                        _pending++;
+                    }
+                    else
+                    {
+                        while (_IndentStack.Count > 0 && col < _IndentStack.Peek())
+                        {
+                            _pending--;
+                            _IndentStack.Pop();
+                        }
+                        if (col != _IndentStack.Peek()) throw new LexicalErrorException(_index, "Inconsistant indenation level!");
+                    }
+                }
+            }
+            
+            _TokenStartPos = _index;
+
+            if (_pending != 0)
+            {
+                if (_pending < 0)
+                {
+                    _pending++;
+                    return new Token(_index, _index, Token.TokenKind.Dedent);
+                }
+                else
+                {
+                    _pending--;
+                    return new Token(_index, _index, Token.TokenKind.Indent);
+                }
+            }
             
 _again:
             _TokenStartPos = _index;
