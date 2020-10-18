@@ -104,6 +104,8 @@ namespace PythonCodeAnalyzer.Parser
 
         public Token GetSymbol()
         {
+            
+_again:
             _TokenStartPos = _index;
 
             /* Handle whitespace and other Trivia below */
@@ -415,6 +417,26 @@ _letterQuote:
             }
             
             /* Handle Line continuation */
+            if (SourceCode[_index] == '\\')
+            {
+                _index++;
+                if (SourceCode[_index] == '\r')
+                {
+                    if (SourceCode[_index] == '\n')
+                    {
+                        _index++;
+                    }
+                }
+                else if (SourceCode[_index] == '\n')
+                {
+                    _index++;
+                }
+                else throw new LexicalErrorException(_index, "Expecting newline after line continuation character '\'");
+
+                // Add Trivia => LineContinuation and Newline here Later!
+                
+                goto _again;
+            }
             
             /* Handle Operators or Delimiters */
             switch (SourceCode[_index])
