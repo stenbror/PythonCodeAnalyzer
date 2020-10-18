@@ -1,4 +1,5 @@
 using System;
+using System.Linq.Expressions;
 using Xunit;
 using TestPythonCodeAnalyzer;
 using PythonCodeAnalyzer.Parser;
@@ -326,6 +327,54 @@ namespace TestPythonCodeAnalyzer
             Assert.Equal(6UL, node.End );
             Assert.Equal(Token.TokenKind.Name, ((NameLiteralExpression) node.Left).Name.Kind);
             Assert.Equal(Token.TokenKind.PyPower, node.Operator.Kind);
+            Assert.Equal(Token.TokenKind.Name, ((NameLiteralExpression) node.Right).Name.Kind);
+        }
+        
+        [Fact]
+        public void TestUnaryPlusExpression()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("+a; ".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+            
+            var node = (FactorExpression)parser.ParseFactor();
+            Assert.Equal(FactorExpression.FactorOperatorKind.UnaryPlus, node.FactorOperator);
+            Assert.Equal(0UL, node.Start );
+            Assert.Equal(2UL, node.End );
+            Assert.Equal(Token.TokenKind.PyPlus, node.Operator.Kind);
+            Assert.Equal(Token.TokenKind.Name, ((NameLiteralExpression) node.Right).Name.Kind);
+        }
+        
+        [Fact]
+        public void TestUnaryMinusExpression()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("-a; ".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+            
+            var node = (FactorExpression)parser.ParseFactor();
+            Assert.Equal(FactorExpression.FactorOperatorKind.UnaryMinus, node.FactorOperator);
+            Assert.Equal(0UL, node.Start );
+            Assert.Equal(2UL, node.End );
+            Assert.Equal(Token.TokenKind.PyMinus, node.Operator.Kind);
+            Assert.Equal(Token.TokenKind.Name, ((NameLiteralExpression) node.Right).Name.Kind);
+        }
+        
+        [Fact]
+        public void TestUnaryInvertExpression()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("~a; ".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+            
+            var node = (FactorExpression)parser.ParseFactor();
+            Assert.Equal(FactorExpression.FactorOperatorKind.UnaryInvert, node.FactorOperator);
+            Assert.Equal(0UL, node.Start );
+            Assert.Equal(2UL, node.End );
+            Assert.Equal(Token.TokenKind.PyInvert, node.Operator.Kind);
             Assert.Equal(Token.TokenKind.Name, ((NameLiteralExpression) node.Right).Name.Kind);
         }
     }
