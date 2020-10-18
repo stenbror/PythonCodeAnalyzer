@@ -312,5 +312,21 @@ namespace TestPythonCodeAnalyzer
             Assert.Equal(Token.TokenKind.Name, ((DotNameExpression) trailerNode[0]).Name.Kind);
             Assert.Equal("exec", ((DotNameExpression) trailerNode[0]).Name.Text);
         }
+        
+        [Fact]
+        public void TestPowerExpression()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("a ** b; ".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+            
+            var node = (PowerExpression)parser.ParsePower();
+            Assert.Equal(0UL, node.Start );
+            Assert.Equal(6UL, node.End );
+            Assert.Equal(Token.TokenKind.Name, ((NameLiteralExpression) node.Left).Name.Kind);
+            Assert.Equal(Token.TokenKind.PyPower, node.Operator.Kind);
+            Assert.Equal(Token.TokenKind.Name, ((NameLiteralExpression) node.Right).Name.Kind);
+        }
     }
 }

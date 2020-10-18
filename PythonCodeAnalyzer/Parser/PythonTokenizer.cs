@@ -220,8 +220,8 @@ _again:
                     _index++;
                     if (SourceCode[_index] == '\'' || SourceCode[_index] == '"') goto _letterQuote;
                 }
-                
-                _index++;
+
+                _index = _TokenStartPos;
                 while (Char.IsLetterOrDigit(SourceCode[_index]) || SourceCode[_index] == '_') _index++;
                 var key = new String( SourceCode[ (int) _TokenStartPos .. (int) _index ] );
                 
