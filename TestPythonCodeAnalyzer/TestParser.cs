@@ -264,5 +264,53 @@ namespace TestPythonCodeAnalyzer
             Assert.True(((CallExpression) trailerNode[0]).Right == null);
             Assert.Equal(Token.TokenKind.PyRightParen, ((CallExpression) trailerNode[0]).Operator2.Kind);
         }
+        
+        // [Fact]
+        // public void TestAtomExprAwaitAndIndex()
+        // {
+        //     var parser = new PythonParser();
+        //     Assert.True(parser != null);
+        //     parser.Tokenizer = new PythonTokenizer("await __init__[1];".ToCharArray(), false, 8);
+        //     parser.Tokenizer.Advance();
+        //     
+        //     var node = (AtomExpression)parser.ParseAtomExpression();
+        //     Assert.True(node.IsAwait);
+        //     Assert.Equal(Token.TokenKind.PyAwait, node.Operator.Kind);
+        //     Assert.Equal(Token.TokenKind.Name, ((NameLiteralExpression)node.Right).Name.Kind);
+        //     Assert.Equal(6U, ((NameLiteralExpression)node.Right).Name.Start);
+        //     Assert.Equal(14U, ((NameLiteralExpression)node.Right).Name.End);
+        //     Assert.True(node.TrailerCollection != null);
+        //     Assert.Equal(0UL, node.Start );
+        //     Assert.Equal(17UL, node.End );
+        //     var trailerNode = node.TrailerCollection;
+        //     Assert.True(trailerNode.Length == 1);
+        //     Assert.Equal(Token.TokenKind.PyLeftBracket, ((IndexExpression) trailerNode[0]).Operator1.Kind);
+        //     Assert.True(((IndexExpression) trailerNode[0]).Right != null);
+        //     Assert.Equal(Token.TokenKind.PyRightBracket, ((IndexExpression) trailerNode[0]).Operator2.Kind);
+        // }
+        
+        [Fact]
+        public void TestAtomExprAwaitAndDotName()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("await __init__.exec;".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+            
+            var node = (AtomExpression)parser.ParseAtomExpression();
+            Assert.True(node.IsAwait);
+            Assert.Equal(Token.TokenKind.PyAwait, node.Operator.Kind);
+            Assert.Equal(Token.TokenKind.Name, ((NameLiteralExpression)node.Right).Name.Kind);
+            Assert.Equal(6U, ((NameLiteralExpression)node.Right).Name.Start);
+            Assert.Equal(14U, ((NameLiteralExpression)node.Right).Name.End);
+            Assert.True(node.TrailerCollection != null);
+            Assert.Equal(0UL, node.Start );
+            Assert.Equal(19UL, node.End );
+            var trailerNode = node.TrailerCollection;
+            Assert.True(trailerNode.Length == 1);
+            Assert.Equal(Token.TokenKind.PyDot, ((DotNameExpression) trailerNode[0]).Operator.Kind);
+            Assert.Equal(Token.TokenKind.Name, ((DotNameExpression) trailerNode[0]).Name.Kind);
+            Assert.Equal("exec", ((DotNameExpression) trailerNode[0]).Name.Text);
+        }
     }
 }

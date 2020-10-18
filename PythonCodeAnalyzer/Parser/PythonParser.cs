@@ -184,10 +184,10 @@ namespace PythonCodeAnalyzer.Parser
                     var op1 = Tokenizer.CurSymbol;
                     Tokenizer.Advance();
                     ExpressionNode right = null;
-                    if (Tokenizer.CurSymbol.Kind != Token.TokenKind.PyRightBracket)
-                    {
+                    //if (Tokenizer.CurSymbol.Kind != Token.TokenKind.PyRightBracket)
+                    //{
                         right = ParseSubscriptList();
-                    }
+                    //}
                     if (Tokenizer.CurSymbol.Kind != Token.TokenKind.PyRightBracket) throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol, "Expecting ']'");
                     var op2 = Tokenizer.CurSymbol;
                     Tokenizer.Advance();
