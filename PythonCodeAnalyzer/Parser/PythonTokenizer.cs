@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.VisualBasic;
+using PythonCodeAnalyzer.Parser.Ast;
 
 namespace PythonCodeAnalyzer.Parser
 {
@@ -109,8 +110,26 @@ _again:
             _TokenStartPos = _index;
 
             /* Handle whitespace and other Trivia below */
+            if (SourceCode[_index] == ' ' || SourceCode[_index] == '\t' || SourceCode[_index] == 0x0c)
+            {
+                while (SourceCode[_index] == ' ' || SourceCode[_index] == '\t' || SourceCode[_index] == 0x0c) _index++;
+            }
+            
+            _TokenStartPos = _index;
+            
+            /* Handle comment, unless it is a type comment */
+            if (SourceCode[_index] == '#')
+            {
+                throw new NotImplementedException();
+            }
 
             /* Handle End Of File */
+            if (SourceCode[_index] == '\0')
+            {
+                // Check for if it is ok to be EOF first. Might need more input.
+                
+                return new Token(_index, _index, Token.TokenKind.EOF);
+            }
 
             /* Handle Name literal or Reserved keywords */
             if (Char.IsLetter(SourceCode[_index]) || SourceCode[_index] == '_')
@@ -140,6 +159,22 @@ _again:
             }
             
             /* Handle Newline - Token or Trivia */
+            if (SourceCode[_index] == '\r' || SourceCode[_index] == '\n')
+            {
+                if (SourceCode[_index] == '\r')
+                {
+                    _index++;
+                }
+
+                if (SourceCode[_index] == '\n')
+                {
+                    _index++;
+                }
+                
+                // Check for valid first.... Trivia or Token?
+                
+                return new Token(_TokenStartPos, _index, Token.TokenKind.Newline);
+            }
 
             /* Period or start of Number */
             if (SourceCode[_index] == '.')
