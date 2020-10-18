@@ -113,14 +113,14 @@ namespace PythonCodeAnalyzer.Parser
                     Tokenizer.Advance();
                     ExpressionNode right = null;
                     bool isDictionary = true;
-                    if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyRightBracket)
+                    if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyRightCurly)
                     {
                         var op2 = Tokenizer.CurSymbol;
                         Tokenizer.Advance();
                         return new DictionaryExpression(startPos, Tokenizer.Position, op1, right, op2);
                     }
                     (right, isDictionary) = ParseDictorSetMaker();
-                    if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyRightBracket)
+                    if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyRightCurly)
                     {
                         var op2 = Tokenizer.CurSymbol;
                         Tokenizer.Advance();

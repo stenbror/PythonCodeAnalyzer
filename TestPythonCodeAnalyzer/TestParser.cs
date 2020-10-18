@@ -146,5 +146,62 @@ namespace TestPythonCodeAnalyzer
             Assert.Equal(0UL, node.Elipsis.Start );
             Assert.Equal(3UL, node.Elipsis.End );
         }
+        
+        [Fact]
+        public void TestEmptyTupleAtom()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("();".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+            
+            var node = (TupleExpression)parser.ParseAtom();
+            Assert.Equal(Token.TokenKind.PyLeftParen, node.Operator1.Kind );
+            Assert.Equal(Token.TokenKind.PyRightParen, node.Operator2.Kind );
+            Assert.Equal(0UL, node.Operator1.Start );
+            Assert.Equal(1UL, node.Operator1.End );
+            Assert.Equal(1UL, node.Operator2.Start );
+            Assert.Equal(2UL, node.Operator2.End );
+            Assert.Equal(0UL, node.Start );
+            Assert.Equal(2UL, node.End );
+        }
+        
+        [Fact]
+        public void TestEmptyListAtom()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("[];".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+            
+            var node = (AtomListExpression)parser.ParseAtom();
+            Assert.Equal(Token.TokenKind.PyLeftBracket, node.Operator1.Kind );
+            Assert.Equal(Token.TokenKind.PyRightBracket, node.Operator2.Kind );
+            Assert.Equal(0UL, node.Operator1.Start );
+            Assert.Equal(1UL, node.Operator1.End );
+            Assert.Equal(1UL, node.Operator2.Start );
+            Assert.Equal(2UL, node.Operator2.End );
+            Assert.Equal(0UL, node.Start );
+            Assert.Equal(2UL, node.End );
+        }
+        
+        [Fact]
+        public void TestEmptyDictionaryOrSetAtom()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("{};".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+            
+            var node = (DictionaryExpression)parser.ParseAtom();
+            Assert.Equal(Token.TokenKind.PyLeftCurly, node.Operator1.Kind );
+            Assert.Equal(Token.TokenKind.PyRightCurly, node.Operator2.Kind );
+            Assert.Equal(0UL, node.Operator1.Start );
+            Assert.Equal(1UL, node.Operator1.End );
+            Assert.Equal(1UL, node.Operator2.Start );
+            Assert.Equal(2UL, node.Operator2.End );
+            Assert.Equal(0UL, node.Start );
+            Assert.Equal(2UL, node.End );
+        }
     }
 }
