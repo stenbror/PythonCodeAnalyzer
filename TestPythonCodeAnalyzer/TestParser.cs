@@ -554,5 +554,69 @@ namespace TestPythonCodeAnalyzer
             Assert.Equal(Token.TokenKind.Name, ((NameLiteralExpression) node.Right).Name.Kind);
             Assert.Equal("c", ((NameLiteralExpression) node.Right).Name.Text);
         }
+        
+        [Fact]
+        public void TestSingleShiftLeftExpression()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("a << b; ".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+            
+            var node = (ShiftExpression)parser.ParseShiftExpr();
+            Assert.Equal(ShiftExpression.OperatorKind.Left, node.ShiftOperator);
+            Assert.Equal(0UL, node.Start );
+            Assert.Equal(6UL, node.End );
+            Assert.Equal(Token.TokenKind.Name, ((NameLiteralExpression) node.Left).Name.Kind);
+            Assert.Equal(Token.TokenKind.PyShiftLeft, node.Operator.Kind);
+            Assert.Equal(Token.TokenKind.Name, ((NameLiteralExpression) node.Right).Name.Kind);
+        }
+        
+        [Fact]
+        public void TestSingleShiftRightExpression()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("a >> b; ".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+            
+            var node = (ShiftExpression)parser.ParseShiftExpr();
+            Assert.Equal(ShiftExpression.OperatorKind.Right, node.ShiftOperator);
+            Assert.Equal(0UL, node.Start );
+            Assert.Equal(6UL, node.End );
+            Assert.Equal(Token.TokenKind.Name, ((NameLiteralExpression) node.Left).Name.Kind);
+            Assert.Equal(Token.TokenKind.PyShiftRight, node.Operator.Kind);
+            Assert.Equal(Token.TokenKind.Name, ((NameLiteralExpression) node.Right).Name.Kind);
+        }
+        
+        [Fact]
+        public void TestMultipleShiftLeftExpression()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("a << b << c; ".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+            
+            var node = (ShiftExpression)parser.ParseShiftExpr();
+            Assert.Equal(ShiftExpression.OperatorKind.Left, node.ShiftOperator);
+            Assert.Equal(0UL, node.Start );
+            Assert.Equal(11UL, node.End );
+            
+            // Left part of the last operator
+            var node2 = ((ShiftExpression) node.Left);
+            Assert.Equal(ShiftExpression.OperatorKind.Left, node2.ShiftOperator);
+            Assert.Equal(0UL, node2.Start );
+            Assert.Equal(7UL, node2.End );
+            Assert.Equal(Token.TokenKind.Name, ((NameLiteralExpression) node2.Left).Name.Kind);
+            Assert.Equal("a", ((NameLiteralExpression) node2.Left).Name.Text);
+            Assert.Equal(Token.TokenKind.PyShiftLeft, node2.Operator.Kind);
+            Assert.Equal(Token.TokenKind.Name, ((NameLiteralExpression) node2.Right).Name.Kind);
+            Assert.Equal("b", ((NameLiteralExpression) node2.Right).Name.Text);
+            
+            // Right part of the last operator
+            Assert.Equal(Token.TokenKind.PyShiftLeft, node.Operator.Kind);
+            Assert.Equal(Token.TokenKind.Name, ((NameLiteralExpression) node.Right).Name.Kind);
+            Assert.Equal("c", ((NameLiteralExpression) node.Right).Name.Text);
+        }
     }
 }

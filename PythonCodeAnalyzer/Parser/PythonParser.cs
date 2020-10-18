@@ -352,7 +352,7 @@ namespace PythonCodeAnalyzer.Parser
                         var op = Tokenizer.CurSymbol;
                         Tokenizer.Advance();
                         var right = ParseArithExpr();
-                        res = new ArithExpression(startPos, Tokenizer.Position, ArithExpression.ArithOperatorKind.Plus, res, op, right);
+                        res = new ShiftExpression(startPos, Tokenizer.Position, ShiftExpression.OperatorKind.Left, res, op, right);
                     }
                         break;
                     case Token.TokenKind.PyShiftRight:
@@ -360,7 +360,7 @@ namespace PythonCodeAnalyzer.Parser
                         var op = Tokenizer.CurSymbol;
                         Tokenizer.Advance();
                         var right = ParseArithExpr();
-                        res = new ArithExpression(startPos, Tokenizer.Position, ArithExpression.ArithOperatorKind.Minus, res, op, right);
+                        res = new ShiftExpression(startPos, Tokenizer.Position, ShiftExpression.OperatorKind.Right, res, op, right);
                     }
                         break;
                 }
