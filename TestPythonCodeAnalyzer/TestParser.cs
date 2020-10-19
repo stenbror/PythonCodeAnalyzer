@@ -965,5 +965,33 @@ namespace TestPythonCodeAnalyzer
             Assert.Equal(Token.TokenKind.PyNot, node.Operator2.Kind);
             Assert.Equal(Token.TokenKind.Name, ((NameLiteralExpression) node.Right).Name.Kind);
         }
+        
+        [Fact]
+        public void TestMultipleRelationLessExpression()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("a < b < c; ".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+            
+            var node = (RelationExpression)parser.ParseComparison();
+            Assert.Equal(0UL, node.Start );
+            Assert.Equal(9UL, node.End );
+            
+            // Left part of the last operator
+            var node2 = ((RelationExpression) node.Left);
+            Assert.Equal(0UL, node2.Start );
+            Assert.Equal(6UL, node2.End );
+            Assert.Equal(Token.TokenKind.Name, ((NameLiteralExpression) node2.Left).Name.Kind);
+            Assert.Equal("a", ((NameLiteralExpression) node2.Left).Name.Text);
+            Assert.Equal(Token.TokenKind.PyLess, node2.Operator.Kind);
+            Assert.Equal(Token.TokenKind.Name, ((NameLiteralExpression) node2.Right).Name.Kind);
+            Assert.Equal("b", ((NameLiteralExpression) node2.Right).Name.Text);
+            
+            // Right part of the last operator
+            Assert.Equal(Token.TokenKind.PyLess, node.Operator.Kind);
+            Assert.Equal(Token.TokenKind.Name, ((NameLiteralExpression) node.Right).Name.Kind);
+            Assert.Equal("c", ((NameLiteralExpression) node.Right).Name.Text);
+        }
     }
 }
