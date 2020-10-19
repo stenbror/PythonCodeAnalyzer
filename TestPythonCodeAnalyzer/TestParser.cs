@@ -929,5 +929,23 @@ namespace TestPythonCodeAnalyzer
             Assert.True(node.Operator2 == null);
             Assert.Equal(Token.TokenKind.Name, ((NameLiteralExpression) node.Right).Name.Kind);
         }
+        
+        [Fact]
+        public void TestSingleRelationNotInExpression()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("a not in b; ".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+            
+            var node = (RelationExpression)parser.ParseComparison();
+            Assert.Equal(RelationExpression.Relation.NotIn, node.RelationKind);
+            Assert.Equal(0UL, node.Start );
+            Assert.Equal(10UL, node.End );
+            Assert.Equal(Token.TokenKind.Name, ((NameLiteralExpression) node.Left).Name.Kind);
+            Assert.Equal(Token.TokenKind.PyNot, node.Operator.Kind);
+            Assert.Equal(Token.TokenKind.PyIn, node.Operator2.Kind);
+            Assert.Equal(Token.TokenKind.Name, ((NameLiteralExpression) node.Right).Name.Kind);
+        }
     }
 }

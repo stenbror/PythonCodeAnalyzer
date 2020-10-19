@@ -519,8 +519,10 @@ namespace PythonCodeAnalyzer.Parser
                             Tokenizer.Advance();
                             if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyIn)
                             {
+                                var op2 = Tokenizer.CurSymbol;
+                                Tokenizer.Advance();
                                 var right = ParseOrExpr();
-                                res = new RelationExpression(startPos, Tokenizer.Position, RelationExpression.Relation.NotIn , res, op, null, right);
+                                res = new RelationExpression(startPos, Tokenizer.Position, RelationExpression.Relation.NotIn , res, op, op2, right);
                             }
                             else
                             {
