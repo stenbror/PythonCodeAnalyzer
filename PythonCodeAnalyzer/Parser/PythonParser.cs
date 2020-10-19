@@ -509,7 +509,7 @@ namespace PythonCodeAnalyzer.Parser
                             else
                             {
                                 var right = ParseOrExpr();
-                                res = new RelationExpression(startPos, Tokenizer.Position, RelationExpression.Relation.Less , res, op, null, right);
+                                res = new RelationExpression(startPos, Tokenizer.Position, RelationExpression.Relation.Is , res, op, null, right);
                             }
                         }
                         break;

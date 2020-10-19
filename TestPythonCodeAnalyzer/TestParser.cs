@@ -803,5 +803,131 @@ namespace TestPythonCodeAnalyzer
             Assert.True(node.Operator2 == null);
             Assert.Equal(Token.TokenKind.Name, ((NameLiteralExpression) node.Right).Name.Kind);
         }
+        
+        [Fact]
+        public void TestSingleRelationEqualExpression()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("a == b; ".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+            
+            var node = (RelationExpression)parser.ParseComparison();
+            Assert.Equal(RelationExpression.Relation.Equal, node.RelationKind);
+            Assert.Equal(0UL, node.Start );
+            Assert.Equal(6UL, node.End );
+            Assert.Equal(Token.TokenKind.Name, ((NameLiteralExpression) node.Left).Name.Kind);
+            Assert.Equal(Token.TokenKind.PyEqual, node.Operator.Kind);
+            Assert.True(node.Operator2 == null);
+            Assert.Equal(Token.TokenKind.Name, ((NameLiteralExpression) node.Right).Name.Kind);
+        }
+        
+        [Fact]
+        public void TestSingleRelationNotEqualExpression()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("a != b; ".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+            
+            var node = (RelationExpression)parser.ParseComparison();
+            Assert.Equal(RelationExpression.Relation.NotEqual, node.RelationKind);
+            Assert.Equal(0UL, node.Start );
+            Assert.Equal(6UL, node.End );
+            Assert.Equal(Token.TokenKind.Name, ((NameLiteralExpression) node.Left).Name.Kind);
+            Assert.Equal(Token.TokenKind.PyNotEqual, node.Operator.Kind);
+            Assert.True(node.Operator2 == null);
+            Assert.Equal(Token.TokenKind.Name, ((NameLiteralExpression) node.Right).Name.Kind);
+        }
+        
+        [Fact]
+        public void TestSingleRelationNotEqual2Expression()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("a <> b; ".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+            
+            var node = (RelationExpression)parser.ParseComparison();
+            Assert.Equal(RelationExpression.Relation.NotEqual, node.RelationKind);
+            Assert.Equal(0UL, node.Start );
+            Assert.Equal(6UL, node.End );
+            Assert.Equal(Token.TokenKind.Name, ((NameLiteralExpression) node.Left).Name.Kind);
+            Assert.Equal(Token.TokenKind.PyNotEqual, node.Operator.Kind);
+            Assert.True(node.Operator2 == null);
+            Assert.Equal(Token.TokenKind.Name, ((NameLiteralExpression) node.Right).Name.Kind);
+        }
+        
+        [Fact]
+        public void TestSingleRelationGreaterEqualExpression()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("a >= b; ".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+            
+            var node = (RelationExpression)parser.ParseComparison();
+            Assert.Equal(RelationExpression.Relation.GreaterEqual, node.RelationKind);
+            Assert.Equal(0UL, node.Start );
+            Assert.Equal(6UL, node.End );
+            Assert.Equal(Token.TokenKind.Name, ((NameLiteralExpression) node.Left).Name.Kind);
+            Assert.Equal(Token.TokenKind.PyGreaterEqual, node.Operator.Kind);
+            Assert.True(node.Operator2 == null);
+            Assert.Equal(Token.TokenKind.Name, ((NameLiteralExpression) node.Right).Name.Kind);
+        }
+        
+        [Fact]
+        public void TestSingleRelationGreaterExpression()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("a > b; ".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+            
+            var node = (RelationExpression)parser.ParseComparison();
+            Assert.Equal(RelationExpression.Relation.Greater, node.RelationKind);
+            Assert.Equal(0UL, node.Start );
+            Assert.Equal(5UL, node.End );
+            Assert.Equal(Token.TokenKind.Name, ((NameLiteralExpression) node.Left).Name.Kind);
+            Assert.Equal(Token.TokenKind.PyGreater, node.Operator.Kind);
+            Assert.True(node.Operator2 == null);
+            Assert.Equal(Token.TokenKind.Name, ((NameLiteralExpression) node.Right).Name.Kind);
+        }
+        
+        [Fact]
+        public void TestSingleRelationIsExpression()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("a is b; ".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+            
+            var node = (RelationExpression)parser.ParseComparison();
+            Assert.Equal(RelationExpression.Relation.Is, node.RelationKind);
+            Assert.Equal(0UL, node.Start );
+            Assert.Equal(6UL, node.End );
+            Assert.Equal(Token.TokenKind.Name, ((NameLiteralExpression) node.Left).Name.Kind);
+            Assert.Equal(Token.TokenKind.PyIs, node.Operator.Kind);
+            Assert.True(node.Operator2 == null);
+            Assert.Equal(Token.TokenKind.Name, ((NameLiteralExpression) node.Right).Name.Kind);
+        }
+        
+        [Fact]
+        public void TestSingleRelationInExpression()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("a in b; ".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+            
+            var node = (RelationExpression)parser.ParseComparison();
+            Assert.Equal(RelationExpression.Relation.In, node.RelationKind);
+            Assert.Equal(0UL, node.Start );
+            Assert.Equal(6UL, node.End );
+            Assert.Equal(Token.TokenKind.Name, ((NameLiteralExpression) node.Left).Name.Kind);
+            Assert.Equal(Token.TokenKind.PyIn, node.Operator.Kind);
+            Assert.True(node.Operator2 == null);
+            Assert.Equal(Token.TokenKind.Name, ((NameLiteralExpression) node.Right).Name.Kind);
+        }
     }
 }
