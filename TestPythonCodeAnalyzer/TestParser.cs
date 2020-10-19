@@ -750,5 +750,21 @@ namespace TestPythonCodeAnalyzer
             Assert.Equal(Token.TokenKind.Name, ((NameLiteralExpression) node.Right).Name.Kind);
             Assert.Equal("c", ((NameLiteralExpression) node.Right).Name.Text);
         }
+        
+        [Fact]
+        public void TestStarExpression()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("*a; ".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+            
+            var node = (StarExpression)parser.ParseStarExpr();
+            Assert.Equal(0UL, node.Start );
+            Assert.Equal(2UL, node.End );
+            Assert.Equal(Token.TokenKind.PyMul, node.Operator.Kind);
+            Assert.Equal(Token.TokenKind.Name, ((NameLiteralExpression) node.Right).Name.Kind);
+            Assert.Equal("a", ((NameLiteralExpression) node.Right).Name.Text);
+        }
     }
 }
