@@ -4,6 +4,7 @@ using Xunit;
 using TestPythonCodeAnalyzer;
 using PythonCodeAnalyzer.Parser;
 using PythonCodeAnalyzer.Parser.Ast.Expression;
+using ConditionalExpression = PythonCodeAnalyzer.Parser.Ast.Expression.ConditionalExpression;
 
 namespace TestPythonCodeAnalyzer
 {
@@ -765,6 +766,42 @@ namespace TestPythonCodeAnalyzer
             Assert.Equal(Token.TokenKind.PyMul, node.Operator.Kind);
             Assert.Equal(Token.TokenKind.Name, ((NameLiteralExpression) node.Right).Name.Kind);
             Assert.Equal("a", ((NameLiteralExpression) node.Right).Name.Text);
+        }
+        
+        [Fact]
+        public void TestSingleRelationLessExpression()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("a < b; ".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+            
+            var node = (RelationExpression)parser.ParseComparison();
+            Assert.Equal(RelationExpression.Relation.Less, node.RelationKind);
+            Assert.Equal(0UL, node.Start );
+            Assert.Equal(5UL, node.End );
+            Assert.Equal(Token.TokenKind.Name, ((NameLiteralExpression) node.Left).Name.Kind);
+            Assert.Equal(Token.TokenKind.PyLess, node.Operator.Kind);
+            Assert.True(node.Operator2 == null);
+            Assert.Equal(Token.TokenKind.Name, ((NameLiteralExpression) node.Right).Name.Kind);
+        }
+        
+        [Fact]
+        public void TestSingleRelationLessEqualExpression()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("a <= b; ".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+            
+            var node = (RelationExpression)parser.ParseComparison();
+            Assert.Equal(RelationExpression.Relation.LessEqual, node.RelationKind);
+            Assert.Equal(0UL, node.Start );
+            Assert.Equal(6UL, node.End );
+            Assert.Equal(Token.TokenKind.Name, ((NameLiteralExpression) node.Left).Name.Kind);
+            Assert.Equal(Token.TokenKind.PyLessEqual, node.Operator.Kind);
+            Assert.True(node.Operator2 == null);
+            Assert.Equal(Token.TokenKind.Name, ((NameLiteralExpression) node.Right).Name.Kind);
         }
     }
 }
