@@ -993,5 +993,21 @@ namespace TestPythonCodeAnalyzer
             Assert.Equal(Token.TokenKind.Name, ((NameLiteralExpression) node.Right).Name.Kind);
             Assert.Equal("c", ((NameLiteralExpression) node.Right).Name.Text);
         }
+        
+        [Fact]
+        public void TestSingleNotTestExpression()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("not b; ".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+            
+            var node = (NotTestExpression)parser.ParseNotTest();
+            Assert.Equal(0UL, node.Start );
+            Assert.Equal(5UL, node.End );
+            Assert.Equal(Token.TokenKind.PyNot, node.Operator.Kind);
+            Assert.Equal(Token.TokenKind.Name, ((NameLiteralExpression) node.Right).Name.Kind);
+            Assert.Equal("b", ((NameLiteralExpression) node.Right).Name.Text);
+        }
     }
 }

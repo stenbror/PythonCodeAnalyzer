@@ -546,7 +546,8 @@ namespace PythonCodeAnalyzer.Parser
                 var right = ParseNotTest();
                 return new NotTestExpression(startPos, Tokenizer.Position, op, right);
             }
-            throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol, "Expecting 'not' in not test expression!");
+
+            return ParseComparison();
         }
         
         public ExpressionNode ParseAndTest()
