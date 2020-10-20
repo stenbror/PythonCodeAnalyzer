@@ -1,10 +1,7 @@
-using System;
-using System.Linq.Expressions;
+
 using Xunit;
-using TestPythonCodeAnalyzer;
 using PythonCodeAnalyzer.Parser;
 using PythonCodeAnalyzer.Parser.Ast.Expression;
-using ConditionalExpression = PythonCodeAnalyzer.Parser.Ast.Expression.ConditionalExpression;
 
 namespace TestPythonCodeAnalyzer
 {
@@ -267,29 +264,29 @@ namespace TestPythonCodeAnalyzer
             Assert.Equal(Token.TokenKind.PyRightParen, ((CallExpression) trailerNode[0]).Operator2.Kind);
         }
         
-        // [Fact]
-        // public void TestAtomExprAwaitAndIndex()
-        // {
-        //     var parser = new PythonParser();
-        //     Assert.True(parser != null);
-        //     parser.Tokenizer = new PythonTokenizer("await __init__[1];".ToCharArray(), false, 8);
-        //     parser.Tokenizer.Advance();
-        //     
-        //     var node = (AtomExpression)parser.ParseAtomExpression();
-        //     Assert.True(node.IsAwait);
-        //     Assert.Equal(Token.TokenKind.PyAwait, node.Operator.Kind);
-        //     Assert.Equal(Token.TokenKind.Name, ((NameLiteralExpression)node.Right).Name.Kind);
-        //     Assert.Equal(6U, ((NameLiteralExpression)node.Right).Name.Start);
-        //     Assert.Equal(14U, ((NameLiteralExpression)node.Right).Name.End);
-        //     Assert.True(node.TrailerCollection != null);
-        //     Assert.Equal(0UL, node.Start );
-        //     Assert.Equal(17UL, node.End );
-        //     var trailerNode = node.TrailerCollection;
-        //     Assert.True(trailerNode.Length == 1);
-        //     Assert.Equal(Token.TokenKind.PyLeftBracket, ((IndexExpression) trailerNode[0]).Operator1.Kind);
-        //     Assert.True(((IndexExpression) trailerNode[0]).Right != null);
-        //     Assert.Equal(Token.TokenKind.PyRightBracket, ((IndexExpression) trailerNode[0]).Operator2.Kind);
-        // }
+        [Fact]
+        public void TestAtomExprAwaitAndIndex()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("await __init__[1];".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+            
+            var node = (AtomExpression)parser.ParseAtomExpression();
+            Assert.True(node.IsAwait);
+            Assert.Equal(Token.TokenKind.PyAwait, node.Operator.Kind);
+            Assert.Equal(Token.TokenKind.Name, ((NameLiteralExpression)node.Right).Name.Kind);
+            Assert.Equal(6U, ((NameLiteralExpression)node.Right).Name.Start);
+            Assert.Equal(14U, ((NameLiteralExpression)node.Right).Name.End);
+            Assert.True(node.TrailerCollection != null);
+            Assert.Equal(0UL, node.Start );
+            Assert.Equal(17UL, node.End );
+            var trailerNode = node.TrailerCollection;
+            Assert.True(trailerNode.Length == 1);
+            Assert.Equal(Token.TokenKind.PyLeftBracket, ((IndexExpression) trailerNode[0]).Operator1.Kind);
+            Assert.True(((IndexExpression) trailerNode[0]).Right != null);
+            Assert.Equal(Token.TokenKind.PyRightBracket, ((IndexExpression) trailerNode[0]).Operator2.Kind);
+        }
         
         [Fact]
         public void TestAtomExprAwaitAndDotName()
@@ -1117,6 +1114,23 @@ namespace TestPythonCodeAnalyzer
             
             Assert.Equal(Token.TokenKind.Name, ((NameLiteralExpression) node.Right).Name.Kind);
             Assert.Equal("c", ((NameLiteralExpression) node.Right).Name.Text);
+        }
+        
+        [Fact]
+        public void Test()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("__init__; ".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+            
+            var node = (NameLiteralExpression)parser.ParseNoCond();
+            Assert.Equal(Token.TokenKind.Name, node.Name.Kind );
+            Assert.Equal("__init__", node.Name.Text);
+            Assert.Equal(0UL, node.Start );
+            Assert.Equal(8UL, node.End );
+            Assert.Equal(0UL, node.Name.Start );
+            Assert.Equal(8UL, node.Name.End );
         }
     }
 }
