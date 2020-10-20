@@ -1187,5 +1187,29 @@ namespace TestPythonCodeAnalyzer
             Assert.Equal(Token.TokenKind.Name, ((NameLiteralExpression) node.Right).Name.Kind);
             Assert.Equal("a", ((NameLiteralExpression) node.Right).Name.Text);
         }
+        
+        [Fact]
+        public void TestRuleTestWithConditionalExpression()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("__init__ if a else b; ".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+            
+            var node = (ConditionalExpression)parser.ParseTest();
+            Assert.Equal(0UL, node.Start );
+            Assert.Equal(20UL, node.End );
+            
+            Assert.Equal(Token.TokenKind.Name, ((NameLiteralExpression) node.Left).Name.Kind);
+            Assert.Equal("__init__", ((NameLiteralExpression) node.Left).Name.Text);
+            
+            Assert.Equal(Token.TokenKind.PyIf, node.Operator1.Kind );
+            Assert.Equal(Token.TokenKind.Name, ((NameLiteralExpression) node.Right).Name.Kind);
+            Assert.Equal("a", ((NameLiteralExpression) node.Right).Name.Text);
+            
+            Assert.Equal(Token.TokenKind.PyElse, node.Operator2.Kind );
+            Assert.Equal(Token.TokenKind.Name, ((NameLiteralExpression) node.Next).Name.Kind);
+            Assert.Equal("b", ((NameLiteralExpression) node.Next).Name.Text);
+        }
     }
 }
