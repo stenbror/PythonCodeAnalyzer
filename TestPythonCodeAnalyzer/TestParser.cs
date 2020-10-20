@@ -1211,5 +1211,22 @@ namespace TestPythonCodeAnalyzer
             Assert.Equal(Token.TokenKind.Name, ((NameLiteralExpression) node.Next).Name.Kind);
             Assert.Equal("b", ((NameLiteralExpression) node.Next).Name.Text);
         }
+        
+        [Fact]
+        public void TestRuleNamedTestExpression()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("__init__; ".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+            
+            var node = (NameLiteralExpression)parser.ParseNamedExpr();
+            Assert.Equal(Token.TokenKind.Name, node.Name.Kind );
+            Assert.Equal("__init__", node.Name.Text);
+            Assert.Equal(0UL, node.Start );
+            Assert.Equal(8UL, node.End );
+            Assert.Equal(0UL, node.Name.Start );
+            Assert.Equal(8UL, node.Name.End );
+        }
     }
 }
