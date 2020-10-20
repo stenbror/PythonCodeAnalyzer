@@ -1074,5 +1074,49 @@ namespace TestPythonCodeAnalyzer
             Assert.Equal(Token.TokenKind.Name, ((NameLiteralExpression) node.Right).Name.Kind);
             Assert.Equal("c", ((NameLiteralExpression) node.Right).Name.Text);
         }
+        
+        [Fact]
+        public void TestSingleOrTestExpression()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("a or b; ".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+            
+            var node = (OrTestExpression)parser.ParseOrTest();
+            Assert.Equal(0UL, node.Start );
+            Assert.Equal(6UL, node.End );
+            Assert.Equal(Token.TokenKind.Name, ((NameLiteralExpression) node.Left).Name.Kind);
+            Assert.Equal("a", ((NameLiteralExpression) node.Left).Name.Text);
+            Assert.Equal(Token.TokenKind.PyTestOr, node.Operator.Kind);
+            Assert.Equal(Token.TokenKind.Name, ((NameLiteralExpression) node.Right).Name.Kind);
+            Assert.Equal("b", ((NameLiteralExpression) node.Right).Name.Text);
+        }
+        
+        [Fact]
+        public void TestMultipleOrTestExpression()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("a or b or c; ".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+            
+            var node = (OrTestExpression)parser.ParseOrTest();
+            Assert.Equal(Token.TokenKind.PyTestOr, node.Operator.Kind);
+            Assert.Equal(0UL, node.Start );
+            Assert.Equal(11UL, node.End );
+            
+            var node2 = (OrTestExpression) node.Left;
+            Assert.Equal(Token.TokenKind.PyTestOr, node2.Operator.Kind);
+            Assert.Equal(0UL, node2.Start );
+            Assert.Equal(7UL, node2.End );
+            Assert.Equal(Token.TokenKind.Name, ((NameLiteralExpression) node2.Left).Name.Kind);
+            Assert.Equal("a", ((NameLiteralExpression) node2.Left).Name.Text);
+            Assert.Equal(Token.TokenKind.Name, ((NameLiteralExpression) node2.Right).Name.Kind);
+            Assert.Equal("b", ((NameLiteralExpression) node2.Right).Name.Text);
+            
+            Assert.Equal(Token.TokenKind.Name, ((NameLiteralExpression) node.Right).Name.Kind);
+            Assert.Equal("c", ((NameLiteralExpression) node.Right).Name.Text);
+        }
     }
 }
