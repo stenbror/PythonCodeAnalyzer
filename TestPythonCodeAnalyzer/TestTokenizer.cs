@@ -63,7 +63,7 @@ namespace TestPythonCodeAnalyzer
         {
             var lex = new PythonTokenizer("and ".ToCharArray(), false, 8);
             lex.Advance();
-            Assert.Equal(Token.TokenKind.PyAnd, lex.CurSymbol.Kind);
+            Assert.Equal(Token.TokenKind.PyTestAnd, lex.CurSymbol.Kind);
             Assert.Equal(0u, lex.CurSymbol.Start);
             Assert.Equal(3u, lex.CurSymbol.End);
         }
@@ -303,7 +303,7 @@ namespace TestPythonCodeAnalyzer
         {
             var lex = new PythonTokenizer("or ".ToCharArray(), false, 8);
             lex.Advance();
-            Assert.Equal(Token.TokenKind.PyOr, lex.CurSymbol.Kind);
+            Assert.Equal(Token.TokenKind.PyTestOr, lex.CurSymbol.Kind);
             Assert.Equal(0u, lex.CurSymbol.Start);
             Assert.Equal(2u, lex.CurSymbol.End);
         }
