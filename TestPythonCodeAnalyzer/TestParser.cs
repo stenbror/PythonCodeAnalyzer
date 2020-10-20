@@ -1009,5 +1009,26 @@ namespace TestPythonCodeAnalyzer
             Assert.Equal(Token.TokenKind.Name, ((NameLiteralExpression) node.Right).Name.Kind);
             Assert.Equal("b", ((NameLiteralExpression) node.Right).Name.Text);
         }
+        
+        [Fact]
+        public void TestMultipleNotTestExpression()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("not not b; ".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+            
+            var node = (NotTestExpression)parser.ParseNotTest();
+            Assert.Equal(Token.TokenKind.PyNot, node.Operator.Kind);
+            Assert.Equal(0UL, node.Start );
+            Assert.Equal(9UL, node.End );
+
+            var node2 = (NotTestExpression)node.Right;
+            Assert.Equal(Token.TokenKind.PyNot, node2.Operator.Kind);
+            Assert.Equal(4UL, node2.Start );
+            Assert.Equal(9UL, node2.End );
+            Assert.Equal(Token.TokenKind.Name, ((NameLiteralExpression) node2.Right).Name.Kind);
+            Assert.Equal("b", ((NameLiteralExpression) node2.Right).Name.Text);
+        }
     }
 }
