@@ -1228,5 +1228,30 @@ namespace TestPythonCodeAnalyzer
             Assert.Equal(0UL, node.Name.Start );
             Assert.Equal(8UL, node.Name.End );
         }
+        
+        [Fact]
+        public void TestRuleNamedExprWithColonAssignExpression()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("__init__ := a; ".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+            
+            var node = (NamedExpression)parser.ParseNamedExpr();
+            Assert.Equal(Token.TokenKind.PyColonAssign, node.Operator.Kind );
+            Assert.Equal(0UL, node.Start );
+            Assert.Equal(13UL, node.End );
+            
+            Assert.Equal(Token.TokenKind.Name, ((NameLiteralExpression) node.Left).Name.Kind);
+            Assert.Equal("__init__", ((NameLiteralExpression) node.Left).Name.Text);
+            Assert.Equal(0U, ((NameLiteralExpression) node.Left).Name.Start);
+            Assert.Equal(8U, ((NameLiteralExpression) node.Left).Name.End);
+            
+            Assert.Equal(Token.TokenKind.Name, ((NameLiteralExpression) node.Right).Name.Kind);
+            Assert.Equal("a", ((NameLiteralExpression) node.Right).Name.Text);
+            Assert.Equal(12U, ((NameLiteralExpression) node.Right).Name.Start);
+            Assert.Equal(13U, ((NameLiteralExpression) node.Right).Name.End);
+            
+        }
     }
 }
