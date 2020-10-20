@@ -1117,7 +1117,7 @@ namespace TestPythonCodeAnalyzer
         }
         
         [Fact]
-        public void Test()
+        public void TestNoCond()
         {
             var parser = new PythonParser();
             Assert.True(parser != null);
@@ -1131,6 +1131,61 @@ namespace TestPythonCodeAnalyzer
             Assert.Equal(8UL, node.End );
             Assert.Equal(0UL, node.Name.Start );
             Assert.Equal(8UL, node.Name.End );
+        }
+        
+        [Fact]
+        public void TestNoCondLambdaExpression()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("lambda: a; ".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+            
+            var node = (LambdaExpression)parser.ParseNoCond();
+            Assert.Equal(Token.TokenKind.PyLambda, node.Operator1.Kind );
+            Assert.Equal(0UL, node.Start );
+            Assert.Equal(9L, node.End );
+            Assert.True(node.Left == null);
+            Assert.Equal(Token.TokenKind.PyColon, node.Operator2.Kind );
+            
+            Assert.Equal(Token.TokenKind.Name, ((NameLiteralExpression) node.Right).Name.Kind);
+            Assert.Equal("a", ((NameLiteralExpression) node.Right).Name.Text);
+        }
+        
+        [Fact]
+        public void TestRuleTestExpression()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("__init__; ".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+            
+            var node = (NameLiteralExpression)parser.ParseTest();
+            Assert.Equal(Token.TokenKind.Name, node.Name.Kind );
+            Assert.Equal("__init__", node.Name.Text);
+            Assert.Equal(0UL, node.Start );
+            Assert.Equal(8UL, node.End );
+            Assert.Equal(0UL, node.Name.Start );
+            Assert.Equal(8UL, node.Name.End );
+        }
+        
+        [Fact]
+        public void TestuleTestLambdaExpression()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("lambda: a; ".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+            
+            var node = (LambdaExpression)parser.ParseTest();
+            Assert.Equal(Token.TokenKind.PyLambda, node.Operator1.Kind );
+            Assert.Equal(0UL, node.Start );
+            Assert.Equal(9L, node.End );
+            Assert.True(node.Left == null);
+            Assert.Equal(Token.TokenKind.PyColon, node.Operator2.Kind );
+            
+            Assert.Equal(Token.TokenKind.Name, ((NameLiteralExpression) node.Right).Name.Kind);
+            Assert.Equal("a", ((NameLiteralExpression) node.Right).Name.Text);
         }
     }
 }
