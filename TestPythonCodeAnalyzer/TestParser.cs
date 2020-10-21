@@ -1251,7 +1251,26 @@ namespace TestPythonCodeAnalyzer
             Assert.Equal("a", ((NameLiteralExpression) node.Right).Name.Text);
             Assert.Equal(12U, ((NameLiteralExpression) node.Right).Name.Start);
             Assert.Equal(13U, ((NameLiteralExpression) node.Right).Name.End);
+        }
+        
+        [Fact]
+        public void TestYieldFromExpression()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("yield from __init__; ".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
             
+            var node = (YieldExpression)parser.ParseYieldExpr();
+            Assert.Equal(Token.TokenKind.PyYield, node.Operator1.Kind );
+            Assert.Equal(Token.TokenKind.PyFrom, node.Operator2.Kind );
+            Assert.Equal(0UL, node.Start );
+            Assert.Equal(19UL, node.End );
+            
+            Assert.Equal(Token.TokenKind.Name, ((NameLiteralExpression) node.Right).Name.Kind);
+            Assert.Equal("__init__", ((NameLiteralExpression) node.Right).Name.Text);
+            Assert.Equal(11U, ((NameLiteralExpression) node.Right).Name.Start);
+            Assert.Equal(19U, ((NameLiteralExpression) node.Right).Name.End);
         }
     }
 }
