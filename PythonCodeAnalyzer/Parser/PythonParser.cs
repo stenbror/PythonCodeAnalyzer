@@ -992,7 +992,7 @@ namespace PythonCodeAnalyzer.Parser
         public ExpressionNode ParseCompIf()
         {
             var startPos = Tokenizer.Position;
-            if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyAsync)
+            if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyIf)
             {
                 var op1 = Tokenizer.CurSymbol;
                 Tokenizer.Advance();
