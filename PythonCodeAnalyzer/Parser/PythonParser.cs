@@ -986,7 +986,8 @@ namespace PythonCodeAnalyzer.Parser
                 var right = ParseSyncCompFor();
                 return new CompForExpression(startPos, Tokenizer.Position, op1, right);
             }
-            throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol, "Expecting 'async' in for comprehension expression!");
+
+            return ParseSyncCompFor();
         }
         
         public ExpressionNode ParseCompIf()

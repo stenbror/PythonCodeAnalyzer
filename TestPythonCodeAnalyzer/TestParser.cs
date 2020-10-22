@@ -1342,5 +1342,32 @@ namespace TestPythonCodeAnalyzer
             Assert.Equal(8U, ((NameLiteralExpression) node2.Right).Name.Start);
             Assert.Equal(9U, ((NameLiteralExpression) node2.Right).Name.End);
         }
+        
+        [Fact]
+        public void TestSingleCompForExpression()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("for a in b; ".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+            
+            var node = (CompSyncForExpression)parser.ParseCompIter();
+            Assert.Equal(Token.TokenKind.PyFor, node.Operator1.Kind );
+            Assert.Equal(Token.TokenKind.PyIn, node.Operator2.Kind );
+            Assert.Equal(0UL, node.Start );
+            Assert.Equal(10UL, node.End );
+            
+            Assert.Equal(Token.TokenKind.Name, ((NameLiteralExpression) node.Left).Name.Kind);
+            Assert.Equal("a", ((NameLiteralExpression) node.Left).Name.Text);
+            Assert.Equal(4U, ((NameLiteralExpression) node.Left).Name.Start);
+            Assert.Equal(5U, ((NameLiteralExpression) node.Left).Name.End);
+            
+            Assert.Equal(Token.TokenKind.Name, ((NameLiteralExpression) node.Right).Name.Kind);
+            Assert.Equal("b", ((NameLiteralExpression) node.Right).Name.Text);
+            Assert.Equal(9U, ((NameLiteralExpression) node.Right).Name.Start);
+            Assert.Equal(10U, ((NameLiteralExpression) node.Right).Name.End);
+            
+            Assert.True(node.Next == null);
+        }
     }
 }
