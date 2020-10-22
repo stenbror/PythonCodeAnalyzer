@@ -1369,5 +1369,36 @@ namespace TestPythonCodeAnalyzer
             
             Assert.True(node.Next == null);
         }
+        
+        [Fact]
+        public void TestMultipleCompForExpression()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("for a in b if c; ".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+            
+            var node = (CompSyncForExpression)parser.ParseCompIter();
+            Assert.Equal(Token.TokenKind.PyFor, node.Operator1.Kind );
+            Assert.Equal(Token.TokenKind.PyIn, node.Operator2.Kind );
+            Assert.Equal(0UL, node.Start );
+            Assert.Equal(15UL, node.End );
+            
+            Assert.Equal(Token.TokenKind.Name, ((NameLiteralExpression) node.Left).Name.Kind);
+            Assert.Equal("a", ((NameLiteralExpression) node.Left).Name.Text);
+            Assert.Equal(4U, ((NameLiteralExpression) node.Left).Name.Start);
+            Assert.Equal(5U, ((NameLiteralExpression) node.Left).Name.End);
+            
+            Assert.Equal(Token.TokenKind.Name, ((NameLiteralExpression) node.Right).Name.Kind);
+            Assert.Equal("b", ((NameLiteralExpression) node.Right).Name.Text);
+            Assert.Equal(9U, ((NameLiteralExpression) node.Right).Name.Start);
+            Assert.Equal(10U, ((NameLiteralExpression) node.Right).Name.End);
+
+            var node2 = (CompIfExpression) node.Next;
+            Assert.Equal(Token.TokenKind.PyIf, node2.Operator.Kind );
+            Assert.Equal("c", ((NameLiteralExpression)node2.Right).Name.Text );
+            Assert.Equal(14U, ((NameLiteralExpression)node2.Right).Name.Start );
+            Assert.Equal(15U, ((NameLiteralExpression)node2.Right).Name.End );
+        }
     }
 }
