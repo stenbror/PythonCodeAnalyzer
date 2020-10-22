@@ -1400,5 +1400,37 @@ namespace TestPythonCodeAnalyzer
             Assert.Equal(14U, ((NameLiteralExpression)node2.Right).Name.Start );
             Assert.Equal(15U, ((NameLiteralExpression)node2.Right).Name.End );
         }
+        
+        [Fact]
+        public void TestSingleCompAsyncForExpression()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("async for a in b; ".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+
+            var node2 = (CompForExpression) parser.ParseCompFor();
+            Assert.Equal(Token.TokenKind.PyAsync, node2.AsyncOperator.Kind );
+            Assert.Equal(0UL, node2.Start );
+            Assert.Equal(16UL, node2.End );
+            
+            var node = (CompSyncForExpression)node2.Right;
+            Assert.Equal(Token.TokenKind.PyFor, node.Operator1.Kind );
+            Assert.Equal(Token.TokenKind.PyIn, node.Operator2.Kind );
+            Assert.Equal(6UL, node.Start );
+            Assert.Equal(16UL, node.End );
+            
+            Assert.Equal(Token.TokenKind.Name, ((NameLiteralExpression) node.Left).Name.Kind);
+            Assert.Equal("a", ((NameLiteralExpression) node.Left).Name.Text);
+            Assert.Equal(10U, ((NameLiteralExpression) node.Left).Name.Start);
+            Assert.Equal(11U, ((NameLiteralExpression) node.Left).Name.End);
+            
+            Assert.Equal(Token.TokenKind.Name, ((NameLiteralExpression) node.Right).Name.Kind);
+            Assert.Equal("b", ((NameLiteralExpression) node.Right).Name.Text);
+            Assert.Equal(15U, ((NameLiteralExpression) node.Right).Name.Start);
+            Assert.Equal(16U, ((NameLiteralExpression) node.Right).Name.End);
+            
+            Assert.True(node.Next == null);
+        }
     }
 }
