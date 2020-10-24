@@ -1638,5 +1638,20 @@ namespace TestPythonCodeAnalyzer
             Assert.Equal(Token.TokenKind.PyComma, node.Separators[0].Kind);
             Assert.Equal(Token.TokenKind.PyComma, node.Separators[1].Kind);
         }
+        
+        [Fact]
+        public void TestATestList1()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("a; ".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+            
+            
+            var node = (NameLiteralExpression)parser.ParseTestList();
+            Assert.Equal("a", node.Name.Text );
+            Assert.Equal(0UL, node.Start );
+            Assert.Equal(1UL, node.End );
+        }
     }
 }
