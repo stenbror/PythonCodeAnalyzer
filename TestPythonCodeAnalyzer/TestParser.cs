@@ -1451,5 +1451,23 @@ namespace TestPythonCodeAnalyzer
             Assert.Equal(1U, node.Name.Start);
             Assert.Equal(2U, node.Name.End);
         }
+        
+        [Fact]
+        public void TestArgument2()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("**a, ".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+            
+            var node = (PowerArgument)parser.ParseArgument();
+            Assert.Equal(0UL, node.Start );
+            Assert.Equal(3UL, node.End );
+            
+            Assert.Equal(Token.TokenKind.PyPower, node.PowerOperator.Kind);
+            Assert.Equal("a", node.Name.Text);
+            Assert.Equal(2U, node.Name.Start);
+            Assert.Equal(3U, node.Name.End);
+        }
     }
 }
