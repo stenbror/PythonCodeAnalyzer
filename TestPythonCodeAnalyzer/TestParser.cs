@@ -1535,5 +1535,27 @@ namespace TestPythonCodeAnalyzer
             Assert.Equal(5U, node.Right.Start);
             Assert.Equal(6U, node.Right.End);
         }
+        
+        [Fact]
+        public void TestArgument6()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("a for b in c, ".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+            
+            var node = (ArgumentExpression)parser.ParseArgument();
+            Assert.Equal(0UL, node.Start );
+            Assert.Equal(12UL, node.End );
+            
+            Assert.Equal(Token.TokenKind.Name, node.Left.Kind);
+            Assert.Equal("a", node.Left.Text);
+            Assert.Equal(0U, node.Left.Start);
+            Assert.Equal(1U, node.Left.End);
+
+            var node2 = (CompSyncForExpression)node.Right;
+            Assert.Equal(2u, node2.Start);
+            Assert.Equal(12u, node2.End);
+        }
     }
 }
