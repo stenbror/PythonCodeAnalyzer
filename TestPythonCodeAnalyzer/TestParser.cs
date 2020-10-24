@@ -1647,11 +1647,29 @@ namespace TestPythonCodeAnalyzer
             parser.Tokenizer = new PythonTokenizer("a; ".ToCharArray(), false, 8);
             parser.Tokenizer.Advance();
             
-            
             var node = (NameLiteralExpression)parser.ParseTestList();
             Assert.Equal("a", node.Name.Text );
             Assert.Equal(0UL, node.Start );
             Assert.Equal(1UL, node.End );
+        }
+        
+        [Fact]
+        public void TestATestList2()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("a,; ".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+            
+            var node = (ListExpression)parser.ParseTestList();
+            Assert.Equal(ListExpression.ListType.TestList, node.ContainerType);
+            Assert.Equal(0UL, node.Start );
+            Assert.Equal(2UL, node.End );
+            Assert.True(node.Elements.Length == 1);
+            Assert.Equal("a", ((NameLiteralExpression) node.Elements[0]).Name.Text);
+            
+            Assert.True(node.Separators.Length == 1);
+            Assert.Equal(Token.TokenKind.PyComma, node.Separators[0].Kind);
         }
     }
 }
