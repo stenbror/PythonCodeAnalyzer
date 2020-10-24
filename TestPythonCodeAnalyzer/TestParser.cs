@@ -1,6 +1,7 @@
 
 using Xunit;
 using PythonCodeAnalyzer.Parser;
+using PythonCodeAnalyzer.Parser.Ast;
 using PythonCodeAnalyzer.Parser.Ast.Expression;
 
 namespace TestPythonCodeAnalyzer
@@ -1431,6 +1432,24 @@ namespace TestPythonCodeAnalyzer
             Assert.Equal(16U, ((NameLiteralExpression) node.Right).Name.End);
             
             Assert.True(node.Next == null);
+        }
+        
+        [Fact]
+        public void TestArgument1()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("*a, ".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+            
+            var node = (StarArgument)parser.ParseArgument();
+            Assert.Equal(0UL, node.Start );
+            Assert.Equal(2UL, node.End );
+            
+            Assert.Equal(Token.TokenKind.PyMul, node.MulOperator.Kind);
+            Assert.Equal("a", node.Name.Text);
+            Assert.Equal(1U, node.Name.Start);
+            Assert.Equal(2U, node.Name.End);
         }
     }
 }
