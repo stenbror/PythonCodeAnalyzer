@@ -741,7 +741,7 @@ namespace PythonCodeAnalyzer.Parser
                     if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyColon || Tokenizer.CurSymbol.Kind == Token.TokenKind.PyIn) continue;
                     nodes.Add((Tokenizer.CurSymbol.Kind == Token.TokenKind.PyMul) ? ParseStarExpr() : ParseOrExpr());
                 }
-                return new ListExpression(startPos, Tokenizer.Position, ListExpression.ListType.TestList, nodes.ToArray(), separators.ToArray());
+                return new ListExpression(startPos, Tokenizer.Position, ListExpression.ListType.ExprList, nodes.ToArray(), separators.ToArray());
             }
             return node;
         }
