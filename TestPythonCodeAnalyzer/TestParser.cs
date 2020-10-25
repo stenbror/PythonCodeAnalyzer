@@ -2099,5 +2099,175 @@ namespace TestPythonCodeAnalyzer
             Assert.Equal(Token.TokenKind.PyComma, node.Separators[0].Kind);
             Assert.Equal(Token.TokenKind.PyComma, node.Separators[1].Kind);
         }
+        
+        [Fact]
+        public void TestTuple1()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("( yield from test ); ".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+            
+            var node = (TupleExpression)parser.ParseAtom();
+            Assert.Equal(0UL, node.Start );
+            Assert.Equal(19UL, node.End );
+            var node2 = (YieldExpression)node.Right;
+            Assert.Equal(2U, node2.Start);
+        }
+        
+        [Fact]
+        public void TestTuple2()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("( *a ); ".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+            
+            var node = (TupleExpression)parser.ParseAtom();
+            Assert.Equal(0UL, node.Start );
+            Assert.Equal(6UL, node.End );
+
+            var node2 = (StarExpression)node.Right;
+            Assert.Equal(2U, node2.Start);
+        }
+        
+        [Fact]
+        public void TestTuple3()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("( *a for b in c ); ".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+            
+            var node = (TupleExpression)parser.ParseAtom();
+            Assert.Equal(0UL, node.Start );
+            Assert.Equal(17UL, node.End );
+
+            var node2 = (ListExpression)node.Right;
+            Assert.True(node2.Elements.Length == 2);
+            Assert.Equal("a", ((NameLiteralExpression) node2.Elements[0]).Name.Text);
+
+            var node3 = (CompSyncForExpression) node2.Elements[1];
+            Assert.Equal(5U, node3.Start);
+        }
+        
+        [Fact]
+        public void TestTuple4()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("( *a, ); ".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+            
+            var node = (TupleExpression)parser.ParseAtom();
+            Assert.Equal(0UL, node.Start );
+            Assert.Equal(7UL, node.End );
+
+            var node2 = (ListExpression)node.Right;
+            Assert.True(node2.Elements.Length == 1);
+            Assert.Equal("a", ((NameLiteralExpression) node2.Elements[0]).Name.Text);
+            
+            Assert.True(node2.Separators.Length == 1);
+            Assert.Equal(Token.TokenKind.PyComma, node2.Separators[0].Kind);
+        }
+        
+        [Fact]
+        public void TestTuple5()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("( *a, b := c ); ".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+            
+            var node = (TupleExpression)parser.ParseAtom();
+            Assert.Equal(0UL, node.Start );
+            Assert.Equal(14UL, node.End );
+
+            var node2 = (ListExpression)node.Right;
+            Assert.True(node2.Elements.Length == 2);
+            Assert.Equal("a", ((NameLiteralExpression) node2.Elements[0]).Name.Text);
+
+            var node3 = (NamedExpression) node2.Elements[1];
+            Assert.Equal(6U, node3.Start);
+            
+            Assert.True(node2.Separators.Length == 1);
+            Assert.Equal(Token.TokenKind.PyComma, node2.Separators[0].Kind);
+        }
+        
+        [Fact]
+        public void TestTuple6()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("( *a, b := c, ); ".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+            
+            var node = (TupleExpression)parser.ParseAtom();
+            Assert.Equal(0UL, node.Start );
+            Assert.Equal(15UL, node.End );
+
+            var node2 = (ListExpression)node.Right;
+            Assert.True(node2.Elements.Length == 2);
+            Assert.Equal("a", ((NameLiteralExpression) node2.Elements[0]).Name.Text);
+
+            var node3 = (NamedExpression) node2.Elements[1];
+            Assert.Equal(6U, node3.Start);
+            
+            Assert.True(node2.Separators.Length == 2);
+            Assert.Equal(Token.TokenKind.PyComma, node2.Separators[0].Kind);
+            Assert.Equal(Token.TokenKind.PyComma, node2.Separators[1].Kind);
+        }
+        
+        [Fact]
+        public void TestTuple7()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("( a := b, *b, ); ".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+            
+            var node = (TupleExpression)parser.ParseAtom();
+            Assert.Equal(0UL, node.Start );
+            Assert.Equal(15UL, node.End );
+
+            var node2 = (ListExpression) node.Right;
+            Assert.Equal(ListExpression.ListType.TestListStarExpr, node2.ContainerType);
+
+            var node3 = (NamedExpression) node2.Elements[0];
+            Assert.Equal(2U, node3.Start);
+
+            var node4 = (StarExpression) node2.Elements[1];
+            Assert.Equal(10U, node4.Start);
+            
+            Assert.True(node2.Separators.Length == 2);
+            Assert.Equal(Token.TokenKind.PyComma, node2.Separators[0].Kind);
+            Assert.Equal(Token.TokenKind.PyComma, node2.Separators[1].Kind);
+        }
+        
+        [Fact]
+        public void TestAtomList1()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("[ a := b, *b, ]; ".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+            
+            var node = (TupleExpression)parser.ParseAtom();
+            Assert.Equal(0UL, node.Start );
+            Assert.Equal(15UL, node.End );
+
+            var node2 = (ListExpression) node.Right;
+            Assert.Equal(ListExpression.ListType.TestListStarExpr, node2.ContainerType);
+
+            var node3 = (NamedExpression) node2.Elements[0];
+            Assert.Equal(2U, node3.Start);
+
+            var node4 = (StarExpression) node2.Elements[1];
+            Assert.Equal(10U, node4.Start);
+            
+            Assert.True(node2.Separators.Length == 2);
+            Assert.Equal(Token.TokenKind.PyComma, node2.Separators[0].Kind);
+            Assert.Equal(Token.TokenKind.PyComma, node2.Separators[1].Kind);
+        }
     }
 }
