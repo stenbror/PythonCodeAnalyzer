@@ -647,7 +647,7 @@ namespace PythonCodeAnalyzer.Parser
                 var nodes = new List<ExpressionNode>();
                 nodes.Add(node);
                 nodes.Add(ParseCompFor());
-                return new ListExpression(startPos, Tokenizer.Position, ListExpression.ListType.TestList , nodes.ToArray(), null);
+                return new ListExpression(startPos, Tokenizer.Position, ListExpression.ListType.TestListStarExpr , nodes.ToArray(), null);
             }
             else if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyComma)
             {
@@ -662,7 +662,7 @@ namespace PythonCodeAnalyzer.Parser
                     if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyRightBracket || Tokenizer.CurSymbol.Kind == Token.TokenKind.PyRightParen) continue;
                     nodes.Add((Tokenizer.CurSymbol.Kind == Token.TokenKind.PyMul) ? ParseStarExpr() : ParseNamedExpr());
                 }
-                return new ListExpression(startPos, Tokenizer.Position, ListExpression.ListType.TestList , nodes.ToArray(), separators.ToArray());
+                return new ListExpression(startPos, Tokenizer.Position, ListExpression.ListType.TestListStarExpr , nodes.ToArray(), separators.ToArray());
             }
             return node;
         }
