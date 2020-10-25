@@ -1998,5 +1998,51 @@ namespace TestPythonCodeAnalyzer
             Assert.True(node.Operator2 == null);
             Assert.True(node.Step == null);
         }
+        
+        [Fact]
+        public void TestSubscriptList1()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("[1:10]; ".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+            parser.Tokenizer.Advance();
+            
+            var node = (SubscriptExpression)parser.ParseSubscriptList();
+            Assert.Equal(1UL, node.Start );
+            Assert.Equal(5UL, node.End );
+
+            var node2 = (NumberLiteralExpression) node.StartPos;
+            Assert.Equal("1", node2.Number.Text);
+            Assert.Equal(Token.TokenKind.PyColon, node.Operator1.Kind);
+            var node3 = (NumberLiteralExpression) node.EndPos;
+            Assert.Equal("10", node3.Number.Text);
+            
+            Assert.True(node.Operator2 == null);
+            Assert.True(node.Step == null);
+        }
+        
+        [Fact]
+        public void TestSubscriptList2()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("[1:10,]; ".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+            parser.Tokenizer.Advance();
+            
+            var node = (ListExpression)parser.ParseSubscriptList();
+            Assert.Equal(ListExpression.ListType.SubscriptList, node.ContainerType);
+            Assert.Equal(1UL, node.Start );
+            Assert.Equal(6UL, node.End );
+            
+            Assert.True(node.Elements.Length == 1);
+            var node2 = (SubscriptExpression) node.Elements[0];
+            var node3 = (NumberLiteralExpression) node2.StartPos;
+            Assert.Equal("1", node3.Number.Text);
+            
+            Assert.True(node.Separators.Length == 1);
+            Assert.Equal(Token.TokenKind.PyComma, node.Separators[0].Kind);
+        }
     }
 }
