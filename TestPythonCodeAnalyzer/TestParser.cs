@@ -2379,5 +2379,57 @@ namespace TestPythonCodeAnalyzer
             Assert.Equal(Token.TokenKind.PyComma, node2.Separators[0].Kind);
             Assert.Equal(Token.TokenKind.PyComma, node2.Separators[1].Kind);
         }
+        
+        [Fact]
+        public void TestAtomSet6()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("{ a, b, *c }; ".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+            
+            var node = (SetExpression)parser.ParseAtom();
+            Assert.Equal(0UL, node.Start );
+            Assert.Equal(12UL, node.End );
+
+            var node2 = (SetContainerExpression)node.Right;
+            Assert.True(node2.Keys.Length == 3);
+            Assert.Equal("a", ((NameLiteralExpression)node2.Keys[0]).Name.Text);
+            Assert.Equal("b", ((NameLiteralExpression)node2.Keys[1]).Name.Text);
+
+            var node3 = (StarExpression) node2.Keys[2];
+            Assert.True(node3.Start == 8U);
+            
+            Assert.True(node2.Separators.Length == 2);
+            Assert.Equal(Token.TokenKind.PyComma, node2.Separators[0].Kind);
+            Assert.Equal(Token.TokenKind.PyComma, node2.Separators[1].Kind);
+        }
+        
+        [Fact]
+        public void TestAtomSet7()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("{ *a, b, *c }; ".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+            
+            var node = (SetExpression)parser.ParseAtom();
+            Assert.Equal(0UL, node.Start );
+            Assert.Equal(13UL, node.End );
+
+            var node2 = (SetContainerExpression)node.Right;
+            Assert.True(node2.Keys.Length == 3);
+            Assert.Equal("b", ((NameLiteralExpression)node2.Keys[1]).Name.Text);
+
+            var node3 = (StarExpression) node2.Keys[2];
+            Assert.Equal(9U, node3.Start);
+            
+            var node4 = (StarExpression) node2.Keys[0];
+            Assert.Equal(2U, node4.Start);
+            
+            Assert.True(node2.Separators.Length == 2);
+            Assert.Equal(Token.TokenKind.PyComma, node2.Separators[0].Kind);
+            Assert.Equal(Token.TokenKind.PyComma, node2.Separators[1].Kind);
+        }
     }
 }
