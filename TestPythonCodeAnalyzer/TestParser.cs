@@ -2145,7 +2145,9 @@ namespace TestPythonCodeAnalyzer
 
             var node2 = (ListExpression)node.Right;
             Assert.True(node2.Elements.Length == 2);
-            Assert.Equal("a", ((NameLiteralExpression) node2.Elements[0]).Name.Text);
+
+            var node4 = (NameLiteralExpression) node2.Elements[0];
+            Assert.Equal("a", node4.Name.Text);
 
             var node3 = (CompSyncForExpression) node2.Elements[1];
             Assert.Equal(5U, node3.Start);
@@ -2165,7 +2167,9 @@ namespace TestPythonCodeAnalyzer
 
             var node2 = (ListExpression)node.Right;
             Assert.True(node2.Elements.Length == 1);
-            Assert.Equal("a", ((NameLiteralExpression) node2.Elements[0]).Name.Text);
+            
+            var node4 = (NameLiteralExpression) node2.Elements[0];
+            Assert.Equal("a", node4.Name.Text);
             
             Assert.True(node2.Separators.Length == 1);
             Assert.Equal(Token.TokenKind.PyComma, node2.Separators[0].Kind);
@@ -2185,7 +2189,9 @@ namespace TestPythonCodeAnalyzer
 
             var node2 = (ListExpression)node.Right;
             Assert.True(node2.Elements.Length == 2);
-            Assert.Equal("a", ((NameLiteralExpression) node2.Elements[0]).Name.Text);
+            
+            var node4 = (NameLiteralExpression) node2.Elements[0];
+            Assert.Equal("a", node4.Name.Text);
 
             var node3 = (NamedExpression) node2.Elements[1];
             Assert.Equal(6U, node3.Start);
@@ -2208,7 +2214,9 @@ namespace TestPythonCodeAnalyzer
 
             var node2 = (ListExpression)node.Right;
             Assert.True(node2.Elements.Length == 2);
-            Assert.Equal("a", ((NameLiteralExpression) node2.Elements[0]).Name.Text);
+            
+            var node4 = (NameLiteralExpression) node2.Elements[0];
+            Assert.Equal("a", node4.Name.Text);
 
             var node3 = (NamedExpression) node2.Elements[1];
             Assert.Equal(6U, node3.Start);
