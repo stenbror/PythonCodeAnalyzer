@@ -2044,5 +2044,60 @@ namespace TestPythonCodeAnalyzer
             Assert.True(node.Separators.Length == 1);
             Assert.Equal(Token.TokenKind.PyComma, node.Separators[0].Kind);
         }
+        
+        [Fact]
+        public void TestSubscriptList3()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("[1:10, b]; ".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+            parser.Tokenizer.Advance();
+            
+            var node = (ListExpression)parser.ParseSubscriptList();
+            Assert.Equal(ListExpression.ListType.SubscriptList, node.ContainerType);
+            Assert.Equal(1UL, node.Start );
+            Assert.Equal(8UL, node.End );
+            
+            Assert.True(node.Elements.Length == 2);
+            var node2 = (SubscriptExpression) node.Elements[0];
+            var node3 = (NumberLiteralExpression) node2.StartPos;
+            Assert.Equal("1", node3.Number.Text);
+            
+            var node4 = (SubscriptExpression) node.Elements[1];
+            var node5 = (NameLiteralExpression) node4.StartPos;
+            Assert.Equal("b", node5.Name.Text);
+            
+            Assert.True(node.Separators.Length == 1);
+            Assert.Equal(Token.TokenKind.PyComma, node.Separators[0].Kind);
+        }
+        
+        [Fact]
+        public void TestSubscriptList4()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("[1:10, b,]; ".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+            parser.Tokenizer.Advance();
+            
+            var node = (ListExpression)parser.ParseSubscriptList();
+            Assert.Equal(ListExpression.ListType.SubscriptList, node.ContainerType);
+            Assert.Equal(1UL, node.Start );
+            Assert.Equal(9UL, node.End );
+            
+            Assert.True(node.Elements.Length == 2);
+            var node2 = (SubscriptExpression) node.Elements[0];
+            var node3 = (NumberLiteralExpression) node2.StartPos;
+            Assert.Equal("1", node3.Number.Text);
+            
+            var node4 = (SubscriptExpression) node.Elements[1];
+            var node5 = (NameLiteralExpression) node4.StartPos;
+            Assert.Equal("b", node5.Name.Text);
+            
+            Assert.True(node.Separators.Length == 2);
+            Assert.Equal(Token.TokenKind.PyComma, node.Separators[0].Kind);
+            Assert.Equal(Token.TokenKind.PyComma, node.Separators[1].Kind);
+        }
     }
 }
