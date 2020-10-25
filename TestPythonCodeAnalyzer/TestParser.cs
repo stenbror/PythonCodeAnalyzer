@@ -2245,7 +2245,7 @@ namespace TestPythonCodeAnalyzer
             Assert.Equal(2U, node3.Start);
 
             var node4 = (StarExpression) node2.Elements[1];
-            Assert.Equal("a", ((NameLiteralExpression)node4.Right).Name.Text);
+            Assert.Equal("b", ((NameLiteralExpression)node4.Right).Name.Text);
             
             Assert.True(node2.Separators.Length == 2);
             Assert.Equal(Token.TokenKind.PyComma, node2.Separators[0].Kind);
@@ -2260,7 +2260,7 @@ namespace TestPythonCodeAnalyzer
             parser.Tokenizer = new PythonTokenizer("[ a := b, *b, ]; ".ToCharArray(), false, 8);
             parser.Tokenizer.Advance();
             
-            var node = (TupleExpression)parser.ParseAtom();
+            var node = (AtomListExpression)parser.ParseAtom();
             Assert.Equal(0UL, node.Start );
             Assert.Equal(15UL, node.End );
 
