@@ -1827,5 +1827,66 @@ namespace TestPythonCodeAnalyzer
             Assert.Equal(Token.TokenKind.PyComma, node.Separators[0].Kind);
             Assert.Equal(Token.TokenKind.PyComma, node.Separators[1].Kind);
         }
+        
+        [Fact]
+        public void TestSubscript1()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("[1]; ".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+            parser.Tokenizer.Advance();
+            
+            var node = (SubscriptExpression)parser.ParseSubscript();
+            Assert.Equal(1UL, node.Start );
+            Assert.Equal(2UL, node.End );
+
+            var node2 = (NumberLiteralExpression) node.StartPos;
+            Assert.Equal("1", node2.Number.Text);
+            Assert.True(node.Operator1 == null);
+            Assert.True(node.EndPos == null);
+            Assert.True(node.Operator2 == null);
+            Assert.True(node.Step == null);
+        }
+        
+        [Fact]
+        public void TestSubscript2()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("[:]; ".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+            parser.Tokenizer.Advance();
+            
+            var node = (SubscriptExpression)parser.ParseSubscript();
+            Assert.Equal(1UL, node.Start );
+            Assert.Equal(2UL, node.End );
+
+            Assert.True(node.StartPos == null);
+            Assert.Equal(Token.TokenKind.PyColon, node.Operator1.Kind);
+            Assert.True(node.EndPos == null);
+            Assert.True(node.Operator2 == null);
+            Assert.True(node.Step == null);
+        }
+        
+        [Fact]
+        public void TestSubscript3()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("[::]; ".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+            parser.Tokenizer.Advance();
+            
+            var node = (SubscriptExpression)parser.ParseSubscript();
+            Assert.Equal(1UL, node.Start );
+            Assert.Equal(3UL, node.End );
+
+            Assert.True(node.StartPos == null);
+            Assert.Equal(Token.TokenKind.PyColon, node.Operator1.Kind);
+            Assert.True(node.EndPos == null);
+            Assert.Equal(Token.TokenKind.PyColon, node.Operator2.Kind);
+            Assert.True(node.Step == null);
+        }
     }
 }
