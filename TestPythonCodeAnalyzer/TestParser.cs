@@ -2316,5 +2316,68 @@ namespace TestPythonCodeAnalyzer
             
             Assert.True(node2.Separators.Length == 0);
         }
+        
+        [Fact]
+        public void TestAtomSet3()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("{ a, }; ".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+            
+            var node = (SetExpression)parser.ParseAtom();
+            Assert.Equal(0UL, node.Start );
+            Assert.Equal(6UL, node.End );
+
+            var node2 = (SetContainerExpression)node.Right;
+            Assert.True(node2.Keys.Length == 1);
+            Assert.Equal("a", ((NameLiteralExpression)node2.Keys[0]).Name.Text);
+            
+            Assert.True(node2.Separators.Length == 1);
+            Assert.Equal(Token.TokenKind.PyComma, node2.Separators[0].Kind);
+        }
+        
+        [Fact]
+        public void TestAtomSet4()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("{ a, b }; ".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+            
+            var node = (SetExpression)parser.ParseAtom();
+            Assert.Equal(0UL, node.Start );
+            Assert.Equal(8UL, node.End );
+
+            var node2 = (SetContainerExpression)node.Right;
+            Assert.True(node2.Keys.Length == 2);
+            Assert.Equal("a", ((NameLiteralExpression)node2.Keys[0]).Name.Text);
+            Assert.Equal("b", ((NameLiteralExpression)node2.Keys[1]).Name.Text);
+            
+            Assert.True(node2.Separators.Length == 1);
+            Assert.Equal(Token.TokenKind.PyComma, node2.Separators[0].Kind);
+        }
+        
+        [Fact]
+        public void TestAtomSet5()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("{ a, b, }; ".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+            
+            var node = (SetExpression)parser.ParseAtom();
+            Assert.Equal(0UL, node.Start );
+            Assert.Equal(9UL, node.End );
+
+            var node2 = (SetContainerExpression)node.Right;
+            Assert.True(node2.Keys.Length == 2);
+            Assert.Equal("a", ((NameLiteralExpression)node2.Keys[0]).Name.Text);
+            Assert.Equal("b", ((NameLiteralExpression)node2.Keys[1]).Name.Text);
+            
+            Assert.True(node2.Separators.Length == 2);
+            Assert.Equal(Token.TokenKind.PyComma, node2.Separators[0].Kind);
+            Assert.Equal(Token.TokenKind.PyComma, node2.Separators[1].Kind);
+        }
     }
 }
