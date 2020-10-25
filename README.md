@@ -5,3 +5,5 @@ This will be a little library written in C# for walking Python 3.9 abstract synt
 It is in early stage. It will be TDD and contains unittests for the part implemented.
 
 It is designed to be very light weight and easy to use for Syntax transformation and check of your Python 3.9 code. It might end up as front end for a new dotnet based Python interpreter / compiler. It is currently based on a RC of .Net 5.0
+
+Expression part of parser including tokenizer is now implemented and covered by UnitTests for happy branch of code. Need to add UnitTests for SyntaxError handling. Next development step will be to implement and test all UnitTests for statement rules in parser.
