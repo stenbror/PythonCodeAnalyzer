@@ -1,4 +1,5 @@
 
+using System;
 using Xunit;
 using PythonCodeAnalyzer.Parser;
 using PythonCodeAnalyzer.Parser.Ast;
@@ -2621,6 +2622,32 @@ namespace TestPythonCodeAnalyzer
             Assert.True(node2.Separators.Length == 2);
             Assert.Equal(Token.TokenKind.PyComma, node2.Separators[0].Kind);
             Assert.Equal(Token.TokenKind.PyComma, node2.Separators[1].Kind);
+        }
+        
+        [Fact]
+        public void TestAtomIllegal()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("pass ".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+
+            try
+            {
+                parser.ParseNamedExpr();
+                Assert.True(false);
+            }
+            catch (SyntaxErrorException e)
+            {
+                Assert.Equal(0U, e.Position);
+                Assert.Equal(Token.TokenKind.PyPass, e.ErrorSymbol.Kind);
+                Assert.Equal("Illegal literal!", e.Message);
+                Assert.True(true);
+            }
+            catch (Exception e)
+            {
+                Assert.True(false);
+            }
         }
     }
 }
