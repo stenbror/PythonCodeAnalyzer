@@ -2589,5 +2589,38 @@ namespace TestPythonCodeAnalyzer
             Assert.True(node2.Separators.Length == 1);
             Assert.Equal(Token.TokenKind.PyComma, node2.Separators[0].Kind);
         }
+        
+        [Fact]
+        public void TestAtomDictionary8()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("{ **a, b : c, **d }; ".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+
+            var node = (DictionaryExpression) parser.ParseAtom();
+            Assert.Equal(0UL, node.Start);
+            Assert.Equal(19UL, node.End);
+
+            var node2 = (DictionaryContainerExpression) node.Right;
+            Assert.True(node2.Keys.Length == 3);
+            
+            var node4 = (PowerKeyExpression) node2.Keys[0];
+            Assert.Equal(Token.TokenKind.PyPower, node4.Operator.Kind);
+            Assert.Equal("a", ((NameLiteralExpression)node4.Right).Name.Text );
+
+            Assert.Equal("b", ((NameLiteralExpression) node2.Keys[1]).Name.Text);
+            Assert.Equal(3, node2.Colons.Length); // Needs to be align.
+            Assert.Equal(Token.TokenKind.PyColon, node2.Colons[1].Kind);
+            Assert.Equal("c", ((NameLiteralExpression) node2.Values[1]).Name.Text);
+
+            var node3 = (PowerKeyExpression) node2.Keys[2];
+            Assert.Equal(Token.TokenKind.PyPower, node3.Operator.Kind);
+            Assert.Equal("d", ((NameLiteralExpression)node3.Right).Name.Text );
+
+            Assert.True(node2.Separators.Length == 2);
+            Assert.Equal(Token.TokenKind.PyComma, node2.Separators[0].Kind);
+            Assert.Equal(Token.TokenKind.PyComma, node2.Separators[1].Kind);
+        }
     }
 }
