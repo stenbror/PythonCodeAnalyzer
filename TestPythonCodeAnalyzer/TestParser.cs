@@ -2504,5 +2504,33 @@ namespace TestPythonCodeAnalyzer
             Assert.True(node2.Separators.Length == 1);
             Assert.Equal(Token.TokenKind.PyComma, node2.Separators[0].Kind);
         }
+        
+        [Fact]
+        public void TestAtomDictionary4()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("{ a : b, c : d }; ".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+
+            var node = (DictionaryExpression) parser.ParseAtom();
+            Assert.Equal(0UL, node.Start);
+            Assert.Equal(16UL, node.End);
+
+            var node2 = (DictionaryContainerExpression) node.Right;
+            Assert.True(node2.Keys.Length == 2);
+
+            Assert.Equal("a", ((NameLiteralExpression) node2.Keys[0]).Name.Text);
+            Assert.True(node2.Colons.Length == 2);
+            Assert.Equal(Token.TokenKind.PyColon, node2.Colons[0].Kind);
+            Assert.Equal("b", ((NameLiteralExpression) node2.Values[0]).Name.Text);
+            
+            Assert.Equal("c", ((NameLiteralExpression) node2.Keys[1]).Name.Text);
+            Assert.Equal(Token.TokenKind.PyColon, node2.Colons[1].Kind);
+            Assert.Equal("d", ((NameLiteralExpression) node2.Values[1]).Name.Text);
+
+            Assert.True(node2.Separators.Length == 1);
+            Assert.Equal(Token.TokenKind.PyComma, node2.Separators[0].Kind);
+        }
     }
 }
