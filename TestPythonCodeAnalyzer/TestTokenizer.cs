@@ -429,7 +429,7 @@ namespace TestPythonCodeAnalyzer
                 var tok1 = lex.GetSymbol();
                 Assert.True(false);
             }
-            catch (Exception e)
+            catch
             {
                 Assert.True(true);
             }
@@ -444,7 +444,7 @@ namespace TestPythonCodeAnalyzer
                 var tok1 = lex.GetSymbol();
                 Assert.True(false);
             }
-            catch (Exception e)
+            catch
             {
                 Assert.True(true);
             }
@@ -459,7 +459,7 @@ namespace TestPythonCodeAnalyzer
                 var tok1 = lex.GetSymbol();
                 Assert.True(false);
             }
-            catch (Exception e)
+            catch
             {
                 Assert.True(true);
             }

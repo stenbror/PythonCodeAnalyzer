@@ -84,7 +84,7 @@ namespace PythonCodeAnalyzer.Parser
                         Tokenizer.Advance();
                         return new TupleExpression(startPos, Tokenizer.Position, op1, right, op2);
                     }
-                    throw new SyntaxErrorException(startPos, Tokenizer.CurSymbol, "Expecting ')' in tuple declaration!");
+                    throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol, "Expecting ')' in tuple declaration!");
                 }
                 case Token.TokenKind.PyLeftBracket:
                 {
@@ -104,7 +104,7 @@ namespace PythonCodeAnalyzer.Parser
                         Tokenizer.Advance();
                         return new AtomListExpression(startPos, Tokenizer.Position, op1, right, op2);
                     }
-                    throw new SyntaxErrorException(startPos, Tokenizer.CurSymbol,
+                    throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol,
                         "Expecting ']' in tuple declaration!");
                 }
                 case Token.TokenKind.PyLeftCurly:
@@ -126,7 +126,7 @@ namespace PythonCodeAnalyzer.Parser
                         Tokenizer.Advance();
                         return isDictionary ? (ExpressionNode) new DictionaryExpression(startPos, Tokenizer.Position, op1, right, op2) : new SetExpression(startPos, Tokenizer.Position, op1, right, op2);
                     }
-                    throw new SyntaxErrorException(startPos, Tokenizer.CurSymbol,
+                    throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol,
                         "Expecting '}' in dictionary or set declaration!");
                 }
                 default:

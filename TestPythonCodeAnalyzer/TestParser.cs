@@ -2644,7 +2644,85 @@ namespace TestPythonCodeAnalyzer
                 Assert.Equal("Illegal literal!", e.Message);
                 Assert.True(true);
             }
-            catch (Exception e)
+            catch 
+            {
+                Assert.True(false);
+            }
+        }
+        
+        [Fact]
+        public void TestTupleAtomIllegal()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("( a; ".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+
+            try
+            {
+                parser.ParseNamedExpr();
+                Assert.True(false);
+            }
+            catch (SyntaxErrorException e)
+            {
+                Assert.Equal(3U, e.Position);
+                Assert.Equal(Token.TokenKind.PySemiColon, e.ErrorSymbol.Kind);
+                Assert.Equal("Expecting ')' in tuple declaration!", e.Message);
+                Assert.True(true);
+            }
+            catch
+            {
+                Assert.True(false);
+            }
+        }
+        
+        [Fact]
+        public void TestListAtomIllegal()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("[ a; ".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+
+            try
+            {
+                parser.ParseNamedExpr();
+                Assert.True(false);
+            }
+            catch (SyntaxErrorException e)
+            {
+                Assert.Equal(3U, e.Position);
+                Assert.Equal(Token.TokenKind.PySemiColon, e.ErrorSymbol.Kind);
+                Assert.Equal("Expecting ']' in tuple declaration!", e.Message);
+                Assert.True(true);
+            }
+            catch 
+            {
+                Assert.True(false);
+            }
+        }
+        
+        [Fact]
+        public void TestDictionaryAtomIllegal()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("{ a : b; ".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+
+            try
+            {
+                parser.ParseNamedExpr();
+                Assert.True(false);
+            }
+            catch (SyntaxErrorException e)
+            {
+                Assert.Equal(7U, e.Position);
+                Assert.Equal(Token.TokenKind.PySemiColon, e.ErrorSymbol.Kind);
+                Assert.Equal("Expecting '}' in dictionary or set declaration!", e.Message);
+                Assert.True(true);
+            }
+            catch 
             {
                 Assert.True(false);
             }
