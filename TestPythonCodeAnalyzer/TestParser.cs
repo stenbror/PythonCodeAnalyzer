@@ -2642,7 +2642,6 @@ namespace TestPythonCodeAnalyzer
                 Assert.Equal(0U, e.Position);
                 Assert.Equal(Token.TokenKind.PyPass, e.ErrorSymbol.Kind);
                 Assert.Equal("Illegal literal!", e.Message);
-                Assert.True(true);
             }
             catch 
             {
@@ -2668,7 +2667,6 @@ namespace TestPythonCodeAnalyzer
                 Assert.Equal(3U, e.Position);
                 Assert.Equal(Token.TokenKind.PySemiColon, e.ErrorSymbol.Kind);
                 Assert.Equal("Expecting ')' in tuple declaration!", e.Message);
-                Assert.True(true);
             }
             catch
             {
@@ -2694,7 +2692,6 @@ namespace TestPythonCodeAnalyzer
                 Assert.Equal(3U, e.Position);
                 Assert.Equal(Token.TokenKind.PySemiColon, e.ErrorSymbol.Kind);
                 Assert.Equal("Expecting ']' in tuple declaration!", e.Message);
-                Assert.True(true);
             }
             catch 
             {
@@ -2720,7 +2717,6 @@ namespace TestPythonCodeAnalyzer
                 Assert.Equal(7U, e.Position);
                 Assert.Equal(Token.TokenKind.PySemiColon, e.ErrorSymbol.Kind);
                 Assert.Equal("Expecting '}' in dictionary or set declaration!", e.Message);
-                Assert.True(true);
             }
             catch 
             {
