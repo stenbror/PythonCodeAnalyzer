@@ -9,22 +9,3 @@ It is designed to be very light weight and easy to use for Syntax transformation
 Expression part of parser including tokenizer is now implemented and covered by UnitTests. That should make it possibly to use the framework for parsing expression part of Python from source code to final binary tree of nodes. AST.
 
 Next, is implementing all UnitTests for Statement rules that does not including block controll. That is Indent / Dedent handling.
-
-Simple use for now is:
-
-
-using PythonCodeAnalyzer;&nbsp;
-using PythonCodeAnalyzer.Parser;&nbsp;
-using PythonCodeAnalyzer.Parser.Ast;&nbsp;
-using PythonCodeAnalyzer.Parser.Ast.Expression;&nbsp;
-
-var parser = new PythonParser();&nbsp;
-parser.Tokenizer = new PythonTokenizer("a + b * c / d; ".ToCharArray(), false, 8);&nbsp;
-
-parser.Tokenizer.Advance(); // Advance first token needed when not starting at top level rule in parser. &nbsp;
-
-var node = parser.ParseNamedExpr(); &nbsp;
-
-node contain root node for ASTTree generated.
-
-Just remember, this framework is not ready for any purpose until the whole parser is tested and implemented with correct Tokenizer handling block of code. 
