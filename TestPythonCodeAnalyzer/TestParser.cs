@@ -3378,5 +3378,49 @@ namespace TestPythonCodeAnalyzer
             
             Assert.Equal(Token.TokenKind.Newline, node.NewLine.Kind);
         }
+        
+        [Fact]
+        public void TestBreakStmt()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("break\r\n\0".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+
+            var node = (ListStatement) parser.ParseStmt();
+            Assert.True(node.Elements.Length == 1);
+            
+            var node2 = (FlowStatement) node.Elements[0];
+            Assert.Equal(FlowStatement.OperatorKind.Break, node2.Kind);
+            Assert.Equal(Token.TokenKind.PyBreak, node2.Operator.Kind);
+            Assert.Equal(0UL, node2.Start);
+            Assert.Equal(5UL, node2.End);
+            
+            Assert.True(node.Separators.Length == 0);
+            
+            Assert.Equal(Token.TokenKind.Newline, node.NewLine.Kind);
+        }
+        
+        [Fact]
+        public void TestContinueStmt()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("continue\r\n\0".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+
+            var node = (ListStatement) parser.ParseStmt();
+            Assert.True(node.Elements.Length == 1);
+            
+            var node2 = (FlowStatement) node.Elements[0];
+            Assert.Equal(FlowStatement.OperatorKind.Continue, node2.Kind);
+            Assert.Equal(Token.TokenKind.PyContinue, node2.Operator.Kind);
+            Assert.Equal(0UL, node2.Start);
+            Assert.Equal(8UL, node2.End);
+            
+            Assert.True(node.Separators.Length == 0);
+            
+            Assert.Equal(Token.TokenKind.Newline, node.NewLine.Kind);
+        }
     }
 }
