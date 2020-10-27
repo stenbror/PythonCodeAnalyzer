@@ -4,6 +4,7 @@ using Xunit;
 using PythonCodeAnalyzer.Parser;
 using PythonCodeAnalyzer.Parser.Ast;
 using PythonCodeAnalyzer.Parser.Ast.Expression;
+using PythonCodeAnalyzer.Parser.Ast.Statement;
 
 namespace TestPythonCodeAnalyzer
 {
@@ -3297,6 +3298,59 @@ namespace TestPythonCodeAnalyzer
             {
                 Assert.True(false);
             }
+        }
+        
+        
+        
+        // Statement rules is tested below!
+        
+        [Fact]
+        public void TestPassStmt()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("pass; \r\n\0".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+
+            var node = (ListStatement) parser.ParseStmt();
+            Assert.True(node.Elements.Length == 1);
+            
+            Assert.True(node.Separators.Length == 1);
+            Assert.Equal(Token.TokenKind.PySemiColon, node.Separators[0].Kind);
+
+            var node2 = (PassStatement) node.Elements[0];
+            Assert.Equal(Token.TokenKind.PyPass, node2.Operator.Kind);
+            Assert.Equal(0UL, node2.Start);
+            Assert.Equal(4UL, node2.End);
+            
+            Assert.Equal(Token.TokenKind.Newline, node.NewLine.Kind);
+        }
+        
+        [Fact]
+        public void TestPassStmtMultiple()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("pass; pass\r\n\0".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+
+            var node = (ListStatement) parser.ParseStmt();
+            Assert.True(node.Elements.Length == 2);
+            
+            Assert.True(node.Separators.Length == 1);
+            Assert.Equal(Token.TokenKind.PySemiColon, node.Separators[0].Kind);
+
+            var node2 = (PassStatement) node.Elements[0];
+            Assert.Equal(Token.TokenKind.PyPass, node2.Operator.Kind);
+            Assert.Equal(0UL, node2.Start);
+            Assert.Equal(4UL, node2.End);
+            
+            var node3 = (PassStatement) node.Elements[1];
+            Assert.Equal(Token.TokenKind.PyPass, node3.Operator.Kind);
+            Assert.Equal(6UL, node3.Start);
+            Assert.Equal(10UL, node3.End);
+            
+            Assert.Equal(Token.TokenKind.Newline, node.NewLine.Kind);
         }
     }
 }
