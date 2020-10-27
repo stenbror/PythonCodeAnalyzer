@@ -2923,5 +2923,55 @@ namespace TestPythonCodeAnalyzer
                 Assert.True(false);
             }
         }
+        
+        [Fact]
+        public void TestExprListWithDoubleCommas()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("a(b for c,,d in e); ".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+
+            try
+            {
+                parser.ParseNamedExpr();
+                Assert.True(false);
+            }
+            catch (SyntaxErrorException e)
+            {
+                Assert.Equal(10U, e.Position);
+                Assert.Equal(Token.TokenKind.PyComma, e.ErrorSymbol.Kind);
+                Assert.Equal("Double ',' in expression list!", e.Message);
+            }
+            catch 
+            {
+                Assert.True(false);
+            }
+        }
+        
+        [Fact]
+        public void TestTestListWithDoubleCommas()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("a,, b; ".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+
+            try
+            {
+                parser.ParseTestList();
+                Assert.True(false);
+            }
+            catch (SyntaxErrorException e)
+            {
+                Assert.Equal(2U, e.Position);
+                Assert.Equal(Token.TokenKind.PyComma, e.ErrorSymbol.Kind);
+                Assert.Equal("Double ',' in expression list!", e.Message);
+            }
+            catch 
+            {
+                Assert.True(false);
+            }
+        }
     }
 }
