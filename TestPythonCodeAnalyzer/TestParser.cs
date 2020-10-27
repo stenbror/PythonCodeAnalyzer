@@ -2823,5 +2823,30 @@ namespace TestPythonCodeAnalyzer
                 Assert.True(false);
             }
         }
+        
+        [Fact]
+        public void TestLambadMissingColon()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("lambda a b; ".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+
+            try
+            {
+                parser.ParseNamedExpr();
+                Assert.True(false);
+            }
+            catch (SyntaxErrorException e)
+            {
+                Assert.Equal(9U, e.Position);
+                Assert.Equal(Token.TokenKind.Name, e.ErrorSymbol.Kind);
+                Assert.Equal("Expecting ':' in lambda expression!", e.Message);
+            }
+            catch 
+            {
+                Assert.True(false);
+            }
+        }
     }
 }
