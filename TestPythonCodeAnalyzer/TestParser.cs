@@ -3073,5 +3073,55 @@ namespace TestPythonCodeAnalyzer
                 Assert.True(false);
             }
         }
+        
+        [Fact]
+        public void TestArgumentWithCompForMissingFor()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("a(b async c in d); ".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+
+            try
+            {
+                parser.ParseNamedExpr();
+                Assert.True(false);
+            }
+            catch (SyntaxErrorException e)
+            {
+                Assert.Equal(10U, e.Position);
+                Assert.Equal(Token.TokenKind.Name, e.ErrorSymbol.Kind);
+                Assert.Equal("Expecting 'for' in for comprehension expression!", e.Message);
+            }
+            catch 
+            {
+                Assert.True(false);
+            }
+        }
+        
+        [Fact]
+        public void TestArgumentWithCompForMissingIn()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("a(b async for c d); ".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+
+            try
+            {
+                parser.ParseNamedExpr();
+                Assert.True(false);
+            }
+            catch (SyntaxErrorException e)
+            {
+                Assert.Equal(16U, e.Position);
+                Assert.Equal(Token.TokenKind.Name, e.ErrorSymbol.Kind);
+                Assert.Equal("Expecting 'in' in for comprehension expression!", e.Message);
+            }
+            catch 
+            {
+                Assert.True(false);
+            }
+        }
     }
 }
