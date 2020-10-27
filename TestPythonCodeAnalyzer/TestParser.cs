@@ -3125,6 +3125,31 @@ namespace TestPythonCodeAnalyzer
         }
         
         [Fact]
+        public void TestArgumentWithCompIfMissingExpression()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("a(b async for c in d if ); ".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+
+            try
+            {
+                parser.ParseNamedExpr();
+                Assert.True(false);
+            }
+            catch (SyntaxErrorException e)
+            {
+                Assert.Equal(24U, e.Position);
+                Assert.Equal(Token.TokenKind.PyRightParen, e.ErrorSymbol.Kind);
+                Assert.Equal("Illegal literal!", e.Message);
+            }
+            catch 
+            {
+                Assert.True(false);
+            }
+        }
+        
+        [Fact]
         public void TestSetMissingNameAfterMul()
         {
             var parser = new PythonParser();
@@ -3166,6 +3191,106 @@ namespace TestPythonCodeAnalyzer
             {
                 Assert.Equal(5U, e.Position);
                 Assert.Equal(Token.TokenKind.PyRightCurly, e.ErrorSymbol.Kind);
+                Assert.Equal("Illegal literal!", e.Message);
+            }
+            catch 
+            {
+                Assert.True(false);
+            }
+        }
+        
+        [Fact]
+        public void TestDictionaryMissingValue()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("{ a : , }; ".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+
+            try
+            {
+                parser.ParseNamedExpr();
+                Assert.True(false);
+            }
+            catch (SyntaxErrorException e)
+            {
+                Assert.Equal(6U, e.Position);
+                Assert.Equal(Token.TokenKind.PyComma, e.ErrorSymbol.Kind);
+                Assert.Equal("Illegal literal!", e.Message);
+            }
+            catch 
+            {
+                Assert.True(false);
+            }
+        }
+        
+        [Fact]
+        public void TestSetMissingKey()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("{ , b }; ".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+
+            try
+            {
+                parser.ParseNamedExpr();
+                Assert.True(false);
+            }
+            catch (SyntaxErrorException e)
+            {
+                Assert.Equal(2U, e.Position);
+                Assert.Equal(Token.TokenKind.PyComma, e.ErrorSymbol.Kind);
+                Assert.Equal("Illegal literal!", e.Message);
+            }
+            catch 
+            {
+                Assert.True(false);
+            }
+        }
+        
+        [Fact]
+        public void TestYieldFromMissingExpression()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("( yield from ); ".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+
+            try
+            {
+                parser.ParseNamedExpr();
+                Assert.True(false);
+            }
+            catch (SyntaxErrorException e)
+            {
+                Assert.Equal(13U, e.Position);
+                Assert.Equal(Token.TokenKind.PyRightParen, e.ErrorSymbol.Kind);
+                Assert.Equal("Illegal literal!", e.Message);
+            }
+            catch 
+            {
+                Assert.True(false);
+            }
+        }
+        
+        [Fact]
+        public void TestYieldMissingExpression()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("( yield ); ".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+
+            try
+            {
+                parser.ParseNamedExpr();
+                Assert.True(false);
+            }
+            catch (SyntaxErrorException e)
+            {
+                Assert.Equal(8U, e.Position);
+                Assert.Equal(Token.TokenKind.PyRightParen, e.ErrorSymbol.Kind);
                 Assert.Equal("Illegal literal!", e.Message);
             }
             catch 
