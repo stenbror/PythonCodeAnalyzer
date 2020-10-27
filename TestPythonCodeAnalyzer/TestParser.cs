@@ -2798,5 +2798,30 @@ namespace TestPythonCodeAnalyzer
                 Assert.True(false);
             }
         }
+        
+        [Fact]
+        public void TestNotMissingIn()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("a not b; ".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+
+            try
+            {
+                parser.ParseNamedExpr();
+                Assert.True(false);
+            }
+            catch (SyntaxErrorException e)
+            {
+                Assert.Equal(6U, e.Position);
+                Assert.Equal(Token.TokenKind.Name, e.ErrorSymbol.Kind);
+                Assert.Equal("Expecting 'not' 'in' , but missing 'in' in relation expression!", e.Message);
+            }
+            catch 
+            {
+                Assert.True(false);
+            }
+        }
     }
 }
