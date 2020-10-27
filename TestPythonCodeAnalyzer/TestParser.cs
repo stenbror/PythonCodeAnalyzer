@@ -3470,5 +3470,49 @@ namespace TestPythonCodeAnalyzer
             
             Assert.Equal(Token.TokenKind.Newline, node.NewLine.Kind);
         }
+        
+        [Fact]
+        public void TestYieldFromStmt()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("yield from a\r\n\0".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+
+            var node = (ListStatement) parser.ParseStmt();
+            Assert.True(node.Elements.Length == 1);
+            
+            var node2 = (PlainExpressionStatement) node.Elements[0];
+            Assert.Equal(Token.TokenKind.PyYield, ((YieldExpression)node2.Node).Operator1.Kind);
+            Assert.Equal(Token.TokenKind.PyFrom, ((YieldExpression)node2.Node).Operator2.Kind);
+            Assert.Equal(0UL, node2.Start);
+            Assert.Equal(12UL, node2.End);
+            
+            Assert.True(node.Separators.Length == 0);
+            
+            Assert.Equal(Token.TokenKind.Newline, node.NewLine.Kind);
+        }
+        
+        [Fact]
+        public void TestYieldStmt()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("yield a\r\n\0".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+
+            var node = (ListStatement) parser.ParseStmt();
+            Assert.True(node.Elements.Length == 1);
+            
+            var node2 = (PlainExpressionStatement) node.Elements[0];
+            Assert.Equal(Token.TokenKind.PyYield, ((YieldExpression)node2.Node).Operator1.Kind);
+            Assert.True(((YieldExpression)node2.Node).Operator2 == null);
+            Assert.Equal(0UL, node2.Start);
+            Assert.Equal(7UL, node2.End);
+            
+            Assert.True(node.Separators.Length == 0);
+            
+            Assert.Equal(Token.TokenKind.Newline, node.NewLine.Kind);
+        }
     }
 }
