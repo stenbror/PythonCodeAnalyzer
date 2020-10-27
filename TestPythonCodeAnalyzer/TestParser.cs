@@ -3422,5 +3422,53 @@ namespace TestPythonCodeAnalyzer
             
             Assert.Equal(Token.TokenKind.Newline, node.NewLine.Kind);
         }
+        
+        [Fact]
+        public void TestEmptyReturnStmt()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("return\r\n\0".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+
+            var node = (ListStatement) parser.ParseStmt();
+            Assert.True(node.Elements.Length == 1);
+            
+            var node2 = (FlowStatement) node.Elements[0];
+            Assert.Equal(FlowStatement.OperatorKind.Return, node2.Kind);
+            Assert.Equal(Token.TokenKind.PyReturn, node2.Operator.Kind);
+            Assert.Equal(0UL, node2.Start);
+            Assert.Equal(6UL, node2.End);
+            
+            Assert.True(node.Separators.Length == 0);
+            
+            Assert.Equal(Token.TokenKind.Newline, node.NewLine.Kind);
+        }
+        
+        [Fact]
+        public void TestReturnStmt()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("return 0, b\r\n\0".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+
+            var node = (ListStatement) parser.ParseStmt();
+            Assert.True(node.Elements.Length == 1);
+            
+            var node2 = (FlowStatement) node.Elements[0];
+            Assert.Equal(FlowStatement.OperatorKind.Return, node2.Kind);
+            Assert.Equal(Token.TokenKind.PyReturn, node2.Operator.Kind);
+            Assert.Equal(0UL, node2.Start);
+            Assert.Equal(11UL, node2.End);
+            
+            var node3 = (ListExpression)node2.Right;
+            Assert.Equal(ListExpression.ListType.TestListStarExpr, node3.ContainerType);
+            Assert.True(node3.Elements.Length == 2);
+            
+            Assert.True(node.Separators.Length == 0);
+            
+            Assert.Equal(Token.TokenKind.Newline, node.NewLine.Kind);
+        }
     }
 }
