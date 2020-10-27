@@ -3352,5 +3352,31 @@ namespace TestPythonCodeAnalyzer
             
             Assert.Equal(Token.TokenKind.Newline, node.NewLine.Kind);
         }
+        
+        [Fact]
+        public void TestDelStmt()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("del a, b, c;\r\n\0".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+
+            var node = (ListStatement) parser.ParseStmt();
+            Assert.True(node.Elements.Length == 1);
+            
+            Assert.True(node.Separators.Length == 1);
+            Assert.Equal(Token.TokenKind.PySemiColon, node.Separators[0].Kind);
+
+            var node2 = (DelStatement) node.Elements[0];
+            Assert.Equal(Token.TokenKind.PyDel, node2.Operator.Kind);
+            Assert.Equal(0UL, node2.Start);
+            Assert.Equal(11UL, node2.End);
+
+            var node3 = (ListExpression)node2.Right;
+            Assert.Equal(ListExpression.ListType.ExprList, node3.ContainerType);
+            Assert.True(node3.Elements.Length == 3);
+            
+            Assert.Equal(Token.TokenKind.Newline, node.NewLine.Kind);
+        }
     }
 }
