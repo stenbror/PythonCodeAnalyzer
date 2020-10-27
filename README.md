@@ -13,17 +13,17 @@ Next, is implementing all UnitTests for Statement rules that does not including 
 Simple use for now is:
 
 
-using PythonCodeAnalyzer;
-using PythonCodeAnalyzer.Parser;
-using PythonCodeAnalyzer.Parser.Ast;
-using PythonCodeAnalyzer.Parser.Ast.Expression;
+using PythonCodeAnalyzer;&nbsp;
+using PythonCodeAnalyzer.Parser;&nbsp;
+using PythonCodeAnalyzer.Parser.Ast;&nbsp;
+using PythonCodeAnalyzer.Parser.Ast.Expression;&nbsp;
 
-var parser = new PythonParser();
-parser.Tokenizer = new PythonTokenizer("a + b * c / d; ".ToCharArray(), false, 8);
+var parser = new PythonParser();&nbsp;
+parser.Tokenizer = new PythonTokenizer("a + b * c / d; ".ToCharArray(), false, 8);&nbsp;
 
-parser.Tokenizer.Advance(); // Advance first token needed when not starting at top level rule in parser.
+parser.Tokenizer.Advance(); // Advance first token needed when not starting at top level rule in parser. &nbsp;
 
-var node = parser.ParseNamedExpr();
+var node = parser.ParseNamedExpr(); &nbsp;
 
 node contain root node for ASTTree generated.
 
