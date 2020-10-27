@@ -3514,5 +3514,83 @@ namespace TestPythonCodeAnalyzer
             
             Assert.Equal(Token.TokenKind.Newline, node.NewLine.Kind);
         }
+        
+        [Fact]
+        public void TestRaiseZeroArgumentStmt()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("raise\r\n\0".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+
+            var node = (ListStatement) parser.ParseStmt();
+            Assert.True(node.Elements.Length == 1);
+            
+            var node2 = (FlowStatement) node.Elements[0];
+            Assert.Equal(FlowStatement.OperatorKind.Raise, node2.Kind);
+            Assert.Equal(Token.TokenKind.PyRaise, node2.Operator.Kind);
+            Assert.Equal(0UL, node2.Start);
+            Assert.Equal(5UL, node2.End);
+
+            Assert.True(node2.Left == null);
+            Assert.True(node2.Right == null);
+            Assert.True(node2.Operator2 == null);
+            
+            Assert.True(node.Separators.Length == 0);
+            
+            Assert.Equal(Token.TokenKind.Newline, node.NewLine.Kind);
+        }
+        
+        [Fact]
+        public void TestRaiseOneArgumentStmt()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("raise a\r\n\0".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+
+            var node = (ListStatement) parser.ParseStmt();
+            Assert.True(node.Elements.Length == 1);
+            
+            var node2 = (FlowStatement) node.Elements[0];
+            Assert.Equal(FlowStatement.OperatorKind.Raise, node2.Kind);
+            Assert.Equal(Token.TokenKind.PyRaise, node2.Operator.Kind);
+            Assert.Equal(0UL, node2.Start);
+            Assert.Equal(7UL, node2.End);
+
+            Assert.Equal("a" , ((NameLiteralExpression)node2.Left).Name.Text);
+            Assert.True(node2.Right == null);
+            Assert.True(node2.Operator2 == null);
+            
+            Assert.True(node.Separators.Length == 0);
+            
+            Assert.Equal(Token.TokenKind.Newline, node.NewLine.Kind);
+        }
+        
+        [Fact]
+        public void TestRaiseTwoArgumentStmt()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("raise a from b\r\n\0".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+
+            var node = (ListStatement) parser.ParseStmt();
+            Assert.True(node.Elements.Length == 1);
+            
+            var node2 = (FlowStatement) node.Elements[0];
+            Assert.Equal(FlowStatement.OperatorKind.Raise, node2.Kind);
+            Assert.Equal(Token.TokenKind.PyRaise, node2.Operator.Kind);
+            Assert.Equal(0UL, node2.Start);
+            Assert.Equal(14UL, node2.End);
+
+            Assert.Equal("a" , ((NameLiteralExpression)node2.Left).Name.Text);
+            Assert.Equal("b" , ((NameLiteralExpression)node2.Right).Name.Text);
+            Assert.Equal(Token.TokenKind.PyFrom, node2.Operator2.Kind);
+            
+            Assert.True(node.Separators.Length == 0);
+            
+            Assert.Equal(Token.TokenKind.Newline, node.NewLine.Kind);
+        }
     }
 }
