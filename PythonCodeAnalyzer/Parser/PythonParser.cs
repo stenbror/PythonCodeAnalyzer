@@ -2173,7 +2173,7 @@ namespace PythonCodeAnalyzer.Parser
                 {
                     separators.Add(Tokenizer.CurSymbol);
                     Tokenizer.Advance();
-                    if (Tokenizer.CurSymbol.Kind == Token.TokenKind.Name) throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol, "Expecting name literal after ',' in global statement!");
+                    if (Tokenizer.CurSymbol.Kind != Token.TokenKind.Name) throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol, "Expecting name literal after ',' in global statement!");
                     nodes.Add(Tokenizer.CurSymbol);
                     Tokenizer.Advance();
                 }
@@ -2198,7 +2198,7 @@ namespace PythonCodeAnalyzer.Parser
                 {
                     separators.Add(Tokenizer.CurSymbol);
                     Tokenizer.Advance();
-                    if (Tokenizer.CurSymbol.Kind == Token.TokenKind.Name) throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol, "Expecting name literal after ',' in nonlocal statement!");
+                    if (Tokenizer.CurSymbol.Kind != Token.TokenKind.Name) throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol, "Expecting name literal after ',' in nonlocal statement!");
                     nodes.Add(Tokenizer.CurSymbol);
                     Tokenizer.Advance();
                 }
