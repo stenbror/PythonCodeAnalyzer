@@ -4100,5 +4100,27 @@ namespace TestPythonCodeAnalyzer
             
             Assert.Equal(Token.TokenKind.Newline, node.NewLine.Kind);
         }
+        
+        [Fact]
+        public void TestExpressionStatementSingle()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("a + b\r\n\0".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+            
+            var node = (ListStatement) parser.ParseStmt();
+            Assert.True(node.Elements.Length == 1);
+            
+            var node2 = (PlainExpressionStatement) node.Elements[0];
+            Assert.Equal(0UL, node2.Start);
+            Assert.Equal(5UL, node2.End);
+
+            var node3 = (ArithExpression)node2.Node;
+            Assert.Equal(ArithExpression.ArithOperatorKind.Plus, node3.ArithOperator);
+            
+            Assert.True(node.Separators.Length == 0);
+            Assert.Equal(Token.TokenKind.Newline, node.NewLine.Kind);
+        }
     }
 }
