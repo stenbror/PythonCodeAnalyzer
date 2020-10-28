@@ -1726,7 +1726,7 @@ namespace PythonCodeAnalyzer.Parser
                         : ParseTestList();
                     return new AugAssignStatement(startPos, Tokenizer.Position, AugAssignStatement.OperatorKind.MulAssign, left, op, right);
                 }
-                case Token.TokenKind.PyPower:
+                case Token.TokenKind.PyPowerAssign:
                 {
                     var op = Tokenizer.CurSymbol;
                     Tokenizer.Advance();

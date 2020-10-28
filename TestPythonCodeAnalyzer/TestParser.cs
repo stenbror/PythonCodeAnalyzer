@@ -4694,5 +4694,57 @@ namespace TestPythonCodeAnalyzer
             Assert.True(node.Separators.Length == 0);
             Assert.Equal(Token.TokenKind.Newline, node.NewLine.Kind);
         }
+        
+        [Fact]
+        public void TestExpressionStatementPowerAssign()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("a **= b\r\n\0".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+            
+            var node = (ListStatement) parser.ParseStmt();
+            Assert.True(node.Elements.Length == 1);
+            
+            var node2 = (AugAssignStatement) node.Elements[0];
+            Assert.Equal(AugAssignStatement.OperatorKind.PowerAssign, node2.Kind);
+            Assert.Equal(0UL, node2.Start);
+            Assert.Equal(7UL, node2.End);
+
+            var left = (NameLiteralExpression)node2.Left;
+            Assert.Equal("a", left.Name.Text);
+            Assert.Equal(Token.TokenKind.PyPowerAssign, node2.Operator.Kind);
+            var right = (NameLiteralExpression) node2.Right;
+            Assert.Equal("b", right.Name.Text);
+            
+            Assert.True(node.Separators.Length == 0);
+            Assert.Equal(Token.TokenKind.Newline, node.NewLine.Kind);
+        }
+        
+        [Fact]
+        public void TestExpressionStatementPowerAssignYieldExpr()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("a **= yield b\r\n\0".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+            
+            var node = (ListStatement) parser.ParseStmt();
+            Assert.True(node.Elements.Length == 1);
+            
+            var node2 = (AugAssignStatement) node.Elements[0];
+            Assert.Equal(AugAssignStatement.OperatorKind.PowerAssign, node2.Kind);
+            Assert.Equal(0UL, node2.Start);
+            Assert.Equal(13UL, node2.End);
+
+            var left = (NameLiteralExpression)node2.Left;
+            Assert.Equal("a", left.Name.Text);
+            Assert.Equal(Token.TokenKind.PyPowerAssign, node2.Operator.Kind);
+            var right = (YieldExpression) node2.Right;
+            Assert.Equal(Token.TokenKind.PyYield, right.Operator1.Kind);
+            
+            Assert.True(node.Separators.Length == 0);
+            Assert.Equal(Token.TokenKind.Newline, node.NewLine.Kind);
+        }
     }
 }
