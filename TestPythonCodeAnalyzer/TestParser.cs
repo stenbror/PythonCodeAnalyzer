@@ -3651,5 +3651,41 @@ namespace TestPythonCodeAnalyzer
             
             Assert.Equal(Token.TokenKind.Newline, node.NewLine.Kind);
         }
+        
+        [Fact]
+        public void TestImportStmt3()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("import a.b, c\r\n\0".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+            
+            var node = (ListStatement) parser.ParseStmt();
+            Assert.True(node.Elements.Length == 1);
+            
+            var node2 = (ImportStatement) node.Elements[0];
+            Assert.Equal(Token.TokenKind.PyImport, node2.Operaor.Kind);
+            Assert.Equal(0UL, node2.Start);
+            Assert.Equal(13UL, node2.End);
+            
+            var node3 = (ImportListStatement)node2.Right;
+            Assert.True(node3.Elements.Length == 2);
+            Assert.True(node3.Separators.Length == 1);
+
+            var node4 = (DottedNameStatement)node3.Elements[0];
+            Assert.True(node4.Names.Length == 2);
+            Assert.True(node4.Dots.Length == 1);
+            Assert.Equal("a", node4.Names[0].Text);
+            Assert.Equal("b", node4.Names[1].Text);
+                            
+            var node5 = (DottedNameStatement)node3.Elements[1];
+            Assert.True(node5.Names.Length == 1);
+            Assert.True(node5.Dots.Length == 0);
+            Assert.Equal("c", node5.Names[0].Text);
+            
+            Assert.True(node.Separators.Length == 0);
+            
+            Assert.Equal(Token.TokenKind.Newline, node.NewLine.Kind);
+        }
     }
 }
