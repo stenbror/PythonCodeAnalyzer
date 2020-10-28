@@ -4048,5 +4048,57 @@ namespace TestPythonCodeAnalyzer
             
             Assert.Equal(Token.TokenKind.Newline, node.NewLine.Kind);
         }
+        
+        [Fact]
+        public void TestAssertStmt1()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("assert a\r\n\0".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+            
+            var node = (ListStatement) parser.ParseStmt();
+            Assert.True(node.Elements.Length == 1);
+            
+            var node2 = (AssertStatement) node.Elements[0];
+            Assert.Equal(Token.TokenKind.PyAssert, node2.Operator1.Kind);
+            Assert.Equal(0UL, node2.Start);
+            Assert.Equal(8UL, node2.End);
+
+            var node3 = (NameLiteralExpression) node2.Left;
+            Assert.Equal("a", node3.Name.Text);
+            Assert.True(node2.Operator2 == null);
+            Assert.True(node2.Right == null);
+            
+            Assert.True(node.Separators.Length == 0);
+            
+            Assert.Equal(Token.TokenKind.Newline, node.NewLine.Kind);
+        }
+        
+        [Fact]
+        public void TestAssertStmt2()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("assert a, b\r\n\0".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+            
+            var node = (ListStatement) parser.ParseStmt();
+            Assert.True(node.Elements.Length == 1);
+            
+            var node2 = (AssertStatement) node.Elements[0];
+            Assert.Equal(Token.TokenKind.PyAssert, node2.Operator1.Kind);
+            Assert.Equal(0UL, node2.Start);
+            Assert.Equal(11UL, node2.End);
+
+            var node3 = (NameLiteralExpression) node2.Left;
+            Assert.Equal("a", node3.Name.Text);
+            Assert.Equal(Token.TokenKind.PyComma, node2.Operator2.Kind);
+            Assert.Equal("b", ((NameLiteralExpression)node2.Right).Name.Text);
+            
+            Assert.True(node.Separators.Length == 0);
+            
+            Assert.Equal(Token.TokenKind.Newline, node.NewLine.Kind);
+        }
     }
 }

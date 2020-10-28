@@ -2210,7 +2210,7 @@ namespace PythonCodeAnalyzer.Parser
         public StatementNode ParseAssertStmt()
         {
             var startPos = Tokenizer.Position;
-            if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyNonlocal)
+            if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyAssert)
             {
                 var op1 = Tokenizer.CurSymbol;
                 Tokenizer.Advance();
