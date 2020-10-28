@@ -3940,5 +3940,57 @@ namespace TestPythonCodeAnalyzer
             
             Assert.Equal(Token.TokenKind.Newline, node.NewLine.Kind);
         }
+        
+        [Fact]
+        public void TestGlobalStmt1()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("global a\r\n\0".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+            
+            var node = (ListStatement) parser.ParseStmt();
+            Assert.True(node.Elements.Length == 1);
+            
+            var node2 = (ScopeStatement) node.Elements[0];
+            Assert.Equal(ScopeStatement.ScopeKind.Global, node2.Scope);
+            Assert.Equal(Token.TokenKind.PyGlobal, node2.Operator.Kind);
+            Assert.Equal(0UL, node2.Start);
+            Assert.Equal(8UL, node2.End);
+
+            Assert.True(node2.Names.Length == 1);
+            Assert.True(node2.Separators.Length == 0);
+            Assert.Equal("a", node2.Names[0].Text);
+            
+            Assert.True(node.Separators.Length == 0);
+            
+            Assert.Equal(Token.TokenKind.Newline, node.NewLine.Kind);
+        }
+        
+        [Fact]
+        public void TestNonLocalStmt1()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("nonlocal a\r\n\0".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+            
+            var node = (ListStatement) parser.ParseStmt();
+            Assert.True(node.Elements.Length == 1);
+            
+            var node2 = (ScopeStatement) node.Elements[0];
+            Assert.Equal(ScopeStatement.ScopeKind.Nonlocal, node2.Scope);
+            Assert.Equal(Token.TokenKind.PyNonlocal, node2.Operator.Kind);
+            Assert.Equal(0UL, node2.Start);
+            Assert.Equal(10UL, node2.End);
+
+            Assert.True(node2.Names.Length == 1);
+            Assert.True(node2.Separators.Length == 0);
+            Assert.Equal("a", node2.Names[0].Text);
+            
+            Assert.True(node.Separators.Length == 0);
+            
+            Assert.Equal(Token.TokenKind.Newline, node.NewLine.Kind);
+        }
     }
 }

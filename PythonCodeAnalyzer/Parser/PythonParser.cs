@@ -2166,7 +2166,7 @@ namespace PythonCodeAnalyzer.Parser
                 Tokenizer.Advance();
                 var nodes = new List<Token>();
                 var separators = new List<Token>();
-                if (Tokenizer.CurSymbol.Kind == Token.TokenKind.Name) throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol, "Expecting name literal in global statement!");
+                if (Tokenizer.CurSymbol.Kind != Token.TokenKind.Name) throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol, "Expecting name literal in global statement!");
                 nodes.Add(Tokenizer.CurSymbol);
                 Tokenizer.Advance();
                 while (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyComma)
@@ -2191,7 +2191,7 @@ namespace PythonCodeAnalyzer.Parser
                 Tokenizer.Advance();
                 var nodes = new List<Token>();
                 var separators = new List<Token>();
-                if (Tokenizer.CurSymbol.Kind == Token.TokenKind.Name) throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol, "Expecting name literal in nonlocal statement!");
+                if (Tokenizer.CurSymbol.Kind != Token.TokenKind.Name) throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol, "Expecting name literal in nonlocal statement!");
                 nodes.Add(Tokenizer.CurSymbol);
                 Tokenizer.Advance();
                 while (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyComma)
