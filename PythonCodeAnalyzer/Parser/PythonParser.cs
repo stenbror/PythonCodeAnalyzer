@@ -2152,6 +2152,7 @@ namespace PythonCodeAnalyzer.Parser
                     names.Add(Tokenizer.CurSymbol);
                     Tokenizer.Advance();
                 }
+                return new DottedNameStatement(startPos, Tokenizer.Position, names.ToArray(), dots.ToArray());
             }
             throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol, "Expecting Name literal!");
         }
