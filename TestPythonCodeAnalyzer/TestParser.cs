@@ -3687,5 +3687,95 @@ namespace TestPythonCodeAnalyzer
             
             Assert.Equal(Token.TokenKind.Newline, node.NewLine.Kind);
         }
+        
+        [Fact]
+        public void TestImportStmt4()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("import a.b, c, d as e\r\n\0".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+            
+            var node = (ListStatement) parser.ParseStmt();
+            Assert.True(node.Elements.Length == 1);
+            
+            var node2 = (ImportStatement) node.Elements[0];
+            Assert.Equal(Token.TokenKind.PyImport, node2.Operaor.Kind);
+            Assert.Equal(0UL, node2.Start);
+            Assert.Equal(21UL, node2.End);
+            
+            var node3 = (ImportListStatement)node2.Right;
+            Assert.True(node3.Elements.Length == 3);
+            Assert.True(node3.Separators.Length == 2);
+
+            var node4 = (DottedNameStatement)node3.Elements[0];
+            Assert.True(node4.Names.Length == 2);
+            Assert.True(node4.Dots.Length == 1);
+            Assert.Equal("a", node4.Names[0].Text);
+            Assert.Equal("b", node4.Names[1].Text);
+                            
+            var node5 = (DottedNameStatement)node3.Elements[1];
+            Assert.True(node5.Names.Length == 1);
+            Assert.True(node5.Dots.Length == 0);
+            Assert.Equal("c", node5.Names[0].Text);
+            
+            var node6 = (DottedAsNameStatement)node3.Elements[2];
+            Assert.Equal("e", node6.Name.Text);
+            Assert.Equal(Token.TokenKind.PyAs, node6.Operator.Kind);
+            var node7 = (DottedNameStatement) node6.Left;
+            Assert.Equal("d", node7.Names[0].Text);
+            
+            Assert.True(node.Separators.Length == 0);
+            
+            Assert.Equal(Token.TokenKind.Newline, node.NewLine.Kind);
+        }
+        
+        [Fact]
+        public void TestImportStmt5()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("import a.b, c, d as e, f.g\r\n\0".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+            
+            var node = (ListStatement) parser.ParseStmt();
+            Assert.True(node.Elements.Length == 1);
+            
+            var node2 = (ImportStatement) node.Elements[0];
+            Assert.Equal(Token.TokenKind.PyImport, node2.Operaor.Kind);
+            Assert.Equal(0UL, node2.Start);
+            Assert.Equal(26UL, node2.End);
+            
+            var node3 = (ImportListStatement)node2.Right;
+            Assert.True(node3.Elements.Length == 4);
+            Assert.True(node3.Separators.Length == 3);
+
+            var node4 = (DottedNameStatement)node3.Elements[0];
+            Assert.True(node4.Names.Length == 2);
+            Assert.True(node4.Dots.Length == 1);
+            Assert.Equal("a", node4.Names[0].Text);
+            Assert.Equal("b", node4.Names[1].Text);
+                            
+            var node5 = (DottedNameStatement)node3.Elements[1];
+            Assert.True(node5.Names.Length == 1);
+            Assert.True(node5.Dots.Length == 0);
+            Assert.Equal("c", node5.Names[0].Text);
+            
+            var node6 = (DottedAsNameStatement)node3.Elements[2];
+            Assert.Equal("e", node6.Name.Text);
+            Assert.Equal(Token.TokenKind.PyAs, node6.Operator.Kind);
+            var node7 = (DottedNameStatement) node6.Left;
+            Assert.Equal("d", node7.Names[0].Text);
+            
+            var node8 = (DottedNameStatement)node3.Elements[3];
+            Assert.True(node8.Names.Length == 2);
+            Assert.True(node8.Dots.Length == 1);
+            Assert.Equal("f", node8.Names[0].Text);
+            Assert.Equal("g", node8.Names[1].Text);
+            
+            Assert.True(node.Separators.Length == 0);
+            
+            Assert.Equal(Token.TokenKind.Newline, node.NewLine.Kind);
+        }
     }
 }
