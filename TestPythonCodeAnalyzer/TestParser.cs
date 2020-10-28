@@ -3777,5 +3777,121 @@ namespace TestPythonCodeAnalyzer
             
             Assert.Equal(Token.TokenKind.Newline, node.NewLine.Kind);
         }
+        
+        [Fact]
+        public void TestImportFromStmt1()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("from a import *\r\n\0".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+            
+            var node = (ListStatement) parser.ParseStmt();
+            Assert.True(node.Elements.Length == 1);
+            
+            var node2 = (ImportFromStatement) node.Elements[0];
+            Assert.Equal(Token.TokenKind.PyFrom, node2.Operator1.Kind);
+            Assert.Equal(0UL, node2.Start);
+            Assert.Equal(15UL, node2.End);
+            
+            var left = (DottedNameStatement)node2.Left;
+            
+            Assert.Equal(Token.TokenKind.PyMul, node2.Operator3.Kind);
+            
+                            
+            Assert.True(node.Separators.Length == 0);
+            
+            Assert.Equal(Token.TokenKind.Newline, node.NewLine.Kind);
+        }
+        
+        [Fact]
+        public void TestImportFromStmt2()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("from a import ( b, c as d )\r\n\0".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+            
+            var node = (ListStatement) parser.ParseStmt();
+            Assert.True(node.Elements.Length == 1);
+            
+            var node2 = (ImportFromStatement) node.Elements[0];
+            Assert.Equal(Token.TokenKind.PyFrom, node2.Operator1.Kind);
+            Assert.Equal(0UL, node2.Start);
+            Assert.Equal(27UL, node2.End);
+            
+            var left = (DottedNameStatement)node2.Left;
+            Assert.Equal("a", left.Names[0].Text);
+            
+            var right = (ImportListStatement)node2.Right;
+            Assert.Equal(Token.TokenKind.PyLeftParen, node2.Operator3.Kind);
+            Assert.Equal(Token.TokenKind.PyRightParen, node2.Operator4.Kind);
+            Assert.True(right.Elements.Length == 2);
+            Assert.True(right.Separators.Length == 1);
+            Assert.Equal(Token.TokenKind.PyComma, right.Separators[0].Kind);
+
+            var elem1 = (ImportAsNameStatement)right.Elements[0];
+            Assert.Equal("b", elem1.Left.Text);
+            Assert.True(elem1.Operator == null);
+            Assert.True(elem1.Right == null);
+            
+            var elem2 = (ImportAsNameStatement)right.Elements[1];
+            Assert.Equal("c", elem2.Left.Text);
+            Assert.Equal(Token.TokenKind.PyAs, elem2.Operator.Kind);
+            Assert.Equal("d", elem2.Right.Text);
+
+
+            Assert.True(node.Separators.Length == 0);
+            
+            Assert.Equal(Token.TokenKind.Newline, node.NewLine.Kind);
+        }
+        
+        [Fact]
+        public void TestImportFromStmt3()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("from .....a import ( b, c as d )\r\n\0".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+            
+            var node = (ListStatement) parser.ParseStmt();
+            Assert.True(node.Elements.Length == 1);
+            
+            var node2 = (ImportFromStatement) node.Elements[0];
+            Assert.Equal(Token.TokenKind.PyFrom, node2.Operator1.Kind);
+            Assert.Equal(0UL, node2.Start);
+            Assert.Equal(32UL, node2.End);
+            
+            var left = (DottedNameStatement)node2.Left;
+            Assert.Equal("a", left.Names[0].Text);
+            
+            // Global in import from statement and not in dottedname statement....
+            Assert.Equal(3, node2.Dots.Length);
+            Assert.Equal(Token.TokenKind.PyElipsis, node2.Dots[0].Kind);
+            Assert.Equal(Token.TokenKind.PyDot, node2.Dots[1].Kind);
+            Assert.Equal(Token.TokenKind.PyDot, node2.Dots[2].Kind);
+            
+            var right = (ImportListStatement)node2.Right;
+            Assert.Equal(Token.TokenKind.PyLeftParen, node2.Operator3.Kind);
+            Assert.Equal(Token.TokenKind.PyRightParen, node2.Operator4.Kind);
+            Assert.True(right.Elements.Length == 2);
+            Assert.True(right.Separators.Length == 1);
+            Assert.Equal(Token.TokenKind.PyComma, right.Separators[0].Kind);
+
+            var elem1 = (ImportAsNameStatement)right.Elements[0];
+            Assert.Equal("b", elem1.Left.Text);
+            Assert.True(elem1.Operator == null);
+            Assert.True(elem1.Right == null);
+            
+            var elem2 = (ImportAsNameStatement)right.Elements[1];
+            Assert.Equal("c", elem2.Left.Text);
+            Assert.Equal(Token.TokenKind.PyAs, elem2.Operator.Kind);
+            Assert.Equal("d", elem2.Right.Text);
+
+
+            Assert.True(node.Separators.Length == 0);
+            
+            Assert.Equal(Token.TokenKind.Newline, node.NewLine.Kind);
+        }
     }
 }

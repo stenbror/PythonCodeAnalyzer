@@ -2044,7 +2044,7 @@ namespace PythonCodeAnalyzer.Parser
                         op3 = Tokenizer.CurSymbol;
                         Tokenizer.Advance();
                         right = ParseImportAsNames();
-                        if (Tokenizer.CurSymbol.Kind != Token.TokenKind.PyImport) 
+                        if (Tokenizer.CurSymbol.Kind != Token.TokenKind.PyRightParen) 
                             throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol, "Expecting ')' in from import statement!");
                         op4 = Tokenizer.CurSymbol;
                         Tokenizer.Advance();
