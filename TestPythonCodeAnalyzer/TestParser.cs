@@ -4848,5 +4848,30 @@ namespace TestPythonCodeAnalyzer
             Assert.True(node.Separators.Length == 0);
             Assert.Equal(Token.TokenKind.Newline, node.NewLine.Kind);
         }
+        
+        [Fact]
+        public void TestExpressionAssignMuliple()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("a = b = c\r\n\0".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+            
+            var node = (ListStatement) parser.ParseStmt();
+            Assert.True(node.Elements.Length == 1);
+            
+            var node2 = (AssignmentStatement) node.Elements[0];
+            Assert.Equal(0UL, node2.Start);
+            Assert.Equal(9UL, node2.End);
+
+            Assert.True(node2.Assignment.Count == 2);
+            Assert.True(node2.Right.Count == 2);
+            Assert.Equal("a", ((NameLiteralExpression)node2.Left).Name.Text);
+            Assert.Equal("b", ((NameLiteralExpression)node2.Right[0]).Name.Text);
+            Assert.Equal("c", ((NameLiteralExpression)node2.Right[1]).Name.Text);
+            
+            Assert.True(node.Separators.Length == 0);
+            Assert.Equal(Token.TokenKind.Newline, node.NewLine.Kind);
+        }
     }
 }
