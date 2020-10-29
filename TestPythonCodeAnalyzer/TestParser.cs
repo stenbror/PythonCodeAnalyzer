@@ -4902,5 +4902,27 @@ namespace TestPythonCodeAnalyzer
             Assert.True(node.Separators.Length == 0);
             Assert.Equal(Token.TokenKind.Newline, node.NewLine.Kind);
         }
+        
+        [Fact]
+        public void TestExpressionStatementSingleNoOperator()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("a\r\n\0".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+            
+            var node = (ListStatement) parser.ParseStmt();
+            Assert.True(node.Elements.Length == 1);
+            
+            var node2 = (PlainExpressionStatement) node.Elements[0];
+            Assert.Equal(0UL, node2.Start);
+            Assert.Equal(1UL, node2.End);
+
+            var node3 = (NameLiteralExpression) node2.Node;
+            Assert.Equal("a", node3.Name.Text);
+            
+            Assert.True(node.Separators.Length == 0);
+            Assert.Equal(Token.TokenKind.Newline, node.NewLine.Kind);
+        }
     }
 }
