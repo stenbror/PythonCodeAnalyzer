@@ -1,18 +1,21 @@
-﻿namespace PythonCodeAnalyzer.Parser.Ast.Statement
+﻿using System.Collections.Generic;
+
+namespace PythonCodeAnalyzer.Parser.Ast.Statement
 {
     public partial class AssignmentStatement : StatementNode
     {
-        public Node Left { get; set; }
-        public Token Assignment { get; set; }
-        public ExpressionNode Right { get; set; }
+        public ExpressionNode Left { get; set; }
+        public List<Token> Assignment { get; set; }
+        public List<ExpressionNode> Right { get; set; }
         public Token TypeComment { get; set; }
-        
-        public AssignmentStatement(uint start, uint end, Node left, Token op, ExpressionNode rigt) : base(start, end)
+
+        public AssignmentStatement(uint start, uint end, ExpressionNode left, List<Token> op, List<ExpressionNode> right, Token typeComment) :
+            base(start, end)
         {
-            Left = Left;
+            Left = left;
             Assignment = op;
-            Right = rigt;
-            TypeComment = null;
+            Right = right;
+            TypeComment = typeComment;
         }
     }
 }

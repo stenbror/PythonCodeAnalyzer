@@ -1820,24 +1820,26 @@ namespace PythonCodeAnalyzer.Parser
                     return ParseAnnAssign(startPos, left);
                 case Token.TokenKind.PyAssign:
                 {
-                    var res = (Node)left;
+                    var rightNodes = new List<ExpressionNode>();
+                    var operators = new List<Token>();
+                    
                     while (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyAssign)
                     {
-                        var op = Tokenizer.CurSymbol;
+                        operators.Add(Tokenizer.CurSymbol);
                         Tokenizer.Advance();
                         var right = (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyYield)
                             ? ParseYieldExpr()
                             : ParseTestListStarExpr();
-                        res = new AssignmentStatement(startPos, Tokenizer.Position, res, op, right);
+                        rightNodes.Add(right);
                     }
-
+                    
                     if (Tokenizer.CurSymbol.Kind == Token.TokenKind.TypeComment)
                     {
                         var op2 = Tokenizer.CurSymbol;
                         Tokenizer.Advance();
-                        ((AssignmentStatement) res).TypeComment = op2;
+                        return new AssignmentStatement(startPos, Tokenizer.Position, left, operators, rightNodes, op2);
                     }
-                    return (StatementNode)res;
+                    return new AssignmentStatement(startPos, Tokenizer.Position, left, operators, rightNodes, null);
                 }
                 default:
                     return new PlainExpressionStatement(startPos, Tokenizer.Position, left);
