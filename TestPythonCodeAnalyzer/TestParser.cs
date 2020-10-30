@@ -5040,5 +5040,39 @@ namespace TestPythonCodeAnalyzer
             Assert.True(node.Separators.Length == 0);
             Assert.Equal(Token.TokenKind.Newline, node.NewLine.Kind);
         }
+        
+        [Fact]
+        public void TestExpressionTestStarExprList3()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("*a, b, *c;\r\n\0".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+            
+            var node = (ListStatement) parser.ParseStmt();
+            Assert.True(node.Elements.Length == 1);
+            
+            var node2 = (PlainExpressionStatement) node.Elements[0];
+            Assert.Equal(0UL, node2.Start);
+            Assert.Equal(9UL, node2.End);
+
+            var node3 = (ListExpression) node2.Node;
+            Assert.True(node3.Elements.Length == 3);
+            Assert.True(node3.Separators.Length == 2);
+
+            var node4 = (StarExpression) node3.Elements[0];
+            Assert.Equal("a", ((NameLiteralExpression)node4.Right).Name.Text);
+            
+            Assert.Equal("b", ((NameLiteralExpression)node3.Elements[1]).Name.Text);
+            
+            var node5 = (StarExpression) node3.Elements[2];
+            Assert.Equal("c", ((NameLiteralExpression)node5.Right).Name.Text);
+
+            Assert.Equal(Token.TokenKind.PyComma, node3.Separators[0].Kind);  
+            Assert.Equal(Token.TokenKind.PyComma, node3.Separators[1].Kind);  
+            
+            Assert.True(node.Separators.Length == 1);
+            Assert.Equal(Token.TokenKind.Newline, node.NewLine.Kind);
+        }
     }
 }
