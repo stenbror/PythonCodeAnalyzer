@@ -4986,5 +4986,29 @@ namespace TestPythonCodeAnalyzer
             Assert.True(node.Separators.Length == 0);
             Assert.Equal(Token.TokenKind.Newline, node.NewLine.Kind);
         }
+        
+        [Fact]
+        public void TestExpressionTestStarExprList1()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("*a\r\n\0".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+            
+            var node = (ListStatement) parser.ParseStmt();
+            Assert.True(node.Elements.Length == 1);
+            
+            var node2 = (PlainExpressionStatement) node.Elements[0];
+            Assert.Equal(0UL, node2.Start);
+            Assert.Equal(2UL, node2.End);
+
+            var node3 = (StarExpression) node2.Node;
+            
+            var node4 = (NameLiteralExpression) node3.Right;
+            Assert.Equal("a", node4.Name.Text);
+            
+            Assert.True(node.Separators.Length == 0);
+            Assert.Equal(Token.TokenKind.Newline, node.NewLine.Kind);
+        }
     }
 }
