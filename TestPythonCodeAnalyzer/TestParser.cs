@@ -5395,5 +5395,33 @@ namespace TestPythonCodeAnalyzer
             var node6 = (PlainExpressionStatement) node5.Elements[0];
             Assert.Equal("c", ((NameLiteralExpression) node6.Node).Name.Text);
         }
+        
+        [Fact]
+        public void TestCompoundStatementForNoElseSingle()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("for a in b: c\r\n\0".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+            
+            var node = (ForStatement) parser.ParseStmt();
+            Assert.Equal(0UL, node.Start);
+            Assert.Equal(15UL, node.End);
+
+            Assert.Equal(Token.TokenKind.PyFor, node.Operator1.Kind);
+            Assert.Equal("a", ((NameLiteralExpression) node.Left).Name.Text);
+            Assert.Equal(Token.TokenKind.PyIn, node.Operator2.Kind);
+            Assert.Equal("b", ((NameLiteralExpression) node.Right).Name.Text);
+            Assert.Equal(Token.TokenKind.PyColon, node.Operator3.Kind);
+
+            var node2 = (ListStatement) node.Next;
+            Assert.True(node2.Elements.Length == 1);
+            Assert.True(node2.Separators.Length == 0);
+
+            var node3 = (PlainExpressionStatement) node2.Elements[0];
+            Assert.Equal("c", ((NameLiteralExpression) node3.Node).Name.Text);
+            
+            Assert.True(node.ElseElement == null);
+        }
     }
 }

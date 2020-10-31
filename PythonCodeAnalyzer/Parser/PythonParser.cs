@@ -1396,7 +1396,7 @@ namespace PythonCodeAnalyzer.Parser
         public StatementNode ParseForStmt()
         {
             var startPos = Tokenizer.Position;
-            if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyWhile)
+            if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyFor)
             {
                 var op1 = Tokenizer.CurSymbol;
                 Tokenizer.Advance();
