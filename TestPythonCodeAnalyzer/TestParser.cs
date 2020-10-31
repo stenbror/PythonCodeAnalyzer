@@ -5219,5 +5219,67 @@ namespace TestPythonCodeAnalyzer
             var node6 = (PlainExpressionStatement) node5.Elements[0];
             Assert.Equal("d", ((NameLiteralExpression) node6.Node).Name.Text);
         }
+        
+        [Fact]
+        public void TestCompoundStatementIfMultipleElifElseSingle()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("if a: b\r\nelif c: d\r\nelif e: f\r\nelse: g\r\n\0".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+            
+            var node = (IfStatement) parser.ParseStmt();
+            Assert.Equal(0UL, node.Start);
+            Assert.Equal(40UL, node.End);
+
+            Assert.Equal(Token.TokenKind.PyIf, node.Operator1.Kind);
+            Assert.Equal("a", ((NameLiteralExpression) node.Left).Name.Text);
+            Assert.Equal(Token.TokenKind.PyColon, node.Operator2.Kind);
+
+            var node2 = (ListStatement) node.Right;
+            Assert.True(node2.Elements.Length == 1);
+            Assert.True(node2.Separators.Length == 0);
+
+            var node3 = (PlainExpressionStatement) node2.Elements[0];
+            Assert.Equal("b", ((NameLiteralExpression) node3.Node).Name.Text);
+
+            Assert.True(node.ElifElements.Length == 2);
+
+            var node10 = (ElifStatement) node.ElifElements[0];
+            Assert.Equal(Token.TokenKind.PyElif, node10.Operator1.Kind);
+            Assert.Equal("c", ((NameLiteralExpression) node10.Left).Name.Text);
+            Assert.Equal(Token.TokenKind.PyColon, node10.Operator2.Kind);
+            
+            var node11 = (ListStatement) node10.Right;
+            Assert.True(node11.Elements.Length == 1);
+            Assert.True(node11.Separators.Length == 0);
+
+            var node12 = (PlainExpressionStatement) node11.Elements[0];
+            Assert.Equal("d", ((NameLiteralExpression) node12.Node).Name.Text);
+            
+            var node20 = (ElifStatement) node.ElifElements[1];
+            Assert.Equal(Token.TokenKind.PyElif, node20.Operator1.Kind);
+            Assert.Equal("e", ((NameLiteralExpression) node20.Left).Name.Text);
+            Assert.Equal(Token.TokenKind.PyColon, node20.Operator2.Kind);
+            
+            var node21 = (ListStatement) node20.Right;
+            Assert.True(node21.Elements.Length == 1);
+            Assert.True(node21.Separators.Length == 0);
+
+            var node22 = (PlainExpressionStatement) node21.Elements[0];
+            Assert.Equal("f", ((NameLiteralExpression) node22.Node).Name.Text);
+            
+            var node4 = (ElseStatement) node.ElseElement;
+            Assert.Equal(Token.TokenKind.PyElse, node4.Operator1.Kind);
+            Assert.Equal(Token.TokenKind.PyColon, node4.Operator2.Kind);
+
+            var node5 = (ListStatement) node4.Right;
+            Assert.Equal(ListStatement.ListKind.SimpleStatementList, node5.Kind);
+            Assert.True(node5.Elements.Length == 1);
+            Assert.True(node5.Separators.Length == 0);
+
+            var node6 = (PlainExpressionStatement) node5.Elements[0];
+            Assert.Equal("g", ((NameLiteralExpression) node6.Node).Name.Text);
+        }
     }
 }
