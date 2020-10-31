@@ -5492,5 +5492,41 @@ namespace TestPythonCodeAnalyzer
             var node3 = (PlainExpressionStatement) node2.Elements[0];
             Assert.Equal("b", ((NameLiteralExpression) node3.Node).Name.Text);
         }
+        
+        [Fact]
+        public void TestCompoundStatementWithMultiple()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("with a, b as c: d\r\n\0".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+            
+            var node = (WithStatement) parser.ParseStmt();
+            Assert.Equal(0UL, node.Start);
+            Assert.Equal(19UL, node.End);
+
+            Assert.Equal(Token.TokenKind.PyWith, node.Operator1.Kind);
+
+            Assert.True(node.WithItems.Length == 2);
+            
+            var node4 = (WithItemStatement)node.WithItems[0];
+            Assert.Equal("a", ((NameLiteralExpression)node4.Left).Name.Text);
+            Assert.True(node4.Operator1 == null);
+            Assert.True(node4.Right == null);
+            
+            var node5 = (WithItemStatement)node.WithItems[1];
+            Assert.Equal("b", ((NameLiteralExpression)node5.Left).Name.Text);
+            Assert.Equal(Token.TokenKind.PyAs, node5.Operator1.Kind);
+            Assert.Equal("c", ((NameLiteralExpression)node5.Right).Name.Text);
+            
+            Assert.Equal(Token.TokenKind.PyColon, node.Operator2.Kind);
+            
+            var node2 = (ListStatement) node.Suite;
+            Assert.True(node2.Elements.Length == 1);
+            Assert.True(node2.Separators.Length == 0);
+
+            var node3 = (PlainExpressionStatement) node2.Elements[0];
+            Assert.Equal("d", ((NameLiteralExpression) node3.Node).Name.Text);
+        }
     }
 }
