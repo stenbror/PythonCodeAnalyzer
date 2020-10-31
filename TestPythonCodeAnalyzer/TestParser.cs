@@ -5104,5 +5104,35 @@ namespace TestPythonCodeAnalyzer
             Assert.True(node.Separators.Length == 0);
             Assert.Equal(Token.TokenKind.Newline, node.NewLine.Kind);
         }
+        
+        [Fact]
+        public void TestCompoundStatementIfSingle()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("if a: b\r\n\0".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+            
+            var node = (IfStatement) parser.ParseStmt();
+            Assert.Equal(0UL, node.Start);
+            Assert.Equal(9UL, node.End);
+
+            Assert.Equal(Token.TokenKind.PyIf, node.Operator1.Kind);
+            Assert.Equal("a", ((NameLiteralExpression) node.Left).Name.Text);
+            Assert.Equal(Token.TokenKind.PyColon, node.Operator2.Kind);
+
+            var node2 = (ListStatement) node.Right;
+            Assert.True(node2.Elements.Length == 1);
+            Assert.True(node2.Separators.Length == 0);
+
+            var node3 = (PlainExpressionStatement) node2.Elements[0];
+            Assert.Equal("b", ((NameLiteralExpression) node3.Node).Name.Text);
+
+            Assert.True(node.ElifElements == null);
+            Assert.True(node.ElseElement == null);
+
+        }
+        
+        
     }
 }
