@@ -5667,5 +5667,81 @@ namespace TestPythonCodeAnalyzer
             var node4 = (PlainExpressionStatement) node3.Elements[0];
             Assert.Equal("b", ((NameLiteralExpression) node4.Node).Name.Text);
         }
+        
+        [Fact]
+        public void TestCompoundStatementTryTrippleExceptFinallySingle()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("try: a\r\nexcept: c\r\nexcept g as h: t\r\nexcept r: v\r\nfinally: b\r\n\0".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+            
+            var node = (TryStatement) parser.ParseStmt();
+            Assert.Equal(0UL, node.Start);
+            Assert.Equal(62UL, node.End);
+
+            Assert.Equal(Token.TokenKind.PyTry, node.Operator1.Kind);
+            Assert.Equal(Token.TokenKind.PyColon, node.Operator2.Kind);
+
+            var node5 = (ListStatement) node.Left;
+            Assert.Equal(ListStatement.ListKind.SimpleStatementList, node5.Kind);
+
+            var node6 = (PlainExpressionStatement) node5.Elements[0];
+            Assert.Equal("a", ((NameLiteralExpression) node6.Node).Name.Text);
+
+            Assert.True(node.ExceptElements.Length == 3);
+            Assert.True(node.ElseElement == null);
+            
+            var node7 = (ExceptStatement)node.ExceptElements[0];
+            Assert.Equal(Token.TokenKind.PyExcept, node7.Operator1.Kind);
+            
+            Assert.True(node7.Left == null);
+            Assert.Equal(Token.TokenKind.PyColon, node7.Operator4.Kind);
+
+            var node8 = (ListStatement) node7.Right;
+            Assert.Equal(ListStatement.ListKind.SimpleStatementList, node8.Kind);
+
+            var node9 = (PlainExpressionStatement) node8.Elements[0];
+            Assert.Equal("c", ((NameLiteralExpression) node9.Node).Name.Text);
+            
+            var node17 = (ExceptStatement)node.ExceptElements[1];
+            Assert.Equal(Token.TokenKind.PyExcept, node17.Operator1.Kind);
+            Assert.Equal("g", ((NameLiteralExpression) node17.Left).Name.Text);
+            Assert.Equal(Token.TokenKind.PyAs, node17.Operator2.Kind);
+            Assert.Equal(Token.TokenKind.Name, node17.Operator3.Kind);
+            Assert.Equal("h", node17.Operator3.Text);
+            
+            Assert.Equal(Token.TokenKind.PyColon, node17.Operator4.Kind);
+
+            var node18 = (ListStatement) node17.Right;
+            Assert.Equal(ListStatement.ListKind.SimpleStatementList, node18.Kind);
+
+            var node19 = (PlainExpressionStatement) node18.Elements[0];
+            Assert.Equal("t", ((NameLiteralExpression) node19.Node).Name.Text);
+            
+            var node27 = (ExceptStatement)node.ExceptElements[2];
+            Assert.Equal(Token.TokenKind.PyExcept, node27.Operator1.Kind);
+            Assert.Equal("r", ((NameLiteralExpression) node27.Left).Name.Text);
+            Assert.True(node27.Operator2 == null);
+            Assert.True(node27.Operator3 == null);
+            
+            Assert.Equal(Token.TokenKind.PyColon, node27.Operator4.Kind);
+
+            var node28 = (ListStatement) node27.Right;
+            Assert.Equal(ListStatement.ListKind.SimpleStatementList, node28.Kind);
+
+            var node29 = (PlainExpressionStatement) node28.Elements[0];
+            Assert.Equal("v", ((NameLiteralExpression) node29.Node).Name.Text);
+            
+            var node2 = (FinallyStatement) node.FinallyElements;
+            Assert.Equal(Token.TokenKind.PyFinally, node2.Operator1.Kind);
+            Assert.Equal(Token.TokenKind.PyColon, node2.Operator2.Kind);
+
+            var node3 = (ListStatement) node2.Right;
+            Assert.Equal(ListStatement.ListKind.SimpleStatementList, node3.Kind);
+
+            var node4 = (PlainExpressionStatement) node3.Elements[0];
+            Assert.Equal("b", ((NameLiteralExpression) node4.Node).Name.Text);
+        }
     }
 }
