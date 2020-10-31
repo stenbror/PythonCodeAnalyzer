@@ -5560,5 +5560,50 @@ namespace TestPythonCodeAnalyzer
             var node4 = (PlainExpressionStatement) node3.Elements[0];
             Assert.Equal("b", ((NameLiteralExpression) node4.Node).Name.Text);
         }
+        
+        [Fact]
+        public void TestCompoundStatementTrySingleExceptFinallySingle()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("try: a\r\nexcept: c\r\nfinally: b\r\n\0".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+            
+            var node = (TryStatement) parser.ParseStmt();
+            Assert.Equal(0UL, node.Start);
+            Assert.Equal(31UL, node.End);
+
+            Assert.Equal(Token.TokenKind.PyTry, node.Operator1.Kind);
+            Assert.Equal(Token.TokenKind.PyColon, node.Operator2.Kind);
+
+            var node5 = (ListStatement) node.Left;
+            Assert.Equal(ListStatement.ListKind.SimpleStatementList, node5.Kind);
+
+            var node6 = (PlainExpressionStatement) node5.Elements[0];
+            Assert.Equal("a", ((NameLiteralExpression) node6.Node).Name.Text);
+
+            Assert.True(node.ExceptElements.Length == 1);
+            Assert.True(node.ElseElement == null);
+            var node7 = (ExceptStatement)node.ExceptElements[0];
+            Assert.Equal(Token.TokenKind.PyExcept, node7.Operator1.Kind);
+            Assert.True(node7.Left == null);
+            Assert.Equal(Token.TokenKind.PyColon, node7.Operator4.Kind);
+
+            var node8 = (ListStatement) node7.Right;
+            Assert.Equal(ListStatement.ListKind.SimpleStatementList, node8.Kind);
+
+            var node9 = (PlainExpressionStatement) node8.Elements[0];
+            Assert.Equal("c", ((NameLiteralExpression) node9.Node).Name.Text);
+            
+            var node2 = (FinallyStatement) node.FinallyElements;
+            Assert.Equal(Token.TokenKind.PyFinally, node2.Operator1.Kind);
+            Assert.Equal(Token.TokenKind.PyColon, node2.Operator2.Kind);
+
+            var node3 = (ListStatement) node2.Right;
+            Assert.Equal(ListStatement.ListKind.SimpleStatementList, node3.Kind);
+
+            var node4 = (PlainExpressionStatement) node3.Elements[0];
+            Assert.Equal("b", ((NameLiteralExpression) node4.Node).Name.Text);
+        }
     }
 }
