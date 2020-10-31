@@ -5130,9 +5130,44 @@ namespace TestPythonCodeAnalyzer
 
             Assert.True(node.ElifElements == null);
             Assert.True(node.ElseElement == null);
-
         }
         
-        
+        [Fact]
+        public void TestCompoundStatementIfElseSingle()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("if a: b\r\nelse: c\r\n\0".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+            
+            var node = (IfStatement) parser.ParseStmt();
+            Assert.Equal(0UL, node.Start);
+            Assert.Equal(18UL, node.End);
+
+            Assert.Equal(Token.TokenKind.PyIf, node.Operator1.Kind);
+            Assert.Equal("a", ((NameLiteralExpression) node.Left).Name.Text);
+            Assert.Equal(Token.TokenKind.PyColon, node.Operator2.Kind);
+
+            var node2 = (ListStatement) node.Right;
+            Assert.True(node2.Elements.Length == 1);
+            Assert.True(node2.Separators.Length == 0);
+
+            var node3 = (PlainExpressionStatement) node2.Elements[0];
+            Assert.Equal("b", ((NameLiteralExpression) node3.Node).Name.Text);
+
+            Assert.True(node.ElifElements.Length == 0);
+
+            var node4 = (ElseStatement) node.ElseElement;
+            Assert.Equal(Token.TokenKind.PyElse, node4.Operator1.Kind);
+            Assert.Equal(Token.TokenKind.PyColon, node4.Operator2.Kind);
+
+            var node5 = (ListStatement) node4.Right;
+            Assert.Equal(ListStatement.ListKind.SimpleStatementList, node5.Kind);
+            Assert.True(node5.Elements.Length == 1);
+            Assert.True(node5.Separators.Length == 0);
+
+            var node6 = (PlainExpressionStatement) node5.Elements[0];
+            Assert.Equal("c", ((NameLiteralExpression) node6.Node).Name.Text);
+        }
     }
 }
