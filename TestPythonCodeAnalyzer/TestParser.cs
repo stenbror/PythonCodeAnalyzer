@@ -5528,5 +5528,37 @@ namespace TestPythonCodeAnalyzer
             var node3 = (PlainExpressionStatement) node2.Elements[0];
             Assert.Equal("d", ((NameLiteralExpression) node3.Node).Name.Text);
         }
+        
+        [Fact]
+        public void TestCompoundStatementTryFinallySingle()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("try: a\r\nfinally: b\r\n\0".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+            
+            var node = (TryStatement) parser.ParseStmt();
+            Assert.Equal(0UL, node.Start);
+            Assert.Equal(20UL, node.End);
+
+            Assert.Equal(Token.TokenKind.PyTry, node.Operator1.Kind);
+            Assert.Equal(Token.TokenKind.PyColon, node.Operator2.Kind);
+
+            var node5 = (ListStatement) node.Left;
+            Assert.Equal(ListStatement.ListKind.SimpleStatementList, node5.Kind);
+
+            var node6 = (PlainExpressionStatement) node5.Elements[0];
+            Assert.Equal("a", ((NameLiteralExpression) node6.Node).Name.Text);
+            
+            var node2 = (FinallyStatement) node.FinallyElements;
+            Assert.Equal(Token.TokenKind.PyFinally, node2.Operator1.Kind);
+            Assert.Equal(Token.TokenKind.PyColon, node2.Operator2.Kind);
+
+            var node3 = (ListStatement) node2.Right;
+            Assert.Equal(ListStatement.ListKind.SimpleStatementList, node3.Kind);
+
+            var node4 = (PlainExpressionStatement) node3.Elements[0];
+            Assert.Equal("b", ((NameLiteralExpression) node4.Node).Name.Text);
+        }
     }
 }
