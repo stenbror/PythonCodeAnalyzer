@@ -5935,5 +5935,31 @@ namespace TestPythonCodeAnalyzer
             var node3 = (PassStatement)node2.Elements[0];
             Assert.Equal(Token.TokenKind.PyPass, node3.Operator.Kind);
         }
+        
+        [Fact]
+        public void TestCompoundStatementClassDeclarationEmptyInheritance()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("class Test(): pass\r\n\0".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+            
+            var node = (ClassDeclarationStatement) parser.ParseStmt();
+            Assert.Equal(0UL, node.Start);
+            Assert.Equal(20UL, node.End);
+
+            Assert.Equal(Token.TokenKind.PyClass, node.Operator1.Kind);
+            Assert.Equal("Test", node.ClassName.Text);
+            Assert.Equal(Token.TokenKind.PyLeftParen, node.Operator2.Kind);
+            Assert.True(node.Left == null);
+            Assert.Equal(Token.TokenKind.PyRightParen, node.Operator3.Kind);
+            Assert.Equal(Token.TokenKind.PyColon, node.Operator4.Kind);
+
+            var node2 = (ListStatement) node.Right;
+            Assert.Equal(ListStatement.ListKind.SimpleStatementList,node2.Kind);
+            Assert.True(node2.Elements.Length == 1);
+            var node3 = (PassStatement)node2.Elements[0];
+            Assert.Equal(Token.TokenKind.PyPass, node3.Operator.Kind);
+        }
     }
 }
