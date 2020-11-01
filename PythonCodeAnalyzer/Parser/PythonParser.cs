@@ -2820,7 +2820,6 @@ namespace PythonCodeAnalyzer.Parser
                     }
                     else
                     {
-                        Tokenizer.Advance();
                         elements.Add(ParseTest());   
                     }
                 }
