@@ -6383,5 +6383,39 @@ namespace TestPythonCodeAnalyzer
             var node2 = (ListStatement) node.Next;
             Assert.Equal(ListStatement.ListKind.SimpleStatementList, node2.Kind);
         }
+        
+        [Fact]
+        public void TestDefDeclarationStmt3()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("def a(c, d) -> b: pass\r\n\0".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+            
+            var node = (FuncDeclarationStatement) parser.ParseStmt();
+            Assert.Equal(0UL, node.Start);
+            Assert.Equal(24UL, node.End);
+
+            var node3 = (ParameterStatement) node.Left;
+            Assert.Equal(Token.TokenKind.PyLeftParen, node3.Operator1.Kind);
+            
+            var node10 = (TypedArgsStatement)node3.Right;
+            Assert.True(node10.Elements.Length == 2);
+            Assert.True(node10.Separators.Length == 1);
+            
+            Assert.Equal(Token.TokenKind.PyRightParen, node3.Operator2.Kind);
+
+            Assert.Equal(Token.TokenKind.PyDef, node.Operator1.Kind);
+            Assert.Equal("a", node.Name.Text);
+            Assert.Equal(Token.TokenKind.PyArrow, node.Operator2.Kind);
+            
+            var node4 = (NameLiteralExpression)node.Right;
+            Assert.Equal("b", node4.Name.Text);
+            
+            Assert.Equal(Token.TokenKind.PyColon, node.Operator3.Kind);
+
+            var node2 = (ListStatement) node.Next;
+            Assert.Equal(ListStatement.ListKind.SimpleStatementList, node2.Kind);
+        }
     }
 }
