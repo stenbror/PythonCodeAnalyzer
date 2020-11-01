@@ -1591,28 +1591,30 @@ namespace PythonCodeAnalyzer.Parser
             var startPos = Tokenizer.Position;
             if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyClass)
             {
-                var op1 = Tokenizer.CurSymbol;
+                var op1 = Tokenizer.CurSymbol; // 'class'
                 Tokenizer.Advance();
+                
                 if (Tokenizer.CurSymbol.Kind != Token.TokenKind.Name)
                     throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol,
                         "Expecting name of class declaration!");
                 var name = Tokenizer.CurSymbol;
                 Tokenizer.Advance();
-                if (Tokenizer.CurSymbol.Kind != Token.TokenKind.PyLeftParen)
-                    throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol,
-                        "Expecting '(' in class declaration!");
-                var op2 = Tokenizer.CurSymbol;
-                Tokenizer.Advance();
+
+                Token op2 = null, op3 = null;
                 ExpressionNode left = null;
-                if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyRightParen)
+                
+                if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyLeftParen)
                 {
-                    left = ParseArgList();
+                    op2 = Tokenizer.CurSymbol;
+                    Tokenizer.Advance();
+                    if (Tokenizer.CurSymbol.Kind != Token.TokenKind.PyRightParen) left = ParseArgList();
+                    if (Tokenizer.CurSymbol.Kind != Token.TokenKind.PyRightParen)
+                        throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol,
+                            "Expecting ')' in class declaration!");
+                    op3 = Tokenizer.CurSymbol; 
+                    Tokenizer.Advance();
                 }
-                if (Tokenizer.CurSymbol.Kind != Token.TokenKind.PyRightParen)
-                    throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol,
-                        "Expecting ')' in class declaration!");
-                var op3 = Tokenizer.CurSymbol;
-                Tokenizer.Advance();
+                
                 if (Tokenizer.CurSymbol.Kind != Token.TokenKind.PyColon)
                     throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol,
                         "Expecting ':' in class declaration!");
