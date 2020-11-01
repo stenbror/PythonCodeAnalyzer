@@ -6486,5 +6486,20 @@ namespace TestPythonCodeAnalyzer
             
             Assert.Equal(Token.TokenKind.EOF, node.EOF.Kind);
         }
+        
+        [Fact]
+        public void TestTopLevelStartSingleInputJustNewline()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("\r\n\0".ToCharArray(), false, 8);
+            
+            var node = (SingleInputStatement) parser.ParseSingleInput();
+            Assert.Equal(0UL, node.Start);
+            Assert.Equal(2UL, node.End);
+
+            Assert.Equal(Token.TokenKind.Newline, node.Newline.Kind);
+            Assert.True(node.Right == null);
+        }
     }
 }
