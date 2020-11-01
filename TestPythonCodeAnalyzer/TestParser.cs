@@ -6521,5 +6521,22 @@ namespace TestPythonCodeAnalyzer
             Assert.Equal(Token.TokenKind.PyPass, ((PassStatement)node2.Elements[0]).Operator.Kind );
             Assert.True(node2.Separators.Length == 0);
         }
+        
+        [Fact]
+        public void TestTopLevelStartSingleInputCompoundStmt()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("if a: pass\r\n\r\n\0".ToCharArray(), false, 8);
+            
+            var node = (SingleInputStatement) parser.ParseSingleInput();
+            Assert.Equal(0UL, node.Start);
+            Assert.Equal(14UL, node.End);
+            
+            Assert.Equal(Token.TokenKind.Newline, node.Newline.Kind);
+
+            var node2 = (IfStatement) node.Right;
+            Assert.Equal(Token.TokenKind.PyIf, node2.Operator1.Kind);
+        }
     }
 }
