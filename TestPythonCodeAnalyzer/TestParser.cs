@@ -5990,5 +5990,49 @@ namespace TestPythonCodeAnalyzer
             var node3 = (PassStatement)node2.Elements[0];
             Assert.Equal(Token.TokenKind.PyPass, node3.Operator.Kind);
         }
+        
+        [Fact]
+        public void TestdecoratorWithClassDeclaration1()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("@dummy\r\nclass Test: pass\r\n\0".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+            
+            var nodeFront = (DecoratedStatement) parser.ParseStmt();
+            Assert.Equal(0UL, nodeFront.Start);
+            Assert.Equal(26UL, nodeFront.End);
+            
+            // Decorator handling below:
+            var node4 = (ListStatement)nodeFront.Decorators;
+            Assert.Equal(ListStatement.ListKind.DecoratorList, node4.Kind);
+            Assert.True(node4.Elements.Length == 1);
+
+            // Decorator one
+            var node5 = (DecoratorStatement) node4.Elements[0];
+            Assert.Equal(Token.TokenKind.PyMatrice, node5.Operator1.Kind);
+            var node7 = (DottedNameStatement) node5.Left;
+            Assert.True(node7.Names.Length == 1);
+            Assert.Equal("dummy", node7.Names[0].Text);
+            
+            Assert.True(node5.Operator2 == null);
+            Assert.True(node5.Operator3 == null);
+            Assert.Equal(Token.TokenKind.Newline, node5.Operator4.Kind);
+            
+            // Class part below:
+            var node = (ClassDeclarationStatement)nodeFront.Right;
+            Assert.Equal(Token.TokenKind.PyClass, node.Operator1.Kind);
+            Assert.Equal("Test", node.ClassName.Text);
+            Assert.True(node.Operator2 == null);
+            Assert.True(node.Left == null);
+            Assert.True(node.Operator3 == null);
+            Assert.Equal(Token.TokenKind.PyColon, node.Operator4.Kind);
+            
+            var node2 = (ListStatement) node.Right;
+            Assert.Equal(ListStatement.ListKind.SimpleStatementList,node2.Kind);
+            Assert.True(node2.Elements.Length == 1);
+            var node3 = (PassStatement)node2.Elements[0];
+            Assert.Equal(Token.TokenKind.PyPass, node3.Operator.Kind);
+        }
     }
 }
