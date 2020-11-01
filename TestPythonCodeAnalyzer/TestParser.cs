@@ -6622,5 +6622,38 @@ namespace TestPythonCodeAnalyzer
             
             Assert.Equal(Token.TokenKind.EOF, node.EOF.Kind);
         }
+        
+        [Fact]
+        public void TestTopLevelStartFuncTypeInputStmtWithArguments2()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("(*a) -> a + b\r\n\r\n\0".ToCharArray(), false, 8);
+            
+            var node = (FuncInputStatement) parser.ParseFuncInput();
+            Assert.Equal(0UL, node.Start);
+            Assert.Equal(17UL, node.End);
+
+            Assert.True(node.Newlines.Length == 2);
+            Assert.Equal(Token.TokenKind.Newline, node.Newlines[0].Kind);
+            Assert.Equal(Token.TokenKind.Newline, node.Newlines[1].Kind);
+            
+            var node2 = (FuncTypeExpression)node.Right;
+            Assert.Equal(Token.TokenKind.PyLeftParen, node2.Operator1.Kind);
+            
+            var node4 = (TypeListExpression) node2.Left;
+            Assert.True(node4.Elements.Length == 0);
+            Assert.True(node4.Separators.Length == 0);
+            Assert.Equal(Token.TokenKind.PyMul, node4.Mul.Kind);
+            Assert.Equal("a", ((NameLiteralExpression)node4.Left).Name.Text);
+            
+            Assert.Equal(Token.TokenKind.PyRightParen, node2.Operator2.Kind);
+            Assert.Equal(Token.TokenKind.PyArrow, node2.Operator3.Kind);
+
+            var node3 = (ArithExpression) node2.Right;
+            Assert.Equal(ArithExpression.ArithOperatorKind.Plus, node3.ArithOperator);
+            
+            Assert.Equal(Token.TokenKind.EOF, node.EOF.Kind);
+        }
     }
 }
