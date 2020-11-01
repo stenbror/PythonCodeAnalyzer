@@ -2862,9 +2862,9 @@ namespace PythonCodeAnalyzer.Parser
                                     throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol,
                                         "Expecting ')' om FuncType expression!");
                             }
+                            else if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyRightParen) break;
                             else
                             {
-                                Tokenizer.Advance();
                                 elements.Add(ParseTest());   
                             }
                         }
@@ -2878,6 +2878,7 @@ namespace PythonCodeAnalyzer.Parser
                             throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol,
                                 "Expecting ')' om FuncType expression!");
                     }
+                    else if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyRightParen) break;
                     else
                     {
                         elements.Add(ParseTest());
