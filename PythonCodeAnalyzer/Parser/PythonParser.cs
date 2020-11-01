@@ -1284,7 +1284,7 @@ namespace PythonCodeAnalyzer.Parser
                 case Token.TokenKind.PyMatrice:
                     return ParseDecorated();
                 case Token.TokenKind.PyAsync:
-                    return ParseAsyncFuncDef();
+                    return ParseAsyncStmt();
                 default:
                     throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol, "Illegal statement!");
             }

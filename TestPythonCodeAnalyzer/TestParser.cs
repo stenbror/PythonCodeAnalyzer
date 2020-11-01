@@ -6278,5 +6278,53 @@ namespace TestPythonCodeAnalyzer
             var node = (FuncDeclarationStatement)nodeFront.Right;
             Assert.Equal(Token.TokenKind.PyDef, node.Operator1.Kind);
         }
+        
+        [Fact]
+        public void TestAsyncFuncDef()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("async def Test(): pass\r\n\0".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+            
+            var node = (AsyncStatement) parser.ParseStmt();
+            Assert.Equal(0UL, node.Start);
+            Assert.Equal(24UL, node.End);
+
+            Assert.Equal(Token.TokenKind.PyAsync, node.Operator.Kind);
+            Assert.Equal(Token.TokenKind.PyDef, ((FuncDeclarationStatement)node.Right).Operator1.Kind);
+        }
+        
+        [Fact]
+        public void TestAsyncWithStmt()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("async with a: pass\r\n\0".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+            
+            var node = (AsyncStatement) parser.ParseStmt();
+            Assert.Equal(0UL, node.Start);
+            Assert.Equal(20UL, node.End);
+
+            Assert.Equal(Token.TokenKind.PyAsync, node.Operator.Kind);
+            Assert.Equal(Token.TokenKind.PyWith, ((WithStatement)node.Right).Operator1.Kind);
+        }
+        
+        [Fact]
+        public void TestAsyncForStmt()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("async for a in b: pass\r\n\0".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+            
+            var node = (AsyncStatement) parser.ParseStmt();
+            Assert.Equal(0UL, node.Start);
+            Assert.Equal(24UL, node.End);
+
+            Assert.Equal(Token.TokenKind.PyAsync, node.Operator.Kind);
+            Assert.Equal(Token.TokenKind.PyFor, ((ForStatement)node.Right).Operator1.Kind);
+        }
     }
 }
