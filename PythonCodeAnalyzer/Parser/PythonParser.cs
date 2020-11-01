@@ -2357,7 +2357,7 @@ namespace PythonCodeAnalyzer.Parser
                 Tokenizer.Advance();
                 StatementNode right = null;
                 if (Tokenizer.CurSymbol.Kind != Token.TokenKind.PyRightParen) right = ParseTypedArgsList();
-                if (Tokenizer.CurSymbol.Kind != Token.TokenKind.PyDef) 
+                if (Tokenizer.CurSymbol.Kind != Token.TokenKind.PyRightParen) 
                     throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol, "Expecting ')' in parameter of func statement!");
                 var op2 = Tokenizer.CurSymbol;
                 Tokenizer.Advance();

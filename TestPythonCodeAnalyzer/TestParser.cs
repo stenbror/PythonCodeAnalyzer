@@ -6209,5 +6209,74 @@ namespace TestPythonCodeAnalyzer
             var node3 = (PassStatement)node2.Elements[0];
             Assert.Equal(Token.TokenKind.PyPass, node3.Operator.Kind);
         }
+        
+        [Fact]
+        public void TestdecoratorWithAsyncFuncDef()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("@dummy\r\nasync def Test(): pass\r\n\0".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+            
+            var nodeFront = (DecoratedStatement) parser.ParseStmt();
+            Assert.Equal(0UL, nodeFront.Start);
+            Assert.Equal(32UL, nodeFront.End);
+            
+            // Decorator handling below:
+            var node4 = (ListStatement)nodeFront.Decorators;
+            Assert.Equal(ListStatement.ListKind.DecoratorList, node4.Kind);
+            Assert.True(node4.Elements.Length == 1);
+
+            // Decorator one
+            var node5 = (DecoratorStatement) node4.Elements[0];
+            Assert.Equal(Token.TokenKind.PyMatrice, node5.Operator1.Kind);
+            var node7 = (DottedNameStatement) node5.Left;
+            Assert.True(node7.Names.Length == 1);
+            Assert.Equal("dummy", node7.Names[0].Text);
+            
+            Assert.True(node5.Operator2 == null);
+            Assert.True(node5.Operator3 == null);
+            Assert.Equal(Token.TokenKind.Newline, node5.Operator4.Kind);
+            
+            // async def part below:
+            var node = (AsyncStatement)nodeFront.Right;
+            Assert.Equal(Token.TokenKind.PyAsync, node.Operator.Kind);
+
+            var node10 = (FuncDeclarationStatement)node.Right;
+            Assert.Equal(Token.TokenKind.PyDef, node10.Operator1.Kind);
+        }
+        
+        [Fact]
+        public void TestdecoratorWithFuncDef()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("@dummy\r\ndef Test(): pass\r\n\0".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+            
+            var nodeFront = (DecoratedStatement) parser.ParseStmt();
+            Assert.Equal(0UL, nodeFront.Start);
+            Assert.Equal(26UL, nodeFront.End);
+            
+            // Decorator handling below:
+            var node4 = (ListStatement)nodeFront.Decorators;
+            Assert.Equal(ListStatement.ListKind.DecoratorList, node4.Kind);
+            Assert.True(node4.Elements.Length == 1);
+
+            // Decorator one
+            var node5 = (DecoratorStatement) node4.Elements[0];
+            Assert.Equal(Token.TokenKind.PyMatrice, node5.Operator1.Kind);
+            var node7 = (DottedNameStatement) node5.Left;
+            Assert.True(node7.Names.Length == 1);
+            Assert.Equal("dummy", node7.Names[0].Text);
+            
+            Assert.True(node5.Operator2 == null);
+            Assert.True(node5.Operator3 == null);
+            Assert.Equal(Token.TokenKind.Newline, node5.Operator4.Kind);
+            
+            // async def part below:
+            var node = (FuncDeclarationStatement)nodeFront.Right;
+            Assert.Equal(Token.TokenKind.PyDef, node.Operator1.Kind);
+        }
     }
 }
