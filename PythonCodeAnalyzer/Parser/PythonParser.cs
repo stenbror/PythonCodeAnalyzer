@@ -1278,7 +1278,7 @@ namespace PythonCodeAnalyzer.Parser
                 case Token.TokenKind.PyWith:
                     return ParseWithStmt();
                 case Token.TokenKind.PyDef:
-                    return ParseAsyncFuncDef();
+                    return ParseFuncDefDeclaration();
                 case Token.TokenKind.PyClass:
                     return ParseClassDeclaration();
                 case Token.TokenKind.PyMatrice:
