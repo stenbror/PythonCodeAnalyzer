@@ -6538,5 +6538,29 @@ namespace TestPythonCodeAnalyzer
             var node2 = (IfStatement) node.Right;
             Assert.Equal(Token.TokenKind.PyIf, node2.Operator1.Kind);
         }
+        
+        [Fact]
+        public void TestTopLevelStartFuncTypeInputStmt()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("() -> a + b\0".ToCharArray(), false, 8);
+            
+            var node = (FuncInputStatement) parser.ParseFuncInput();
+            Assert.Equal(0UL, node.Start);
+            Assert.Equal(11UL, node.End);
+
+            Assert.True(node.Newlines.Length == 0);
+            var node2 = (FuncTypeExpression)node.Right;
+            Assert.Equal(Token.TokenKind.PyLeftParen, node2.Operator1.Kind);
+            Assert.True(node2.Left == null);
+            Assert.Equal(Token.TokenKind.PyRightParen, node2.Operator2.Kind);
+            Assert.Equal(Token.TokenKind.PyArrow, node2.Operator3.Kind);
+
+            var node3 = (ArithExpression) node2.Right;
+            Assert.Equal(ArithExpression.ArithOperatorKind.Plus, node3.ArithOperator);
+            
+            Assert.Equal(Token.TokenKind.EOF, node.EOF.Kind);
+        }
     }
 }
