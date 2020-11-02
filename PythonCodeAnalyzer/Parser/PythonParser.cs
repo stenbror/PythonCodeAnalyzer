@@ -1169,6 +1169,10 @@ namespace PythonCodeAnalyzer.Parser
                     Tokenizer.Advance();
 
                     Token lastSymbol = div;
+                    if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyColon)
+                    {
+                        return new VarArgsListExpression(startPos, Tokenizer.Position, elements.ToArray(), separators.ToArray(), div);    
+                    }
                     
                     while (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyComma)
                     {
