@@ -1180,6 +1180,7 @@ namespace PythonCodeAnalyzer.Parser
                                 "Unexpected ',' in argument list!");
                         if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyMul ||
                             Tokenizer.CurSymbol.Kind == Token.TokenKind.PyPower) continue;
+                        if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyColon) continue;
                         elements.Add(ParseArgumentExpression());
                         if (Tokenizer.CurSymbol.Kind != Token.TokenKind.PyComma)
                         {
@@ -1247,7 +1248,7 @@ namespace PythonCodeAnalyzer.Parser
                         return new VarArgsListExpression(startPos, Tokenizer.Position, elements.ToArray(), separators.ToArray(), null);
                     }
                 }
-                return new VarArgsListExpression(startPos, Tokenizer.Position, elements.ToArray(), separators.ToArray(), null);
+                return new VarArgsListExpression(startPos, Tokenizer.Position, elements.ToArray(), separators.ToArray(), div);
             }
         }
 
