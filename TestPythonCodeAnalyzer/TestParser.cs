@@ -7503,5 +7503,25 @@ namespace TestPythonCodeAnalyzer
             var node2 = (VFPDefExpression)node.Elements[0];
             Assert.Equal("a", node2.Name.Text);
         }
+        
+        [Fact]
+        public void TestVarArgsList19()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("a:\r\n\r\n\0".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+            
+            var node = (VarArgsListExpression) parser.ParseVarArgsList();
+            Assert.Equal(0UL, node.Start);
+            Assert.Equal(1UL, node.End);
+
+            Assert.True(node.Elements.Length == 1);
+            Assert.True(node.Separators.Length == 0);
+            Assert.True(node.Div == null);
+            
+            var node2 = (VFPDefExpression)node.Elements[0];
+            Assert.Equal("a", node2.Name.Text);
+        }
     }
 }
