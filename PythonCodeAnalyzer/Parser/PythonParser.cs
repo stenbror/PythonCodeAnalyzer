@@ -1095,7 +1095,7 @@ namespace PythonCodeAnalyzer.Parser
             {
                 var op1 = Tokenizer.CurSymbol;
                 Tokenizer.Advance();
-                var rigthMul = ParseArgumentExpression();
+                var rigthMul = ParseVFPDef();
                 Token op2 = null;
                 ExpressionNode rightPower = null;
                 
@@ -1113,7 +1113,7 @@ namespace PythonCodeAnalyzer.Parser
                     {
                         op2 = Tokenizer.CurSymbol;
                         Tokenizer.Advance();
-                        rightPower = ParseArgumentExpression();
+                        rightPower = ParseVFPDef();
                         if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyComma)
                         {
                             separators.Add(Tokenizer.CurSymbol);
@@ -1134,7 +1134,7 @@ namespace PythonCodeAnalyzer.Parser
             {
                 var op2 = Tokenizer.CurSymbol;
                 Tokenizer.Advance();
-                var rightPower = ParseArgumentExpression();
+                var rightPower = ParseVFPDef();
                 if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyComma)
                 {
                     separators.Add(Tokenizer.CurSymbol);
@@ -1195,7 +1195,7 @@ namespace PythonCodeAnalyzer.Parser
                     {
                         var op1 = Tokenizer.CurSymbol;
                         Tokenizer.Advance();
-                        var rigthMul = ParseArgumentExpression();
+                        var rigthMul = ParseVFPDef();
                         Token op2 = null;
                         ExpressionNode rightPower = null;
                         
@@ -1213,7 +1213,7 @@ namespace PythonCodeAnalyzer.Parser
                             {
                                 op2 = Tokenizer.CurSymbol;
                                 Tokenizer.Advance();
-                                rightPower = ParseArgumentExpression();
+                                rightPower = ParseVFPDef();
                                 if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyComma)
                                 {
                                     separators.Add(Tokenizer.CurSymbol);
@@ -1234,7 +1234,7 @@ namespace PythonCodeAnalyzer.Parser
                     {
                         var op2 = Tokenizer.CurSymbol;
                         Tokenizer.Advance();
-                        var rightPower = ParseArgumentExpression();
+                        var rightPower = ParseVFPDef();
                         if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyComma)
                         {
                             separators.Add(Tokenizer.CurSymbol);
