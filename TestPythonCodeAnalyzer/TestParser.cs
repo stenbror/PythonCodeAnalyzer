@@ -7308,5 +7308,44 @@ namespace TestPythonCodeAnalyzer
             Assert.Equal("i", ((VFPDefExpression)node10.Left).Name.Text);
             Assert.Equal("j", ((NameLiteralExpression)node10.Right).Name.Text);
         }
+        
+        [Fact]
+        public void TestVarArgsList12()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("a, b = 4, c, / , d = 6, f, *g:\r\n\r\n\0".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+            
+            var node = (VarArgsListExpression) parser.ParseVarArgsList();
+            Assert.Equal(0UL, node.Start);
+            Assert.Equal(29UL, node.End);
+
+            Assert.True(node.Elements.Length == 6);
+            Assert.True(node.Separators.Length == 6);
+            Assert.Equal(Token.TokenKind.PyDiv, node.Div.Kind);
+            
+            var node2 = (VFPDefExpression)node.Elements[0];
+            Assert.Equal("a", node2.Name.Text);
+            
+            var node3 = (VarArgumentExpression)node.Elements[1];
+            Assert.Equal("b", ((VFPDefExpression)node3.Left).Name.Text);
+            Assert.Equal("4", ((NumberLiteralExpression)node3.Right).Number.Text);
+            
+            var node4 = (VFPDefExpression)node.Elements[2];
+            Assert.Equal("c", node4.Name.Text);
+            
+            var node5 = (VarArgumentExpression)node.Elements[3];
+            Assert.Equal("d", ((VFPDefExpression)node5.Left).Name.Text);
+            Assert.Equal("6", ((NumberLiteralExpression)node5.Right).Number.Text);
+            
+            var node6 = (VFPDefExpression)node.Elements[4];
+            Assert.Equal("f", node6.Name.Text);
+            
+            var node7 = (StarExpression)node.Elements[5];
+            Assert.Equal(Token.TokenKind.PyMul, node7.Operator.Kind);
+            var node8 = (VFPDefExpression) node7.Right;
+            Assert.Equal("g", node8.Name.Text);
+        }
     }
 }
