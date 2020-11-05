@@ -2482,12 +2482,110 @@ namespace PythonCodeAnalyzer.Parser
 
                     if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyDiv ||
                         Tokenizer.CurSymbol.Kind == Token.TokenKind.PyMul ||
-                        Tokenizer.CurSymbol.Kind == Token.TokenKind.PyPower)
+                        Tokenizer.CurSymbol.Kind == Token.TokenKind.PyPower ||
+                        Tokenizer.CurSymbol.Kind == Token.TokenKind.PyRightParen)
+                        break;
+                    
+                    elements.Add(ParseArgumentStatement());
+                }
+
+                if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyDiv)
+                {
+                    div = Tokenizer.CurSymbol;
+                    Tokenizer.Advance();
+                }
+                
+                while (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyComma)
+                {
+                    separators.Add(Tokenizer.CurSymbol);
+                    Tokenizer.Advance();
+                    
+                    if (Tokenizer.CurSymbol.Kind == Token.TokenKind.TypeComment)
+                    {
+                        typeComments.Add(Tokenizer.CurSymbol);
+                        Tokenizer.Advance();
+                    }
+
+                    if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyMul ||
+                        Tokenizer.CurSymbol.Kind == Token.TokenKind.PyPower ||
+                        Tokenizer.CurSymbol.Kind == Token.TokenKind.PyRightParen)
                         break;
                     
                     elements.Add(ParseArgumentStatement());
                 }
                 
+                if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyMul)
+                {
+                    var op1 = Tokenizer.CurSymbol;
+                    Tokenizer.Advance();
+                    var rightMul = ParseTFPDef();
+                    elements.Add(new TypedMulArgumentStatement(startPos, Tokenizer.Position, op1, rightMul));
+                    if (Tokenizer.CurSymbol.Kind == Token.TokenKind.TypeComment)
+                    {
+                        typeComments.Add(Tokenizer.CurSymbol);
+                        Tokenizer.Advance();
+                    }
+                    else
+                    {
+                        while (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyComma)
+                        {
+                            separators.Add(Tokenizer.CurSymbol);
+                            Tokenizer.Advance();
+                            if (Tokenizer.CurSymbol.Kind == Token.TokenKind.TypeComment)
+                            {
+                                typeComments.Add(Tokenizer.CurSymbol);
+                                Tokenizer.Advance();
+                            }
+
+                            if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyPower)
+                            {
+                                var op2 = Tokenizer.CurSymbol;
+                                Tokenizer.Advance();
+                                var rightPower = ParseTFPDef();
+                                elements.Add(new TypedPowerArgumentStatement(startPos, Tokenizer.Position, op2, rightPower));
+                                if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyComma)
+                                {
+                                    separators.Add(Tokenizer.CurSymbol);
+                                    Tokenizer.Advance();
+                                }
+
+                                if (Tokenizer.CurSymbol.Kind == Token.TokenKind.TypeComment)
+                                {
+                                    typeComments.Add(Tokenizer.CurSymbol);
+                                    Tokenizer.Advance();
+                                }
+                                break;
+                            }
+
+                            elements.Add(ParseArgumentStatement());
+                            
+                            if (Tokenizer.CurSymbol.Kind == Token.TokenKind.TypeComment)
+                            {
+                                typeComments.Add(Tokenizer.CurSymbol);
+                                Tokenizer.Advance();
+                                break;
+                            }
+                        }
+                    }
+                }
+                else if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyPower)
+                {
+                    var op2 = Tokenizer.CurSymbol;
+                    Tokenizer.Advance();
+                    var rightPower = ParseTFPDef();
+                    elements.Add(new TypedPowerArgumentStatement(startPos, Tokenizer.Position, op2, rightPower));
+                    if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyComma)
+                    {
+                        separators.Add(Tokenizer.CurSymbol);
+                        Tokenizer.Advance();
+                    }
+
+                    if (Tokenizer.CurSymbol.Kind == Token.TokenKind.TypeComment)
+                    {
+                        typeComments.Add(Tokenizer.CurSymbol);
+                        Tokenizer.Advance();
+                    }
+                }
             }
             
             return new TypedArgsStatement(startPos, Tokenizer.Position, elements.ToArray(), separators.ToArray(), typeComments.ToArray(), div);
