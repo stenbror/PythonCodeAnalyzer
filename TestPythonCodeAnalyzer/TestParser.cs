@@ -7523,5 +7523,87 @@ namespace TestPythonCodeAnalyzer
             var node2 = (VFPDefExpression)node.Elements[0];
             Assert.Equal("a", node2.Name.Text);
         }
+        
+        [Fact]
+        public void TestTypedArgsList1()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("**a # type: int\r\n)\0".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+            
+            var node = (TypedArgsStatement) parser.ParseTypedArgsList();
+            Assert.Equal(0UL, node.Start);
+            Assert.Equal(15UL, node.End);
+
+            Assert.True(node.Elements.Length == 1);
+            Assert.True(node.Separators.Length == 0);
+            Assert.True(node.Div == null);
+            
+            var node2 = (TypedPowerArgumentStatement)node.Elements[0];
+            Assert.Equal(Token.TokenKind.PyPower, node2.Operator.Kind);
+            var node3 = (TFPDefStatement) node2.Right;
+            Assert.Equal("a", node3.Operator1.Text);
+            Assert.True(node3.Operator2 == null);
+            Assert.True(node3.Right == null);
+            
+            Assert.True(node.TypeComments.Length == 1);
+            Assert.Equal("# type: int", node.TypeComments[0].Text);
+        }
+        
+        [Fact]
+        public void TestTypedArgsList2()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("**a : b # type: int\r\n)\0".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+            
+            var node = (TypedArgsStatement) parser.ParseTypedArgsList();
+            Assert.Equal(0UL, node.Start);
+            Assert.Equal(19UL, node.End);
+
+            Assert.True(node.Elements.Length == 1);
+            Assert.True(node.Separators.Length == 0);
+            Assert.True(node.Div == null);
+            
+            var node2 = (TypedPowerArgumentStatement)node.Elements[0];
+            Assert.Equal(Token.TokenKind.PyPower, node2.Operator.Kind);
+            var node3 = (TFPDefStatement) node2.Right;
+            Assert.Equal("a", node3.Operator1.Text);
+            Assert.Equal(Token.TokenKind.PyColon, node3.Operator2.Kind);
+            Assert.Equal("b", ((NameLiteralExpression)node3.Right).Name.Text);
+            
+            Assert.True(node.TypeComments.Length == 1);
+            Assert.Equal("# type: int", node.TypeComments[0].Text);
+        }
+        
+        [Fact]
+        public void TestTypedArgsList3()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("**a : b , # type: int\r\n)\0".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+            
+            var node = (TypedArgsStatement) parser.ParseTypedArgsList();
+            Assert.Equal(0UL, node.Start);
+            Assert.Equal(21UL, node.End);
+
+            Assert.True(node.Elements.Length == 1);
+            Assert.True(node.Separators.Length == 1);
+            Assert.Equal(Token.TokenKind.PyComma, node.Separators[0].Kind);
+            Assert.True(node.Div == null);
+            
+            var node2 = (TypedPowerArgumentStatement)node.Elements[0];
+            Assert.Equal(Token.TokenKind.PyPower, node2.Operator.Kind);
+            var node3 = (TFPDefStatement) node2.Right;
+            Assert.Equal("a", node3.Operator1.Text);
+            Assert.Equal(Token.TokenKind.PyColon, node3.Operator2.Kind);
+            Assert.Equal("b", ((NameLiteralExpression)node3.Right).Name.Text);
+            
+            Assert.True(node.TypeComments.Length == 1);
+            Assert.Equal("# type: int", node.TypeComments[0].Text);
+        }
     }
 }

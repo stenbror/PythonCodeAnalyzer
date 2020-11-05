@@ -2393,84 +2393,78 @@ namespace PythonCodeAnalyzer.Parser
             var separators = new List<Token>();
             var typeComments = new List<Token>();
             Token div = null;
-            
+
             if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyMul)
             {
                 var op1 = Tokenizer.CurSymbol;
                 Tokenizer.Advance();
-                var rigthMul = ParseArgumentStatement();
-                Token op2 = null; 
-                StatementNode rightPower = null;
-                
-                elements.Add(new TypedMulArgumentStatement(startPos, Tokenizer.Position, op1, rigthMul));
-                
-                while (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyComma)
+                var rightMul = ParseTFPDef();
+                elements.Add(new TypedMulArgumentStatement(startPos, Tokenizer.Position, op1, rightMul));
+                if (Tokenizer.CurSymbol.Kind == Token.TokenKind.TypeComment)
                 {
-                    separators.Add(Tokenizer.CurSymbol);
+                    typeComments.Add(Tokenizer.CurSymbol);
                     Tokenizer.Advance();
-                    if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyComma)
-                        throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol,
-                            "Unexpected ',' in argument list!");
-                    else if (Tokenizer.CurSymbol.Kind == Token.TokenKind.TypeComment)
+                }
+                else
+                {
+                    while (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyComma)
                     {
-                        typeComments.Add(Tokenizer.CurSymbol);
+                        separators.Add(Tokenizer.CurSymbol);
                         Tokenizer.Advance();
-                    }
-                    if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyColon) continue;
-                    if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyPower)
-                    {
-                        op2 = Tokenizer.CurSymbol;
-                        Tokenizer.Advance();
-                        rightPower = ParseArgumentStatement();
-                        if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyComma)
+                        if (Tokenizer.CurSymbol.Kind == Token.TokenKind.TypeComment)
                         {
-                            separators.Add(Tokenizer.CurSymbol);
+                            typeComments.Add(Tokenizer.CurSymbol);
                             Tokenizer.Advance();
                         }
-                        if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyComma)
+
+                        if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyPower)
                         {
-                            separators.Add(Tokenizer.CurSymbol);
+                            var op2 = Tokenizer.CurSymbol;
                             Tokenizer.Advance();
+                            var rightPower = ParseTFPDef();
+                            elements.Add(new TypedPowerArgumentStatement(startPos, Tokenizer.Position, op2, rightPower));
+                            if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyComma)
+                            {
+                                separators.Add(Tokenizer.CurSymbol);
+                                Tokenizer.Advance();
+                            }
+
                             if (Tokenizer.CurSymbol.Kind == Token.TokenKind.TypeComment)
                             {
                                 typeComments.Add(Tokenizer.CurSymbol);
                                 Tokenizer.Advance();
                             }
+                            break;
                         }
-                        if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyComma)
-                            throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol,
-                                "Unexpected ',' in argument list!");
-                        elements.Add(new TypedPowerArgumentStatement(startPos, Tokenizer.Position, op2, rightPower));
-                        continue;
+
+                        elements.Add(ParseArgumentStatement());
+                        
+                        if (Tokenizer.CurSymbol.Kind == Token.TokenKind.TypeComment)
+                        {
+                            typeComments.Add(Tokenizer.CurSymbol);
+                            Tokenizer.Advance();
+                            break;
+                        }
                     }
-                    elements.Add(ParseArgumentStatement());
                 }
-                
-                return new TypedArgsStatement(startPos, Tokenizer.Position, elements.ToArray(), separators.ToArray(), null, div);
             }
             else if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyPower)
             {
                 var op2 = Tokenizer.CurSymbol;
                 Tokenizer.Advance();
-                var rightPower = ParseArgumentStatement();
+                var rightPower = ParseTFPDef();
+                elements.Add(new TypedPowerArgumentStatement(startPos, Tokenizer.Position, op2, rightPower));
                 if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyComma)
                 {
                     separators.Add(Tokenizer.CurSymbol);
                     Tokenizer.Advance();
                 }
 
-                if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyComma)
+                if (Tokenizer.CurSymbol.Kind == Token.TokenKind.TypeComment)
                 {
-                    separators.Add(Tokenizer.CurSymbol);
+                    typeComments.Add(Tokenizer.CurSymbol);
                     Tokenizer.Advance();
-                    if (Tokenizer.CurSymbol.Kind == Token.TokenKind.TypeComment)
-                    {
-                        typeComments.Add(Tokenizer.CurSymbol);
-                        Tokenizer.Advance();
-                    }
                 }
-                elements.Add(new TypedPowerArgumentStatement(startPos, Tokenizer.Position, op2, rightPower));
-                return new TypedArgsStatement(startPos, Tokenizer.Position, elements.ToArray(), separators.ToArray(), null, null);
             }
             else
             {
@@ -2479,134 +2473,24 @@ namespace PythonCodeAnalyzer.Parser
                 {
                     separators.Add(Tokenizer.CurSymbol);
                     Tokenizer.Advance();
-                    if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyComma)
-                        throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol,
-                            "Unexpected ',' in argument list!");
-                    else if (Tokenizer.CurSymbol.Kind == Token.TokenKind.TypeComment)
-                    {
-                        typeComments.Add(Tokenizer.CurSymbol);
-                        Tokenizer.Advance();
-                    }
-                    if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyDiv ||
-                        Tokenizer.CurSymbol.Kind == Token.TokenKind.PyColon ||
-                        Tokenizer.CurSymbol.Kind == Token.TokenKind.PyMul ||
-                        Tokenizer.CurSymbol.Kind == Token.TokenKind.PyPower) continue;
-                    elements.Add(ParseArgumentStatement());
-                }
-
-                if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyDiv)
-                {
-                    div = Tokenizer.CurSymbol;
-                    Tokenizer.Advance();
-
-                    Token lastSymbol = div;
-                    
-                    while (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyComma)
-                    {
-                        separators.Add(Tokenizer.CurSymbol);
-                        lastSymbol = Tokenizer.CurSymbol;
-                        Tokenizer.Advance();
-                        if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyComma)
-                            throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol,
-                                "Unexpected ',' in argument list!");
-                        else if (Tokenizer.CurSymbol.Kind == Token.TokenKind.TypeComment)
-                        {
-                            typeComments.Add(Tokenizer.CurSymbol);
-                            Tokenizer.Advance();
-                        }
-                        if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyMul ||
-                            Tokenizer.CurSymbol.Kind == Token.TokenKind.PyPower ||
-                            Tokenizer.CurSymbol.Kind == Token.TokenKind.TypeComment) continue;
-                        elements.Add(ParseArgumentStatement());
-                        if (Tokenizer.CurSymbol.Kind != Token.TokenKind.PyComma)
-                        {
-                            return new TypedArgsStatement(startPos, Tokenizer.Position, elements.ToArray(), separators.ToArray(), null, div);
-                        }
-                    }
-                    
-                    if (lastSymbol.Kind != Token.TokenKind.PyComma) 
-                        throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol,
-                        "Expected ',' in argument list!");
                     
                     if (Tokenizer.CurSymbol.Kind == Token.TokenKind.TypeComment)
                     {
                         typeComments.Add(Tokenizer.CurSymbol);
                         Tokenizer.Advance();
                     }
+
+                    if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyDiv ||
+                        Tokenizer.CurSymbol.Kind == Token.TokenKind.PyMul ||
+                        Tokenizer.CurSymbol.Kind == Token.TokenKind.PyPower)
+                        break;
                     
-                    if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyMul)
-                    {
-                        var op1 = Tokenizer.CurSymbol;
-                        Tokenizer.Advance();
-                        var rigthMul = ParseArgumentStatement();
-                        Token op2 = null;
-                        StatementNode rightPower = null;
-                        
-                        elements.Add(new TypedMulArgumentStatement(startPos, Tokenizer.Position, op1, rigthMul));
-                        
-                        while (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyComma)
-                        {
-                            separators.Add(Tokenizer.CurSymbol);
-                            Tokenizer.Advance();
-                            if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyComma)
-                                throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol,
-                                    "Unexpected ',' in argument list!");
-                            else if (Tokenizer.CurSymbol.Kind == Token.TokenKind.TypeComment)
-                            {
-                                typeComments.Add(Tokenizer.CurSymbol);
-                                Tokenizer.Advance();
-                            }
-                            if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyColon) continue;
-                            if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyPower)
-                            {
-                                op2 = Tokenizer.CurSymbol;
-                                Tokenizer.Advance();
-                                rightPower = ParseArgumentStatement();
-                                if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyComma)
-                                {
-                                    separators.Add(Tokenizer.CurSymbol);
-                                    Tokenizer.Advance();
-                                }
-
-                                if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyComma)
-                                {
-                                    separators.Add(Tokenizer.CurSymbol);
-                                    Tokenizer.Advance();
-                                    if (Tokenizer.CurSymbol.Kind == Token.TokenKind.TypeComment)
-                                    {
-                                        typeComments.Add(Tokenizer.CurSymbol);
-                                        Tokenizer.Advance();
-                                    }
-
-                                    break;
-                                }
-                                elements.Add(new TypedPowerArgumentStatement(startPos, Tokenizer.Position, op2, rightPower));
-                                continue;
-                            }
-                            elements.Add(ParseArgumentStatement());
-                        }
-                        
-                        return new TypedArgsStatement(startPos, Tokenizer.Position, elements.ToArray(), separators.ToArray(), null, div);
-                    }
-                    else if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyPower)
-                    {
-                        var op2 = Tokenizer.CurSymbol;
-                        Tokenizer.Advance();
-                        var rightPower = ParseArgumentStatement();
-                        if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyComma)
-                        {
-                            separators.Add(Tokenizer.CurSymbol);
-                            Tokenizer.Advance();
-                        }
-                        if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyComma)
-                            throw new SyntaxErrorException(Tokenizer.Position, Tokenizer.CurSymbol,
-                                "Unexpected ',' in argument list!");
-                        elements.Add(new TypedPowerArgumentStatement(startPos, Tokenizer.Position, op2, rightPower));
-                        return new TypedArgsStatement(startPos, Tokenizer.Position, elements.ToArray(), separators.ToArray(), null, null);
-                    }
+                    elements.Add(ParseArgumentStatement());
                 }
-                return new TypedArgsStatement(startPos, Tokenizer.Position, elements.ToArray(), separators.ToArray(), null, null);
+                
             }
+            
+            return new TypedArgsStatement(startPos, Tokenizer.Position, elements.ToArray(), separators.ToArray(), typeComments.ToArray(), div);
         }
         
         public StatementNode ParseTFPDef()
