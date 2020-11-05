@@ -1296,5 +1296,16 @@ namespace TestPythonCodeAnalyzer
             Assert.Equal(6u, lex.CurSymbol.End);
             Assert.Equal("\"\"\"\"\"\"", lex.CurSymbol.Text);
         }
+        
+        [Fact]
+        public void TestTypeComment()
+        {
+            var lex = new PythonTokenizer("# type: int\r\n\0 ".ToCharArray(), false, 8);
+            lex.Advance();
+            Assert.Equal(Token.TokenKind.TypeComment, lex.CurSymbol.Kind);
+            Assert.Equal(0u, lex.CurSymbol.Start);
+            Assert.Equal(11u, lex.CurSymbol.End);
+            Assert.Equal("# type: int", lex.CurSymbol.Text);
+        }
     }
 }

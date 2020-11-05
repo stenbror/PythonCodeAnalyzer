@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using Microsoft.VisualBasic;
 using PythonCodeAnalyzer.Parser.Ast;
 
@@ -191,6 +193,14 @@ _again:
             /* Handle comment, unless it is a type comment */
             if (SourceCode[_index] == '#')
             {
+                while (SourceCode[_index] != '\r' && SourceCode[_index] != '\n' && SourceCode[_index] != '\0') _index++;
+                
+                var sr = new string(SourceCode[(int) _TokenStartPos .. (int) _index]);
+                
+                if (sr.StartsWith("# type: "))
+                {
+                    return new Token(_TokenStartPos, _index, Token.TokenKind.TypeComment);
+                }
                 throw new NotImplementedException();
             }
 
