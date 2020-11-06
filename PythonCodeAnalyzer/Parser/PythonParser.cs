@@ -2417,6 +2417,9 @@ namespace PythonCodeAnalyzer.Parser
                             Tokenizer.Advance();
                         }
 
+                        if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyRightParen || 
+                            Tokenizer.CurSymbol.Kind == Token.TokenKind.Newline) break; // Remove newline later
+
                         if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyPower)
                         {
                             var op2 = Tokenizer.CurSymbol;
@@ -2536,6 +2539,9 @@ namespace PythonCodeAnalyzer.Parser
                                 typeComments.Add(Tokenizer.CurSymbol);
                                 Tokenizer.Advance();
                             }
+
+                            if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyRightParen ||
+                                Tokenizer.CurSymbol.Kind == Token.TokenKind.Newline) break;
 
                             if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyPower)
                             {

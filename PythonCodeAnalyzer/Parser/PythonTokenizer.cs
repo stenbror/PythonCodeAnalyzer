@@ -196,6 +196,13 @@ _again:
                 while (SourceCode[_index] != '\r' && SourceCode[_index] != '\n' && SourceCode[_index] != '\0') _index++;
                 
                 var sr = new string(SourceCode[(int) _TokenStartPos .. (int) _index]);
+
+                // if (SourceCode[_index] == '\r' || SourceCode[_index] == '\n')
+                // {
+                //     if (SourceCode[_index] == '\r') _index++;
+                //     if (SourceCode[_index] == '\n') _index++;
+                //
+                // }
                 
                 if (sr.StartsWith("# type: "))
                 {
