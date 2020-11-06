@@ -7605,5 +7605,32 @@ namespace TestPythonCodeAnalyzer
             Assert.True(node.TypeComments.Length == 1);
             Assert.Equal("# type: int", node.TypeComments[0].Text);
         }
+        
+        [Fact]
+        public void TestTypedArgsList4()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("*a # type: int\r\n)\0".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+            
+            var node = (TypedArgsStatement) parser.ParseTypedArgsList();
+            Assert.Equal(0UL, node.Start);
+            Assert.Equal(14UL, node.End);
+
+            Assert.True(node.Elements.Length == 1);
+            Assert.True(node.Separators.Length == 0);
+            Assert.True(node.Div == null);
+            
+            var node2 = (TypedMulArgumentStatement)node.Elements[0];
+            Assert.Equal(Token.TokenKind.PyMul, node2.Operator.Kind);
+            var node3 = (TFPDefStatement) node2.Right;
+            Assert.Equal("a", node3.Operator1.Text);
+            Assert.True(node3.Operator2 == null);
+            Assert.True(node3.Right == null);
+            
+            Assert.True(node.TypeComments.Length == 1);
+            Assert.Equal("# type: int", node.TypeComments[0].Text);
+        }
     }
 }
