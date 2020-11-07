@@ -1159,7 +1159,7 @@ namespace PythonCodeAnalyzer.Parser
                     if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyDiv ||
                         Tokenizer.CurSymbol.Kind == Token.TokenKind.PyColon ||
                         Tokenizer.CurSymbol.Kind == Token.TokenKind.PyMul ||
-                        Tokenizer.CurSymbol.Kind == Token.TokenKind.PyPower) continue;
+                        Tokenizer.CurSymbol.Kind == Token.TokenKind.PyPower ) continue;
                     elements.Add(ParseArgumentExpression());
                 }
 
@@ -2486,7 +2486,8 @@ namespace PythonCodeAnalyzer.Parser
                     if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyDiv ||
                         Tokenizer.CurSymbol.Kind == Token.TokenKind.PyMul ||
                         Tokenizer.CurSymbol.Kind == Token.TokenKind.PyPower ||
-                        Tokenizer.CurSymbol.Kind == Token.TokenKind.PyRightParen)
+                        Tokenizer.CurSymbol.Kind == Token.TokenKind.PyRightParen ||
+                        Tokenizer.CurSymbol.Kind == Token.TokenKind.Newline)
                         break;
                     
                     elements.Add(ParseArgumentStatement());
