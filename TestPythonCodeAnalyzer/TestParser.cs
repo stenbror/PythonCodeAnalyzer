@@ -7828,5 +7828,52 @@ namespace TestPythonCodeAnalyzer
             Assert.True(node.TypeComments.Length == 1);
             Assert.Equal("# type: int", node.TypeComments[0].Text);
         }
+        
+        [Fact]
+        public void TestTypedArgsList10()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("*a, b : c, d = 4, **e\r\n)\0".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+            
+            var node = (TypedArgsStatement) parser.ParseTypedArgsList();
+            Assert.Equal(0UL, node.Start);
+            Assert.Equal(21UL, node.End);
+
+            Assert.True(node.Elements.Length == 4);
+            Assert.True(node.Separators.Length == 3);
+            Assert.True(node.Div == null);
+            
+            var node2 = (TypedMulArgumentStatement)node.Elements[0];
+            Assert.Equal(Token.TokenKind.PyMul, node2.Operator.Kind);
+            var node3 = (TFPDefStatement) node2.Right;
+            Assert.Equal("a", node3.Operator1.Text);
+            Assert.True(node3.Operator2 == null);
+            Assert.True(node3.Right == null);
+            
+            var node5 = ((TFPDefStatement) node.Elements[1]);
+            Assert.Equal("b", node5.Operator1.Text);
+            Assert.Equal(Token.TokenKind.PyColon, node5.Operator2.Kind);
+            Assert.Equal("c", ((NameLiteralExpression)node5.Right).Name.Text);
+            
+            var node6 = (TypedArgumentStatement) node.Elements[2];
+            var node7 = ((TFPDefStatement) node6.Left);
+            Assert.Equal("d", node7.Operator1.Text);
+            Assert.True(node7.Operator2 == null);
+            Assert.True(node7.Right == null);
+            
+            Assert.Equal(Token.TokenKind.PyAssign, node6.Operator.Kind);
+            Assert.Equal("4", ((NumberLiteralExpression)node6.Right).Number.Text);
+            
+            var node8 = (TypedPowerArgumentStatement)node.Elements[3];
+            Assert.Equal(Token.TokenKind.PyPower, node8.Operator.Kind);
+            var node9 = (TFPDefStatement) node8.Right;
+            Assert.Equal("e", node9.Operator1.Text);
+            Assert.True(node9.Operator2 == null);
+            Assert.True(node9.Right == null);
+            
+            Assert.True(node.TypeComments.Length == 0);
+        }
     }
 }
