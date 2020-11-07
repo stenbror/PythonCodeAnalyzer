@@ -8027,16 +8027,16 @@ namespace TestPythonCodeAnalyzer
         {
             var parser = new PythonParser();
             Assert.True(parser != null);
-            parser.Tokenizer = new PythonTokenizer("a, b = 5, c: d, e : f = 8, / # type: int\r\n)\0".ToCharArray(), false, 8);
+            parser.Tokenizer = new PythonTokenizer("a, b = 5, c: d, e : f = 8, / , # type: int\r\n)\0".ToCharArray(), false, 8);
             parser.Tokenizer.Advance();
             
             var node = (TypedArgsStatement) parser.ParseTypedArgsList();
             Assert.Equal(0UL, node.Start);
-            Assert.Equal(37UL, node.End);
+            Assert.Equal(42UL, node.End);
 
             Assert.True(node.Elements.Length == 4);
-            Assert.True(node.Separators.Length == 4);
-            Assert.True(node.Div == null);
+            Assert.True(node.Separators.Length == 5);
+            Assert.Equal(Token.TokenKind.PyDiv, node.Div.Kind);
 
             var node2 = ((TFPDefStatement) node.Elements[0]);
             Assert.Equal("a", node2.Operator1.Text);
