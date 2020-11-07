@@ -8189,5 +8189,76 @@ namespace TestPythonCodeAnalyzer
             Assert.True(node.TypeComments.Length == 1);
             Assert.Equal("# type: int", node.TypeComments[0].Text);
         }
+        
+        [Fact]
+        public void TestTypedArgsList18()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("a, b = 5, c: d, e : f = 8, / , i : j = 4, *t, **h # type: int\r\n)\0".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+            
+            var node = (TypedArgsStatement) parser.ParseTypedArgsList();
+            Assert.Equal(0UL, node.Start);
+            Assert.Equal(61UL, node.End);
+
+            Assert.True(node.Elements.Length == 7);
+            Assert.True(node.Separators.Length == 7);
+            Assert.Equal(Token.TokenKind.PyDiv, node.Div.Kind);
+
+            var node2 = ((TFPDefStatement) node.Elements[0]);
+            Assert.Equal("a", node2.Operator1.Text);
+            Assert.True(node2.Operator2 == null);
+            Assert.True(node2.Right == null);
+            
+            var node3 = (TypedArgumentStatement) node.Elements[1];
+            var node4 = ((TFPDefStatement) node3.Left);
+            Assert.Equal("b", node4.Operator1.Text);
+            Assert.True(node4.Operator2 == null);
+            Assert.True(node4.Right == null);
+            
+            Assert.Equal(Token.TokenKind.PyAssign, node3.Operator.Kind);
+            Assert.Equal("5", ((NumberLiteralExpression)node3.Right).Number.Text);
+            
+            var node5 = ((TFPDefStatement) node.Elements[2]);
+            Assert.Equal("c", node5.Operator1.Text);
+            Assert.Equal(Token.TokenKind.PyColon, node5.Operator2.Kind);
+            Assert.Equal("d", ((NameLiteralExpression)node5.Right).Name.Text);
+            
+            var node6 = (TypedArgumentStatement) node.Elements[3];
+            var node7 = ((TFPDefStatement) node6.Left);
+            Assert.Equal("e", node7.Operator1.Text);
+            Assert.Equal(Token.TokenKind.PyColon, node7.Operator2.Kind);
+            Assert.Equal("f", ((NameLiteralExpression)node7.Right).Name.Text);
+            
+            Assert.Equal(Token.TokenKind.PyAssign, node6.Operator.Kind);
+            Assert.Equal("8", ((NumberLiteralExpression)node6.Right).Number.Text);
+            
+            var node10 = (TypedArgumentStatement) node.Elements[4];
+            var node11 = ((TFPDefStatement) node10.Left);
+            Assert.Equal("i", node11.Operator1.Text);
+            Assert.Equal(Token.TokenKind.PyColon, node11.Operator2.Kind);
+            Assert.Equal("j", ((NameLiteralExpression)node11.Right).Name.Text);
+            
+            Assert.Equal(Token.TokenKind.PyAssign, node10.Operator.Kind);
+            Assert.Equal("4", ((NumberLiteralExpression)node10.Right).Number.Text);
+            
+            var node12 = (TypedMulArgumentStatement)node.Elements[5];
+            Assert.Equal(Token.TokenKind.PyMul, node12.Operator.Kind);
+            var node13 = (TFPDefStatement) node12.Right;
+            Assert.Equal("t", node13.Operator1.Text);
+            Assert.True(node13.Operator2 == null);
+            Assert.True(node13.Right == null);
+            
+            var node8 = (TypedPowerArgumentStatement)node.Elements[6];
+            Assert.Equal(Token.TokenKind.PyPower, node8.Operator.Kind);
+            var node9 = (TFPDefStatement) node8.Right;
+            Assert.Equal("h", node9.Operator1.Text);
+            Assert.True(node9.Operator2 == null);
+            Assert.True(node9.Right == null);
+            
+            Assert.True(node.TypeComments.Length == 1);
+            Assert.Equal("# type: int", node.TypeComments[0].Text);
+        }
     }
 }
