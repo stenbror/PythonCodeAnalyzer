@@ -7900,5 +7900,39 @@ namespace TestPythonCodeAnalyzer
             Assert.True(node.TypeComments.Length == 1);
             Assert.Equal("# type: int", node.TypeComments[0].Text);
         }
+        
+        [Fact]
+        public void TestTypedArgsList12()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("a, b = 5 # type: int\r\n)\0".ToCharArray(), false, 8);
+            parser.Tokenizer.Advance();
+            
+            var node = (TypedArgsStatement) parser.ParseTypedArgsList();
+            Assert.Equal(0UL, node.Start);
+            Assert.Equal(20UL, node.End);
+
+            Assert.True(node.Elements.Length == 2);
+            Assert.True(node.Separators.Length == 1);
+            Assert.True(node.Div == null);
+
+            var node2 = ((TFPDefStatement) node.Elements[0]);
+            Assert.Equal("a", node2.Operator1.Text);
+            Assert.True(node2.Operator2 == null);
+            Assert.True(node2.Right == null);
+            
+            var node3 = (TypedArgumentStatement) node.Elements[1];
+            var node4 = ((TFPDefStatement) node3.Left);
+            Assert.Equal("b", node4.Operator1.Text);
+            Assert.True(node4.Operator2 == null);
+            Assert.True(node4.Right == null);
+            
+            Assert.Equal(Token.TokenKind.PyAssign, node3.Operator.Kind);
+            Assert.Equal("5", ((NumberLiteralExpression)node3.Right).Number.Text);
+            
+            Assert.True(node.TypeComments.Length == 1);
+            Assert.Equal("# type: int", node.TypeComments[0].Text);
+        }
     }
 }

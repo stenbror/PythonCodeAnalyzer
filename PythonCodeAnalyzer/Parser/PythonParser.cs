@@ -2492,6 +2492,12 @@ namespace PythonCodeAnalyzer.Parser
                     
                     elements.Add(ParseArgumentStatement());
                 }
+                
+                if (Tokenizer.CurSymbol.Kind == Token.TokenKind.TypeComment)
+                {
+                    typeComments.Add(Tokenizer.CurSymbol);
+                    Tokenizer.Advance();
+                }
 
                 if (Tokenizer.CurSymbol.Kind == Token.TokenKind.PyDiv)
                 {
