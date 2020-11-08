@@ -106,7 +106,7 @@ namespace PythonCodeAnalyzer.Parser
             /* Handle indentation and dedentation in sourcecode. Block controll in Python */
             bool isBlankline = false;
 
-//_nextline:
+_nextline:
             isBlankline = false;
             if (_atBOL)
             {
@@ -249,6 +249,7 @@ _again:
             /* Handle Newline - Token or Trivia */
             if (SourceCode[_index] == '\r' || SourceCode[_index] == '\n')
             {
+                _atBOL = true;
                 if (SourceCode[_index] == '\r')
                 {
                     _index++;
@@ -773,9 +774,7 @@ _letterQuote:
                     return new Token(_TokenStartPos, _index, Token.TokenKind.PyColon);
             }
             
-            
-
-            throw new LexicalErrorException(_index, "Illegal character in sourcecode!");
+            throw new LexicalErrorException(_index, String.Format("Illegal character in sourcecode! Found '{0}'.", SourceCode[_index]));
         }
     }
 }

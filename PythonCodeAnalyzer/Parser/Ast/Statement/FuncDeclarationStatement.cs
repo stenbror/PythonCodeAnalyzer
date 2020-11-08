@@ -20,7 +20,7 @@
             Token op2,
             ExpressionNode right,
             Token op3,
-            Token commenttype,
+            Token commentType,
             StatementNode next) : base(start, end)
         {
             Operator1 = op1;
@@ -30,7 +30,7 @@
             Operator2 = op2;
             Right = right;
             Operator3 = op3;
-            TypeComment = TypeComment;
+            TypeComment = commentType;
             Next = next;
         }
     }
