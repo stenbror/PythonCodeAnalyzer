@@ -8571,6 +8571,43 @@ namespace TestPythonCodeAnalyzer
         }
         
         [Fact]
+        public void TestDefSuite3()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("def a():\r\n  pass\r\n\0".ToCharArray(), false, 8);
+            
+            var node = (FileInputStatement) parser.ParseFileInput();
+            Assert.Equal(0UL, node.Start);
+            Assert.Equal(18UL, node.End);
+
+            Assert.True(node.Statements.Length == 1);
+            var node2 = (FuncDeclarationStatement)node.Statements[0];
+            Assert.Equal(Token.TokenKind.PyDef, node2.Operator1.Kind);
+            Assert.Equal("a", node2.Name.Text);
+            Assert.True(node2.Operator2 == null);
+            Assert.True(node2.Right == null);
+            Assert.Equal(Token.TokenKind.PyColon, node2.Operator3.Kind);
+            Assert.True(node2.TypeComment == null);
+            
+            var node3 = (ParameterStatement) node2.Left;
+            Assert.Equal(Token.TokenKind.PyLeftParen, node3.Operator1.Kind);
+            Assert.True(node3.Right == null);
+            Assert.Equal(Token.TokenKind.PyRightParen, node3.Operator2.Kind);
+
+            var node4 = (FuncSuiteStatement)node2.Next;
+            Assert.Equal(Token.TokenKind.Newline, node4.Operator1.Kind);
+            Assert.True(node4.Operator2 == null);
+            Assert.True(node4.Operator3 == null);
+            Assert.Equal(Token.TokenKind.Indent, node4.Operator4.Kind);
+            Assert.Equal(Token.TokenKind.Dedent, node4.Operator5.Kind);
+            
+            Assert.True(node4.Statements.Length == 1);
+            var node5 = (ListStatement)node4.Statements[0];
+            Assert.Equal(Token.TokenKind.PyPass, ((PassStatement) node5.Elements[0]).Operator.Kind);
+        }
+        
+        [Fact]
         public void TestForStatementWithTypeCommentAndSuite()
         {
             var parser = new PythonParser();
