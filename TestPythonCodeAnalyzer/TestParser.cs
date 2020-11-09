@@ -8638,6 +8638,36 @@ namespace TestPythonCodeAnalyzer
         }
         
         [Fact]
+        public void TestForStatementWithoutTypeCommentAndSuite()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("for a in b:\r\n   pass\r\n\0".ToCharArray(), false, 8);
+            
+            var node = (FileInputStatement) parser.ParseFileInput();
+            Assert.Equal(0UL, node.Start);
+            Assert.Equal(22UL, node.End);
+
+            Assert.True(node.Statements.Length == 1);
+            var node2 = (ForStatement) node.Statements[0];
+            Assert.Equal(Token.TokenKind.PyFor, node2.Operator1.Kind);
+            Assert.Equal(Token.TokenKind.PyIn, node2.Operator2.Kind);
+            Assert.Equal(Token.TokenKind.PyColon, node2.Operator3.Kind);
+            Assert.True(node2.TypeComment == null);
+
+            var node3 = (SuiteStatement) node2.Next;
+            Assert.Equal(Token.TokenKind.Newline, node3.Operator1.Kind);
+            Assert.Equal(Token.TokenKind.Indent, node3.Operator2.Kind);
+            Assert.True(node3.Statements.Length == 1);
+
+            var node4 = (ListStatement) node3.Statements[0];
+            Assert.True(node4.Elements.Length == 1);
+            Assert.Equal(Token.TokenKind.PyPass, ((PassStatement)node4.Elements[0]).Operator.Kind);
+            
+            Assert.Equal(Token.TokenKind.Dedent, node3.Operator3.Kind);
+        }
+        
+        [Fact]
         public void TestWithStatementWithTypeCommentAndSuite()
         {
             var parser = new PythonParser();
