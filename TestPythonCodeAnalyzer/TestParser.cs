@@ -8820,5 +8820,5 @@ namespace TestPythonCodeAnalyzer
                 Assert.True(false);
             }
         }
-    }
+    } 
 }
