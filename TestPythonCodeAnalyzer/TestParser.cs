@@ -8743,7 +8743,31 @@ namespace TestPythonCodeAnalyzer
                 Assert.Equal(Token.TokenKind.PyPass, e.ErrorSymbol.Kind);
                 Assert.Equal("Expecting 'def', 'with' or 'for' in async statement!", e.Message);
             }
-            catch (Exception e)
+            catch
+            {
+                Assert.True(false);
+            }
+        }
+        
+        [Fact]
+        public void TestCompoundStatementFailingifElifElse1()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("if a pass\0".ToCharArray(), false, 8);
+            
+            try
+            {
+                parser.ParseFileInput();
+                Assert.True(false);
+            }
+            catch (SyntaxErrorException e)
+            {
+                Assert.Equal(5U, e.Position);
+                Assert.Equal(Token.TokenKind.PyPass, e.ErrorSymbol.Kind);
+                Assert.Equal("Expecting ':' in if statement!", e.Message);
+            }
+            catch 
             {
                 Assert.True(false);
             }
