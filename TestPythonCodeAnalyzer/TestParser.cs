@@ -8796,5 +8796,29 @@ namespace TestPythonCodeAnalyzer
                 Assert.True(false);
             }
         }
+        
+        [Fact]
+        public void TestCompoundStatementFailingifElifElse3()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("if a: pass\r\nelif b: pass\r\nelse pass\0".ToCharArray(), false, 8);
+            
+            try
+            {
+                parser.ParseFileInput();
+                Assert.True(false);
+            }
+            catch (SyntaxErrorException e)
+            {
+                Assert.Equal(31U, e.Position);
+                Assert.Equal(Token.TokenKind.PyPass, e.ErrorSymbol.Kind);
+                Assert.Equal("Expecting ':' in else statement!", e.Message);
+            }
+            catch 
+            {
+                Assert.True(false);
+            }
+        }
     }
 }
