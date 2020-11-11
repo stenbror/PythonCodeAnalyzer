@@ -8940,5 +8940,29 @@ namespace TestPythonCodeAnalyzer
                 Assert.True(false);
             }
         }
+        
+        [Fact]
+        public void TestCompoundStatementFailingWithMissingColon()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("with a pass\r\n\0".ToCharArray(), false, 8);
+            
+            try
+            {
+                parser.ParseFileInput();
+                Assert.True(false);
+            }
+            catch (SyntaxErrorException e)
+            {
+                Assert.Equal(7U, e.Position);
+                Assert.Equal(Token.TokenKind.PyPass, e.ErrorSymbol.Kind);
+                Assert.Equal("Expecting ':' in with statement!", e.Message);
+            }
+            catch 
+            {
+                Assert.True(false);
+            }
+        }
     } 
 }
