@@ -8916,5 +8916,29 @@ namespace TestPythonCodeAnalyzer
                 Assert.True(false);
             }
         }
+        
+        [Fact]
+        public void TestCompoundStatementFailingForMissingElseColon()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("for a in b : pass\r\nelse pass\r\n\0".ToCharArray(), false, 8);
+            
+            try
+            {
+                parser.ParseFileInput();
+                Assert.True(false);
+            }
+            catch (SyntaxErrorException e)
+            {
+                Assert.Equal(24U, e.Position);
+                Assert.Equal(Token.TokenKind.PyPass, e.ErrorSymbol.Kind);
+                Assert.Equal("Expecting ':' in else statement!", e.Message);
+            }
+            catch 
+            {
+                Assert.True(false);
+            }
+        }
     } 
 }
