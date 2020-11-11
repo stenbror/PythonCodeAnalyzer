@@ -8988,5 +8988,29 @@ namespace TestPythonCodeAnalyzer
                 Assert.True(false);
             }
         }
+        
+        [Fact]
+        public void TestCompoundStatementFailingTryStmt2()
+        {
+            var parser = new PythonParser();
+            Assert.True(parser != null);
+            parser.Tokenizer = new PythonTokenizer("try:\r\n  pass\r\nfor\0".ToCharArray(), false, 8);
+            
+            try
+            {
+                parser.ParseFileInput();
+                Assert.True(false);
+            }
+            catch (SyntaxErrorException e)
+            {
+                Assert.Equal(14U, e.Position);
+                Assert.Equal(Token.TokenKind.PyFor, e.ErrorSymbol.Kind);
+                Assert.Equal("Expecting 'finally' in try statement missing except statements!", e.Message);
+            }
+            catch 
+            {
+                Assert.True(false);
+            }
+        }
     } 
 }
